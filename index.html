@@ -96,7 +96,7 @@ async function load(sport) {
 
   try {
     // FREE API (no key)
-    let res = await fetch("https://www.scorebat.com/video-api/v3/");
+    let res = await fetch(`/api/sports?sport=${sport}`);
     let data = await res.json();
 
     let matches = data.response;
@@ -122,7 +122,46 @@ async function load(sport) {
 }
 
 // auto load
+<script>
+
+let current = "soccer";
+
+async function load(sport) {
+  current = sport;
+  document.getElementById("matches").innerHTML = "Loading... ⏳";
+
+  try {
+    let res = await fetch(`/api/sports?sport=${sport}`);
+    let data = await res.json();
+
+    let html = "";
+
+    if (!data || data.length === 0) {
+      html = "❌ No data available";
+    } else {
+      data.slice(0, 15).forEach(m => {
+        html += `
+          <div class="match">
+            <div class="team">${m.title}</div>
+            <div class="score">${m.competition || m.score || ""}</div>
+            ${m.matchviewUrl ? `<a href="${m.matchviewUrl}" target="_blank">▶ Highlights</a>` : ""}
+          </div>
+        `;
+      });
+    }
+
+    document.getElementById("matches").innerHTML = html;
+
+  } catch (err) {
+    document.getElementById("matches").innerHTML = "❌ Error loading data";
+    console.error(err);
+  }
+}
+
+// page load पर auto run
 load("soccer");
+
+
 </script>
 
 </body>
