@@ -1,29 +1,12 @@
 export default async function handler(req, res) {
-
-  const sport = req.query.sport || "football";
-
   try {
+    const response = await fetch(
+      "https://www.thesportsdb.com/api/v1/json/3/eventsday.php?d=2026-04-26&s=Soccer"
+    );
+    const data = await response.json();
 
-    // Football + highlights (FREE)
-    if (sport === "football") {
-      const r = await fetch("https://www.scorebat.com/video-api/v3/");
-      const d = await r.json();
-      return res.status(200).json(d.response);
-    }
-
-    // Cricket (basic free)
-    if (sport === "cricket") {
-      return res.status(200).json([
-        { title: "IPL Match", score: "Live data limited (free API)" }
-      ]);
-    }
-
-    // Basketball / tennis / hockey (dummy fallback)
-    return res.status(200).json([
-      { title: sport + " matches coming soon", score: "-" }
-    ]);
-
-  } catch (e) {
-    return res.status(500).json({ error: "API failed" });
+    res.status(200).json(data);
+  } catch (error) {
+    res.status(500).json({ error: "API failed" });
   }
-        }
+}
