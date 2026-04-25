@@ -1,123 +1,82 @@
         <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Sportsnap LIVE</title>
+  <title>Sportsnap LIVE</title>
+  <style>
+    body {
+      background: #0b1b34;
+      color: white;
+      font-family: Arial;
+      text-align: center;
+    }
 
-<style>
-body {
-  margin: 0;
-  font-family: Arial;
-  background: #0b1d3a;
-  color: white;
-}
+    h1 {
+      color: #00ffcc;
+    }
 
-header {
-  text-align: center;
-  padding: 15px;
-  font-size: 22px;
-  font-weight: bold;
-}
+    button {
+      padding: 10px 20px;
+      background: orange;
+      border: none;
+      border-radius: 10px;
+      margin: 10px;
+      cursor: pointer;
+    }
 
-.tabs {
-  display: flex;
-  justify-content: center;
-  gap: 10px;
-  margin: 10px;
-}
-
-.tabs button {
-  padding: 8px 14px;
-  border: none;
-  border-radius: 20px;
-  background: #2c3e50;
-  color: white;
-}
-
-.tabs .active {
-  background: orange;
-}
-
-#matches {
-  padding: 10px;
-}
-
-.card {
-  background: #1c2f4a;
-  margin: 10px 0;
-  padding: 12px;
-  border-radius: 10px;
-}
-
-a {
-  color: #00d4ff;
-  text-decoration: none;
-}
-</style>
+    .match {
+      background: #1e2a44;
+      margin: 10px;
+      padding: 10px;
+      border-radius: 10px;
+    }
+  </style>
 </head>
 
 <body>
 
-<header>Sportsnap ⚽ LIVE</header>
+  <h1>Sportsnap ⚽ LIVE</h1>
 
-<div class="tabs">
-  <button onclick="load('soccer')" class="active">Football</button>
-  <button onclick="load('cricket')">Cricket</button>
-  <button onclick="load('basketball')">Basketball</button>
-  <button onclick="load('tennis')">Tennis</button>
-</div>
+  <!-- Refresh Button -->
+  <button onclick="loadMatches()">🔄 Refresh</button>
 
-<div style="text-align:center;">
-  <button onclick="reload()">🔄 Refresh</button>
-</div>
+  <!-- Matches -->
+  <div id="matches">Loading...</div>
 
-<div id="matches">Loading...</div>
+  <script>
+    async function loadMatches() {
+      document.getElementById("matches").innerHTML = "Loading...";
 
-<script>
-let current = "soccer";
+      try {
+        const res = await fetch("https://www.thesportsdb.com/api/v1/json/3/eventsday.php?s=Soccer");
+        const data = await res.json();
 
-async function load(sport) {
-  current = sport;
-  document.getElementById("matches").innerHTML = "Loading...";
+        if (!data.events) {
+          document.getElementById("matches").innerHTML = "No matches today";
+          return;
+        }
 
-  try {
-    let res = await fetch(`/api/live?sport=${sport}`);
-    let data = await res.json();
+        let html = "";
 
-    let html = "";
+        data.events.slice(0, 10).forEach(m => {
+          html += `
+            <div class="match">
+              <h3>${m.strEvent}</h3>
+              <p>${m.strLeague}</p>
+              <p>${m.dateEvent}</p>
+            </div>
+          `;
+        });
 
-    if (!data || data.length === 0) {
-      html = "❌ No matches found";
-    } else {
-      data.forEach(m => {
-        html += `
-          <div class="card">
-            <h3>${m.title}</h3>
-            <p>${m.competition}</p>
-            <p>${m.time}</p>
-            <p>${m.status}</p>
-            ${m.url ? `<a href="${m.url}" target="_blank">▶ Watch / Highlights</a>` : ""}
-          </div>
-        `;
-      });
+        document.getElementById("matches").innerHTML = html;
+
+      } catch (err) {
+        document.getElementById("matches").innerHTML = "⚠️ API Failed";
+      }
     }
 
-    document.getElementById("matches").innerHTML = html;
-
-  } catch (err) {
-    document.getElementById("matches").innerHTML = "❌ Error loading data";
-    console.error(err);
-  }
-}
-
-function reload(){
-  load(current);
-}
-
-// auto load
-load("soccer");
-</script>
+    // Auto load on page open
+    loadMatches();
+  </script>
 
 </body>
 </html>
