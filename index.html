@@ -37,7 +37,7 @@ async function loadMatches() {
   document.getElementById("result").innerHTML = "Loading...";
 
   try {
-    const res = await fetch("https://www.thesportsdb.com/api/v1/json/3/eventsday.php?s=Soccer");
+    const res = await fetch(const res = await fetch("https://www.thesportsdb.com/api/v1/json/3/eventsnextleague.php?id=4328");
     const data = await res.json();
 
     let html = "";
