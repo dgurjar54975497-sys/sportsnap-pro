@@ -1,6 +1,4 @@
 export default async function handler(req, res) {
-  const sport = req.query.sport || "soccer";
-
   try {
     const url = `https://www.scorebat.com/video-api/v3/feed/?token=demo`;
 
@@ -9,16 +7,13 @@ export default async function handler(req, res) {
 
     let data = json.response || [];
 
-    // filter by sport keyword (basic)
-    data = data.filter(m => 
-      m.title.toLowerCase().includes(sport)
-    );
+    // ❌ filter हटाया (यही main fix है)
 
-    const result = data.slice(0, 10).map(m => ({
+    const result = data.slice(0, 15).map(m => ({
       title: m.title,
       competition: m.competition,
-      time: m.date,
-      status: "Finished / Highlights",
+      time: new Date(m.date).toLocaleString(),
+      status: "Highlights Available",
       url: m.matchviewUrl
     }));
 
@@ -27,4 +22,4 @@ export default async function handler(req, res) {
   } catch (e) {
     res.status(500).json({ error: "API Failed" });
   }
-}
+      }
