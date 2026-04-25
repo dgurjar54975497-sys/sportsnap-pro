@@ -1,37 +1,49 @@
 <!DOCTYPE html>
 <html>
 <head>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Sportsnap PRO</title>
 
   <style>
+    * { box-sizing: border-box; }
+
     body {
       margin: 0;
-      font-family: Arial;
+      font-family: system-ui, -apple-system, Arial;
       background: #0b1d3a;
       color: white;
     }
 
     header {
+      position: sticky;
+      top: 0;
+      z-index: 10;
       background: #08142a;
-      padding: 15px;
+      padding: 14px;
       text-align: center;
-      font-size: 22px;
       font-weight: bold;
+      font-size: 20px;
+      border-bottom: 1px solid #1e2f50;
     }
 
     .tabs {
+      position: sticky;
+      top: 50px;
+      background: #0b1d3a;
       display: flex;
       justify-content: center;
       gap: 10px;
-      margin: 15px;
+      padding: 10px;
+      z-index: 9;
     }
 
     .tabs button {
-      padding: 10px 15px;
+      padding: 8px 14px;
       border: none;
       border-radius: 20px;
       background: #1e2f50;
       color: white;
+      font-size: 14px;
     }
 
     .tabs button.active {
@@ -44,29 +56,57 @@
     }
 
     .card {
-      background: #1e2f50;
+      background: linear-gradient(135deg, #1e2f50, #16233f);
       padding: 12px;
-      border-radius: 10px;
+      border-radius: 12px;
       margin-bottom: 10px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.3);
     }
 
     .teams {
+      display: flex;
+      justify-content: space-between;
       font-weight: bold;
-      font-size: 16px;
+      font-size: 15px;
     }
 
     .score {
-      margin-top: 5px;
+      margin-top: 6px;
       font-size: 14px;
       color: #00ffcc;
     }
 
     .status {
+      margin-top: 4px;
       font-size: 12px;
       color: #ccc;
     }
-  </style>
 
+    .live {
+      color: red;
+      font-weight: bold;
+      font-size: 12px;
+    }
+
+    .skeleton {
+      height: 60px;
+      border-radius: 10px;
+      margin-bottom: 10px;
+      background: linear-gradient(90deg, #1e2f50 25%, #2a3f6f 50%, #1e2f50 75%);
+      animation: shimmer 1.2s infinite;
+    }
+
+    @keyframes shimmer {
+      0% { background-position: -200px 0; }
+      100% { background-position: 200px 0; }
+    }
+
+    .empty {
+      text-align: center;
+      margin-top: 30px;
+      color: #aaa;
+    }
+  </style>
 </head>
 
 <body>
@@ -74,46 +114,85 @@
 <header>Sportsnap ⚽ LIVE</header>
 
 <div class="tabs">
-  <button class="active" onclick="loadFootball()">Football</button>
-  <button onclick="loadIPL()">IPL</button>
+  <button id="tab1" class="active" onclick="loadFootball()">Football</button>
+  <button id="tab2" onclick="loadIPL()">IPL</button>
 </div>
 
-<div class="container" id="result">
-  Click a tab to load matches
-</div>
+<div class="container" id="result"></div>
 
 <script>
+let autoRefresh;
+
+function setActive(tab) {
+  document.getElementById("tab1").classList.remove("active");
+  document.getElementById("tab2").classList.remove("active");
+  document.getElementById(tab).classList.add("active");
+}
+
+function showLoading() {
+  let sk = "";
+  for (let i = 0; i < 5; i++) {
+    sk += `<div class="skeleton"></div>`;
+  }
+  document.getElementById("result").innerHTML = sk;
+}
 
 async function loadFootball() {
-  document.getElementById("result").innerHTML = "Loading Football...";
+  setActive("tab1");
+  showLoading();
+
+  clearInterval(autoRefresh);
 
   try {
     const res = await fetch("https://www.thesportsdb.com/api/v1/json/3/eventsnextleague.php?id=4328");
     const data = await res.json();
 
+    if (!data.events) {
+      document.getElementById("result").innerHTML = "<div class='empty'>No matches 😢</div>";
+      return;
+    }
+
     let html = "";
 
     data.events.forEach(match => {
+      const teams = match.strEvent.split(" vs ");
+
       html += `
         <div class="card">
-          <div class="teams">${match.strEvent}</div>
-          <div class="score">Date: ${match.dateEvent}</div>
-          <div class="status">League Match</div>
+          <div class="teams">
+            <span>${teams[0]}</span>
+            <span>vs</span>
+            <span>${teams[1]}</span>
+          </div>
+
+          <div class="score">${match.dateEvent}</div>
+
+          <div class="status">
+            Upcoming Match
+          </div>
         </div>
       `;
     });
 
     document.getElementById("result").innerHTML = html;
 
+    autoRefresh = setInterval(loadFootball, 30000);
+
   } catch (e) {
-    document.getElementById("result").innerHTML = "Error loading ❌";
+    document.getElementById("result").innerHTML = "<div class='empty'>Error loading ❌</div>";
   }
 }
 
-async function loadIPL() {
-  document.getElementById("result").innerHTML = "IPL coming soon 🚧";
+function loadIPL() {
+  setActive("tab2");
+  clearInterval(autoRefresh);
 
-  // future: cricket API here
+  document.getElementById("result").innerHTML = `
+    <div class="empty">
+      🏏 IPL coming soon<br><br>
+      (Next step: cricket API)
+    </div>
+  `;
 }
 
 </script>
