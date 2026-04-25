@@ -125,17 +125,7 @@ async function load(sport) {
   current = sport;
   document.getElementById("matches").innerHTML = "Loading... ⏳";
 
-  try {
-    let res = await fetch(`/api/sports?sport=${sport}`);
-    let data = await res.json();
-
-    let html = "";
-
-    if (!data || data.length === 0) {
-      html = "❌ No data available";
-    } else {
-      data.slice(0, 15).forEach(m => {
-        html += `
+  
           <div class="match">
             <div class="team">${m.title}</div>
             <div class="score">${m.competition || m.score || ""}</div>
@@ -159,5 +149,42 @@ load("soccer");
 
 </script>
 
+<script>
+let current = "soccer";
+
+async function load(sport){
+  current = sport;
+  document.getElementById("matches").innerHTML = "Loading... ⏳";
+
+  try {
+    let res = await fetch(`/api/sports?sport=${sport}`);
+    let data = await res.json();
+
+    let html = "";
+
+    if(!data || data.length === 0){
+      html = "❌ No data available";
+    } else {
+      data.slice(0,15).forEach(m => {
+        html += `
+        <div class="card">
+          <h3>${m.title}</h3>
+          <p>${m.competition || ""} | ${m.score || ""}</p>
+          ${m.matchviewUrl ? `<a href="${m.matchviewUrl}" target="_blank">📺 Watch</a>` : ""}
+        </div>`;
+      });
+    }
+
+    document.getElementById("matches").innerHTML = html;
+
+  } catch(err){
+    document.getElementById("matches").innerHTML = "❌ Error loading data";
+    console.error(err);
+  }
+}
+
+// auto load
+load("soccer");
+        </script>
 </body>
 </html>
