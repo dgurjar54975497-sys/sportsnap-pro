@@ -86,44 +86,39 @@ button {
 </center>
 
 <div id="matches"></div>
+<button onclick="loadMatches()">Load Matches</button>
 
 <script>
-let current = "soccer";
-
-async function load(sport) {
-  current = sport;
+async function loadMatches() {
   document.getElementById("matches").innerHTML = "Loading...";
 
   try {
-    // FREE API (no key)
-    let res = await fetch(`/api/sports?sport=${sport}`);
-    let data = await res.json();
+    const res = await fetch("/api/sports");
+    const data = await res.json();
 
-    let matches = data.response;
+    if (!data.events) {
+      document.getElementById("matches").innerHTML = "No matches found";
+      return;
+    }
 
     let html = "";
 
-    matches.slice(0,20).forEach(m => {
+    data.events.forEach(match => {
       html += `
-      <div class="match">
-        <div class="team">${m.title}</div>
-        <div class="score">${m.competition}</div>
-        <a href="${m.matchviewUrl}" target="_blank">▶ Watch</a>
-      </div>
+        <div style="background:#1e293b;padding:10px;margin:10px;border-radius:10px">
+          <h3>${match.strEvent}</h3>
+          <p>📅 ${match.dateEvent}</p>
+        </div>
       `;
     });
 
     document.getElementById("matches").innerHTML = html;
 
-  } catch (e) {
-    document.getElementById("matches").innerHTML =
-      "❌ Error loading data";
+  } catch (err) {
+    document.getElementById("matches").innerHTML = "Error loading data ❌";
   }
 }
-
-// auto load
-<script>
-
+</script>
 let current = "soccer";
 
 async function load(sport) {
