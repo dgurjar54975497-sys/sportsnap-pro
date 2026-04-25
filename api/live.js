@@ -1,25 +1,42 @@
 export default async function handler(req, res) {
   try {
-    const url = `https://www.scorebat.com/video-api/v3/feed/?token=demo`;
+    const response = await fetch(
+      "https://www.thesportsdb.com/api/v1/json/3/eventsday.php?s=Soccer"
+    );
 
-    const response = await fetch(url);
-    const json = await response.json();
+    const data = await response.json();
 
-    let data = json.response || [];
+    if (!data.events) {
+      return res.status(200).json([
+        {
+          title: "No matches today",
+          competition: "Football",
+          time: "-",
+          status: "No Data",
+          url: ""
+        }
+      ]);
+    }
 
-    // ❌ filter हटाया (यही main fix है)
-
-    const result = data.slice(0, 15).map(m => ({
-      title: m.title,
-      competition: m.competition,
-      time: new Date(m.date).toLocaleString(),
-      status: "Highlights Available",
-      url: m.matchviewUrl
+    const result = data.events.slice(0, 10).map(m => ({
+      title: m.strEvent,
+      competition: m.strLeague,
+      time: m.dateEvent,
+      status: "Match Scheduled",
+      url: ""
     }));
 
     res.status(200).json(result);
 
   } catch (e) {
-    res.status(500).json({ error: "API Failed" });
-  }
+    res.status(200).json([
+      {
+        title: "API Error",
+        competition: "Fallback",
+        time: "Now",
+        status: "Error",
+        url: ""
       }
+    ]);
+  }
+}
