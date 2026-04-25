@@ -1,16 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Sportsnap LIVE</title>
+  <style>
+    body {
+      background: #0b1d3a;
+      color: white;
+      font-family: Arial;
+      text-align: center;
+    }
+    button {
+      padding: 10px;
+      margin: 10px;
+      background: orange;
+      border: none;
+      border-radius: 8px;
+    }
+    .card {
+      background: #1e2f50;
+      margin: 10px;
+      padding: 10px;
+      border-radius: 10px;
+    }
+  </style>
+</head>
+<body>
+
+<h1>Sportsnap ⚽ LIVE</h1>
+
+<button onclick="loadMatches()">Load Matches</button>
+
+<div id="result">Click button to load</div>
+
 <script>
-async function loadData() {
+async function loadMatches() {
   document.getElementById("result").innerHTML = "Loading...";
 
-  const res = await fetch("https://api.highlightly.net/football/matches", {
-    headers: {
-      "x-rapidapi-key": 02bfa74c-1549-4379-8054-f9cf4a029d52,
-      "x-rapidapi-host": "highlightly.net"
+  try {
+    const res = await fetch("https://www.thesportsdb.com/api/v1/json/3/eventsday.php?s=Soccer");
+    const data = await res.json();
+
+    let html = "";
+
+    if (!data.events) {
+      html = "No matches found";
+    } else {
+      data.events.forEach(match => {
+        html += `
+          <div class="card">
+            <b>${match.strEvent}</b><br>
+            Date: ${match.dateEvent}
+          </div>
+        `;
+      });
     }
-  });
 
-  const data = await res.json();
+    document.getElementById("result").innerHTML = html;
 
-  document.getElementById("result").innerHTML = JSON.stringify(data);
+  } catch (error) {
+    document.getElementById("result").innerHTML = "Error loading data ❌";
+  }
 }
 </script>
+
+</body>
+</html>
