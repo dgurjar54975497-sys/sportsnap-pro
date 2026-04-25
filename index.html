@@ -1,135 +1,16 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <title>Sportsnap Live</title>
-
-  <style>
-    body {
-      margin: 0;
-      font-family: Arial;
-      background: #0f172a;
-      color: white;
-    }
-
-    h1 {
-      text-align: center;
-      padding: 15px;
-      background: black;
-      margin: 0;
-      color: #22c55e;
-    }
-
-    button {
-      margin: 10px;
-      padding: 10px 15px;
-      border: none;
-      border-radius: 8px;
-      background: orange;
-      font-weight: bold;
-    }
-
-    #tabs {
-      text-align: center;
-    }
-
-    #result {
-      padding: 15px;
-    }
-
-    .card {
-      background: #1e293b;
-      padding: 15px;
-      margin-bottom: 10px;
-      border-radius: 10px;
-    }
-
-    .live {
-      color: red;
-      font-weight: bold;
-    }
-  </style>
-</head>
-
-<body>
-
-<h1>Sportsnap ⚽ LIVE</h1>
-
-<div id="tabs">
-  <button onclick="loadFootball()">Football</button>
-  <button onclick="loadIPL()">IPL</button>
-</div>
-
-<div id="result">Loading...</div>
-
 <script>
+async function loadData() {
+  document.getElementById("result").innerHTML = "Loading...";
 
-// ⚽ Football (free API)
-async function loadFootball() {
-  const res = await fetch("https://www.thesportsdb.com/api/v1/json/3/eventsnextleague.php?id=4328");
+  const res = await fetch("https://api.highlightly.net/football/matches", {
+    headers: {
+      "x-rapidapi-key": 02bfa74c-1549-4379-8054-f9cf4a029d52,
+      "x-rapidapi-host": "highlightly.net"
+    }
+  });
+
   const data = await res.json();
 
-  let html = "<h2>Football Matches</h2>";
-
-  data.events.forEach(m => {
-    html += `
-      <div class="card">
-        <b>${m.strEvent}</b><br>
-        
-        📅 ${m.dateEvent}
-      </div>
-    `;
-  });
-
-  document.getElementById("result").innerHTML = html;
+  document.getElementById("result").innerHTML = JSON.stringify(data);
 }
-
-// 🏏 IPL (static + simulated live feel)
-function loadIPL() {
-  let matches = [
-    "MI vs CSK",
-    let current = "football";
-
-function football() {
-  current = "football";
-  // बाकी code
-}
-
-function cricket() {
-  current = "cricket";
-  // बाकी code
-}
-
-setInterval(() => {
-  if (current === "football") football();
-  if (current === "cricket") cricket();
-}, 10000);
-    "RCB vs KKR",
-    "RR vs DC",
-    "SRH vs PBKS"
-  ];
-
-  let html = "<h2>IPL Matches</h2>";
-
-  matches.forEach(m => {
-    let score1 = Math.floor(Math.random() * 200);
-    let score2 = Math.floor(Math.random() * 200);
-
-    html += `
-      <div class="card">
-        <b>${m}</b><br>
-        <span class="live">🔴 LIVE</span><br>
-        ${score1} / ${Math.floor(Math.random()*20)} vs ${score2} / ${Math.floor(Math.random()*20)}
-      </div>
-    `;
-  });
-
-  document.getElementById("result").innerHTML = html;
-}
-
-// auto load
-loadFootball();
-
 </script>
-
-</body>
-  </html>
