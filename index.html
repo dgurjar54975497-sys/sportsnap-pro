@@ -1,112 +1,73 @@
-<!DOCTYPE html>
+    <!DOCTYPE html>
 <html>
 <head>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Sportsnap PRO</title>
+<title>Sportsnap Pro</title>
 
-  <style>
-    * { box-sizing: border-box; }
+<style>
+body {
+  margin: 0;
+  font-family: Arial;
+  background: #0f172a;
+  color: white;
+}
 
-    body {
-      margin: 0;
-      font-family: system-ui, -apple-system, Arial;
-      background: #0b1d3a;
-      color: white;
-    }
+/* Header */
+header {
+  text-align: center;
+  padding: 15px;
+  font-size: 22px;
+  font-weight: bold;
+  background: black;
+}
 
-    header {
-      position: sticky;
-      top: 0;
-      z-index: 10;
-      background: #08142a;
-      padding: 14px;
-      text-align: center;
-      font-weight: bold;
-      font-size: 20px;
-      border-bottom: 1px solid #1e2f50;
-    }
+/* Tabs */
+.tabs {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  padding: 10px;
+}
 
-    .tabs {
-      position: sticky;
-      top: 50px;
-      background: #0b1d3a;
-      display: flex;
-      justify-content: center;
-      gap: 10px;
-      padding: 10px;
-      z-index: 9;
-    }
+.tab {
+  padding: 8px 14px;
+  background: #1e293b;
+  border-radius: 20px;
+  cursor: pointer;
+}
 
-    .tabs button {
-      padding: 8px 14px;
-      border: none;
-      border-radius: 20px;
-      background: #1e2f50;
-      color: white;
-      font-size: 14px;
-    }
+.tab.active {
+  background: orange;
+  color: black;
+}
 
-    .tabs button.active {
-      background: orange;
-      color: black;
-    }
+/* Match Card */
+.match {
+  background: #1e293b;
+  margin: 10px;
+  padding: 12px;
+  border-radius: 10px;
+}
 
-    .container {
-      padding: 10px;
-    }
+.team {
+  font-weight: bold;
+}
 
-    .card {
-      background: linear-gradient(135deg, #1e2f50, #16233f);
-      padding: 12px;
-      border-radius: 12px;
-      margin-bottom: 10px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.3);
-    }
+.score {
+  color: #22c55e;
+  margin-top: 5px;
+}
 
-    .teams {
-      display: flex;
-      justify-content: space-between;
-      font-weight: bold;
-      font-size: 15px;
-    }
+/* Button */
+button {
+  background: orange;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 8px;
+  margin: 10px;
+  cursor: pointer;
+}
+</style>
 
-    .score {
-      margin-top: 6px;
-      font-size: 14px;
-      color: #00ffcc;
-    }
-
-    .status {
-      margin-top: 4px;
-      font-size: 12px;
-      color: #ccc;
-    }
-
-    .live {
-      color: red;
-      font-weight: bold;
-      font-size: 12px;
-    }
-
-    .skeleton {
-      height: 60px;
-      border-radius: 10px;
-      margin-bottom: 10px;
-      background: linear-gradient(90deg, #1e2f50 25%, #2a3f6f 50%, #1e2f50 75%);
-      animation: shimmer 1.2s infinite;
-    }
-
-    @keyframes shimmer {
-      0% { background-position: -200px 0; }
-      100% { background-position: 200px 0; }
-    }
-
-    .empty {
-      text-align: center;
-      margin-top: 30px;
-      color: #aaa;
-    }
-  </style>
 </head>
 
 <body>
@@ -114,87 +75,54 @@
 <header>Sportsnap ⚽ LIVE</header>
 
 <div class="tabs">
-  <button id="tab1" class="active" onclick="loadFootball()">Football</button>
-  <button id="tab2" onclick="loadIPL()">IPL</button>
+  <div class="tab active" onclick="load('soccer')">Football</div>
+  <div class="tab" onclick="load('cricket')">Cricket</div>
+  <div class="tab" onclick="load('basketball')">Basketball</div>
+  <div class="tab" onclick="load('tennis')">Tennis</div>
 </div>
 
-<div class="container" id="result"></div>
+<center>
+<button onclick="load(current)">🔄 Refresh</button>
+</center>
+
+<div id="matches"></div>
 
 <script>
-let autoRefresh;
+let current = "soccer";
 
-function setActive(tab) {
-  document.getElementById("tab1").classList.remove("active");
-  document.getElementById("tab2").classList.remove("active");
-  document.getElementById(tab).classList.add("active");
-}
-
-function showLoading() {
-  let sk = "";
-  for (let i = 0; i < 5; i++) {
-    sk += `<div class="skeleton"></div>`;
-  }
-  document.getElementById("result").innerHTML = sk;
-}
-
-async function loadFootball() {
-  setActive("tab1");
-  showLoading();
-
-  clearInterval(autoRefresh);
+async function load(sport) {
+  current = sport;
+  document.getElementById("matches").innerHTML = "Loading...";
 
   try {
-    const res = await fetch("/api/live");
-    const data = await res.json();
+    // FREE API (no key)
+    let res = await fetch("https://www.scorebat.com/video-api/v3/");
+    let data = await res.json();
 
-    if (!data.events) {
-      document.getElementById("result").innerHTML = "<div class='empty'>No matches 😢</div>";
-      return;
-    }
+    let matches = data.response;
 
     let html = "";
 
-    data.events.forEach(match => {
-      const teams = match.strEvent.split(" vs ");
-
+    matches.slice(0,20).forEach(m => {
       html += `
-        <div class="card">
-          <div class="team
-            <span>${teams[0]}</sp
-            <span>vs</span>
-            <span>${teams[1]}</span>
-          </div>
-
-          <div class="score">${match.dateEvent}</div>
-
-          <div class="status">
-            Upcoming Match
-          </div>
-        </div>
+      <div class="match">
+        <div class="team">${m.title}</div>
+        <div class="score">${m.competition}</div>
+        <a href="${m.matchviewUrl}" target="_blank">▶ Watch</a>
+      </div>
       `;
     });
 
-    document.getElementById("result").innerHTML = html;
-
-    autoRefresh = setInterval(loadFootball, 30000);
+    document.getElementById("matches").innerHTML = html;
 
   } catch (e) {
-    document.getElementById("result").innerHTML = "<div class='empty'>Error loading ❌</div>";
+    document.getElementById("matches").innerHTML =
+      "❌ Error loading data";
   }
 }
 
-function loadIPL() {
-  setActive("tab2");
-  clearInterval(autoRefresh);
-
-  document.getElementById("result").innerHTML = `
-    <div class="empty">
-      🏏 IPL coming soon<br><br>
-      (Next step: cricket API)
-    </div>
-  `;
-}
-
+// auto load
+load("soccer");
 </script>
 
 </body>
