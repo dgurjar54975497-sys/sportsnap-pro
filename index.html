@@ -1,73 +1,60 @@
-    <!DOCTYPE html>
-<html>
+        <!DOCTYPE html>
+<html lang="en">
 <head>
-<title>Sportsnap Pro</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sportsnap LIVE</title>
 
 <style>
 body {
   margin: 0;
   font-family: Arial;
-  background: #0f172a;
+  background: #0b1d3a;
   color: white;
 }
 
-/* Header */
 header {
   text-align: center;
   padding: 15px;
   font-size: 22px;
   font-weight: bold;
-  background: black;
 }
 
-/* Tabs */
 .tabs {
   display: flex;
   justify-content: center;
   gap: 10px;
+  margin: 10px;
+}
+
+.tabs button {
+  padding: 8px 14px;
+  border: none;
+  border-radius: 20px;
+  background: #2c3e50;
+  color: white;
+}
+
+.tabs .active {
+  background: orange;
+}
+
+#matches {
   padding: 10px;
 }
 
-.tab {
-  padding: 8px 14px;
-  background: #1e293b;
-  border-radius: 20px;
-  cursor: pointer;
-}
-
-.tab.active {
-  background: orange;
-  color: black;
-}
-
-/* Match Card */
-.match {
-  background: #1e293b;
-  margin: 10px;
+.card {
+  background: #1c2f4a;
+  margin: 10px 0;
   padding: 12px;
   border-radius: 10px;
 }
 
-.team {
-  font-weight: bold;
-}
-
-.score {
-  color: #22c55e;
-  margin-top: 5px;
-}
-
-/* Button */
-button {
-  background: orange;
-  border: none;
-  padding: 10px 15px;
-  border-radius: 8px;
-  margin: 10px;
-  cursor: pointer;
+a {
+  color: #00d4ff;
+  text-decoration: none;
 }
 </style>
-
 </head>
 
 <body>
@@ -75,61 +62,42 @@ button {
 <header>Sportsnap ⚽ LIVE</header>
 
 <div class="tabs">
-  <div class="tab active" onclick="load('soccer')">Football</div>
-  <div class="tab" onclick="load('cricket')">Cricket</div>
-  <div class="tab" onclick="load('basketball')">Basketball</div>
-  <div class="tab" onclick="load('tennis')">Tennis</div>
+  <button onclick="load('soccer')" class="active">Football</button>
+  <button onclick="load('cricket')">Cricket</button>
+  <button onclick="load('basketball')">Basketball</button>
+  <button onclick="load('tennis')">Tennis</button>
 </div>
 
-<center>
-<button onclick="load(current)">🔄 Refresh</button>
-</center>
+<div style="text-align:center;">
+  <button onclick="reload()">🔄 Refresh</button>
+</div>
 
-<div id="matches"></div>
-<button onclick="loadMatches()">Load Matches</button>
+<div id="matches">Loading...</div>
 
 <script>
-async function loadMatches() {
-  document.getElementById("matches").innerHTML = "Loading...";
-
-  try {
-    const res = await fetch("/api/sports");
-    const data = await res.json();
-
-    if (!data.events) {
-      document.getElementById("matches").innerHTML = "No matches found";
-      return;
-    }
-
-    let html = "";
-
-    data.events.forEach(match => {
-      html += `
-        <div style="background:#1e293b;padding:10px;margin:10px;border-radius:10px">
-          <h3>${match.strEvent}</h3>
-          <p>📅 ${match.dateEvent}</p>
-        </div>
-      `;
-    });
-
-    document.getElementById("matches").innerHTML = html;
-
-  } catch (err) {
-    document.getElementById("matches").innerHTML = "Error loading data ❌";
-  }
-}
-</script>
 let current = "soccer";
 
 async function load(sport) {
   current = sport;
-  document.getElementById("matches").innerHTML = "Loading... ⏳";
+  document.getElementById("matches").innerHTML = "Loading...";
 
-  
-          <div class="match">
-            <div class="team">${m.title}</div>
-            <div class="score">${m.competition || m.score || ""}</div>
-            ${m.matchviewUrl ? `<a href="${m.matchviewUrl}" target="_blank">▶ Highlights</a>` : ""}
+  try {
+    let res = await fetch(`/api/live?sport=${sport}`);
+    let data = await res.json();
+
+    let html = "";
+
+    if (!data || data.length === 0) {
+      html = "❌ No matches found";
+    } else {
+      data.forEach(m => {
+        html += `
+          <div class="card">
+            <h3>${m.title}</h3>
+            <p>${m.competition}</p>
+            <p>${m.time}</p>
+            <p>${m.status}</p>
+            ${m.url ? `<a href="${m.url}" target="_blank">▶ Watch / Highlights</a>` : ""}
           </div>
         `;
       });
@@ -143,48 +111,13 @@ async function load(sport) {
   }
 }
 
-// page load पर auto run
-load("soccer");
-
-
-</script>
-
-<script>
-let current = "soccer";
-
-async function load(sport){
-  current = sport;
-  document.getElementById("matches").innerHTML = "Loading... ⏳";
-
-  try {
-    let res = await fetch(`/api/sports?sport=${sport}`);
-    let data = await res.json();
-
-    let html = "";
-
-    if(!data || data.length === 0){
-      html = "❌ No data available";
-    } else {
-      data.slice(0,15).forEach(m => {
-        html += `
-        <div class="card">
-          <h3>${m.title}</h3>
-          <p>${m.competition || ""} | ${m.score || ""}</p>
-          ${m.matchviewUrl ? `<a href="${m.matchviewUrl}" target="_blank">📺 Watch</a>` : ""}
-        </div>`;
-      });
-    }
-
-    document.getElementById("matches").innerHTML = html;
-
-  } catch(err){
-    document.getElementById("matches").innerHTML = "❌ Error loading data";
-    console.error(err);
-  }
+function reload(){
+  load(current);
 }
 
 // auto load
 load("soccer");
-        </script>
+</script>
+
 </body>
 </html>
