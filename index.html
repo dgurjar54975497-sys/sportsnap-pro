@@ -86,6 +86,22 @@ async function loadFootball() {
 function loadIPL() {
   let matches = [
     "MI vs CSK",
+    let current = "football";
+
+function football() {
+  current = "football";
+  // बाकी code
+}
+
+function cricket() {
+  current = "cricket";
+  // बाकी code
+}
+
+setInterval(() => {
+  if (current === "football") football();
+  if (current === "cricket") cricket();
+}, 10000);
     "RCB vs KKR",
     "RR vs DC",
     "SRH vs PBKS"
