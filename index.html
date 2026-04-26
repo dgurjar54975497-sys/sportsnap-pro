@@ -1,4 +1,4 @@
-          <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -13,11 +13,14 @@
     }
     header {
       background: linear-gradient(#1e2937, #334155);
-      padding: 1rem;
+      padding: 1.2rem;
       text-align: center;
+      position: sticky;
+      top: 0;
+      z-index: 100;
     }
-    h1 { font-size: 2rem; margin: 0; }
-    .subtitle { color: #22c55e; font-size: 1rem; }
+    h1 { font-size: 2.1rem; margin: 0; }
+    .subtitle { color: #22c55e; font-size: 1.05rem; }
 
     .tabs {
       display: flex;
@@ -27,16 +30,16 @@
       overflow-x: auto;
     }
     .tab {
-      padding: 10px 20px;
+      padding: 12px 24px;
       background: #1f2937;
       border-radius: 50px;
       white-space: nowrap;
       cursor: pointer;
+      font-weight: 600;
     }
     .tab.active {
       background: #22c55e;
       color: black;
-      font-weight: bold;
     }
 
     .container { padding: 16px; }
@@ -44,12 +47,13 @@
     .match-card {
       background: #1a2338;
       border-radius: 16px;
-      margin-bottom: 20px;
+      margin-bottom: 24px;
       overflow: hidden;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.4);
     }
     .thumbnail {
       width: 100%;
-      height: 210px;
+      height: 220px;
       object-fit: cover;
     }
     .live-badge {
@@ -58,33 +62,48 @@
       right: 12px;
       background: #ef4444;
       color: white;
-      padding: 4px 12px;
+      padding: 6px 14px;
       border-radius: 20px;
       font-weight: bold;
+      font-size: 0.85rem;
     }
     .card-body {
-      padding: 16px;
+      padding: 18px;
     }
     .match-title {
-      font-size: 1.2rem;
-      font-weight: bold;
+      font-size: 1.25rem;
+      font-weight: 700;
       margin-bottom: 8px;
     }
     .score {
-      font-size: 1.6rem;
+      font-size: 1.7rem;
       color: #22c55e;
       font-weight: 800;
-      margin: 10px 0;
+      margin: 12px 0;
+    }
+    .detail {
+      color: #94a3b8;
+      font-size: 1rem;
     }
     button {
       background: #22c55e;
       color: black;
       border: none;
-      padding: 12px 28px;
+      padding: 14px 32px;
       border-radius: 50px;
       font-weight: bold;
-      margin: 15px auto;
+      margin: 20px auto;
       display: block;
+    }
+    .ai-btn {
+      background: #3b82f6;
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 8px;
+      width: 100%;
+      margin-top: 12px;
+      cursor: pointer;
     }
   </style>
 </head>
@@ -92,7 +111,7 @@
 
   <header>
     <h1>Sportsnap PRO</h1>
-    <p class="subtitle">🏏 IPL 2026 LIVE Scores</p>
+    <p class="subtitle">🏏 IPL 2026 • LIVE Scores & Highlights</p>
   </header>
 
   <div class="tabs">
@@ -110,51 +129,58 @@
       const container = document.getElementById('matchesContainer');
       container.innerHTML = '';
 
-      const iplMatches = [
+      const matches = [
         {
           title: "Royal Challengers Bengaluru vs Chennai Super Kings",
           competition: "IPL 2026 • Match 34",
           score: "RCB 189/5 (19.2 ov)",
-          detail: "Needs 9 runs in 4 balls",
+          detail: "RCB needs 9 runs in 4 balls • Virat 87*",
           status: "LIVE"
         },
         {
           title: "Mumbai Indians vs Kolkata Knight Riders",
           competition: "IPL 2026 • Match 35",
           score: "MI 167/8",
-          detail: "KKR chasing 168",
+          detail: "KKR chasing 168 • 18.3 overs",
           status: "LIVE"
         }
       ];
 
-      iplMatches.forEach(match => {
-        const card = document.createElement('div');
-        card.className = 'match-card';
-        card.innerHTML = `
-          <div style="position:relative;">
-            <img src="https://picsum.photos/id/1018/800/400" class="thumbnail" alt="IPL">
-            <div class="live-badge">${match.status}</div>
-          </div>
-          <div class="card-body">
-            <div class="match-title">${match.title}</div>
-            <div style="color:#94a3b8;">${match.competition}</div>
-            <div class="score">${match.score}</div>
-            <div style="color:#94a3b8;">${match.detail}</div>
-            <button onclick="alert('🤖 AI Analyst:\\n\\n• RCB batting strongly\\n• CSK bowlers under pressure\\n• Virat Kohli in form')">🤖 AI Analyst</button>
+      matches.forEach(match => {
+        const cardHTML = `
+          <div class="match-card">
+            <div style="position:relative;">
+              <img src="https://picsum.photos/id/1018/800/400" class="thumbnail" alt="IPL Match">
+              <div class="live-badge">${match.status}</div>
+            </div>
+            <div class="card-body">
+              <div class="match-title">${match.title}</div>
+              <div style="color:#94a3b8;">${match.competition}</div>
+              <div class="score">${match.score}</div>
+              <div class="detail">${match.detail}</div>
+              
+              <button class="ai-btn" onclick="showAI('${match.title}')">
+                🤖 AI Match Analyst
+              </button>
+            </div>
           </div>
         `;
-        container.appendChild(card);
+        container.innerHTML += cardHTML;
       });
     }
 
     function loadOther() {
       const container = document.getElementById('matchesContainer');
       container.innerHTML = `
-        <div style="text-align:center; padding:60px 20px; color:#94a3b8;">
-          <p>Other sports matches coming soon...</p>
-          <p style="margin-top:20px;">Football, Basketball, Tennis</p>
+        <div style="text-align:center; padding:80px 20px; color:#94a3b8;">
+          <p>Football, Basketball & Tennis matches</p>
+          <p style="margin-top:20px;">Coming soon with real API</p>
         </div>
       `;
+    }
+
+    function showAI(title) {
+      alert(`🤖 AI Analyst for ${title}\n\n• Strong batting performance\n• Key wickets in middle overs\n• Current momentum with batting side\n\nFull ball-by-ball analysis coming soon!`);
     }
 
     // Initial load
