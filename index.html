@@ -5,17 +5,22 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Sportsnap PRO - IPL 2026</title>
   <style>
+    :root {
+      --green: #1e8e3e;
+      --dark: #0a0f1c;
+      --card: #1a2338;
+    }
+    * { margin:0; padding:0; box-sizing:border-box; }
     body {
-      margin: 0;
       font-family: system-ui, sans-serif;
-      background: #0a0f1c;
+      background: var(--dark);
       color: #e2e8f0;
       min-height: 100vh;
     }
 
     /* Top Header - Cricbuzz Style */
-    .top-bar {
-      background: #1e8e3e;
+    .top-header {
+      background: var(--green);
       color: white;
       padding: 12px 16px;
       display: flex;
@@ -25,12 +30,12 @@
       top: 0;
       z-index: 100;
     }
-    .logo { font-size: 1.9rem; font-weight: 700; }
+    .logo { font-size: 1.95rem; font-weight: 700; }
     .get-app {
       background: white;
-      color: #1e8e3e;
-      padding: 8px 16px;
-      border-radius: 20px;
+      color: var(--green);
+      padding: 8px 18px;
+      border-radius: 30px;
       font-weight: bold;
     }
 
@@ -38,12 +43,12 @@
     .main-tabs {
       display: flex;
       background: #111827;
-      padding: 10px 8px;
+      padding: 12px 8px;
       gap: 8px;
       overflow-x: auto;
     }
     .main-tab {
-      padding: 10px 20px;
+      padding: 10px 22px;
       background: #1f2937;
       border-radius: 50px;
       white-space: nowrap;
@@ -58,14 +63,15 @@
     .container { padding: 16px; }
 
     .match-card {
-      background: #1a2338;
+      background: var(--card);
       border-radius: 16px;
       margin-bottom: 20px;
       overflow: hidden;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
     }
     .thumbnail {
       width: 100%;
-      height: 200px;
+      height: 210px;
       object-fit: cover;
     }
     .live-badge {
@@ -75,7 +81,7 @@
       background: #ef4444;
       color: white;
       padding: 6px 14px;
-      border-radius: 20px;
+      border-radius: 30px;
       font-weight: bold;
     }
     .card-body {
@@ -94,17 +100,19 @@
       font-weight: 600;
     }
     .team-logo {
-      width: 42px;
-      height: 42px;
+      width: 48px;
+      height: 48px;
       border-radius: 50%;
-      background: #334155;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.8rem;
+      overflow: hidden;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    }
+    .team-logo img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
     }
     .score {
-      font-size: 1.7rem;
+      font-size: 1.75rem;
       font-weight: 800;
       color: #22c55e;
     }
@@ -113,12 +121,12 @@
     .community-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(85px, 1fr));
-      gap: 12px;
+      gap: 14px;
       margin-top: 16px;
     }
     .team-card {
       background: #1f2937;
-      border-radius: 12px;
+      border-radius: 14px;
       padding: 12px 8px;
       text-align: center;
       cursor: pointer;
@@ -147,8 +155,8 @@
 </head>
 <body>
 
-  <!-- Top Bar -->
-  <div class="top-bar">
+  <!-- Top Header -->
+  <div class="top-header">
     <div class="logo">Sportsnap PRO</div>
     <div class="get-app">GET APP</div>
   </div>
@@ -169,17 +177,17 @@
   </div>
 
   <script>
-    const teams = [
-      {name: "CSK", logo: "🦁", color: "#facc15"},
-      {name: "MI", logo: "🏴‍☠️", color: "#1e40af"},
-      {name: "RCB", logo: "🔴", color: "#b91c1c"},
-      {name: "KKR", logo: "🟣", color: "#6b21a8"},
-      {name: "GT", logo: "⚡", color: "#1e40af"},
-      {name: "SRH", logo: "☀️", color: "#f59e0b"},
-      {name: "PBKS", logo: "🏹", color: "#b91c1c"},
-      {name: "DC", logo: "🟥", color: "#1e40af"},
-      {name: "RR", logo: "🦁", color: "#facc15"},
-      {name: "LSG", logo: "🦁", color: "#22c55e"}
+    const iplTeams = [
+      { name: "CSK", logo: "https://upload.wikimedia.org/wikipedia/en/thumb/2/2b/Chennai_Super_Kings_Logo.svg/800px-Chennai_Super_Kings_Logo.svg.png" },
+      { name: "MI", logo: "https://upload.wikimedia.org/wikipedia/en/thumb/8/8d/Mumbai_Indians_Logo.svg/800px-Mumbai_Indians_Logo.svg.png" },
+      { name: "RCB", logo: "https://upload.wikimedia.org/wikipedia/en/thumb/4/4c/Royal_Challengers_Bengaluru_Logo.svg/800px-Royal_Challengers_Bengaluru_Logo.svg.png" },
+      { name: "KKR", logo: "https://upload.wikimedia.org/wikipedia/en/thumb/4/4c/Kolkata_Knight_Riders_Logo.svg/800px-Kolkata_Knight_Riders_Logo.svg.png" },
+      { name: "GT", logo: "https://upload.wikimedia.org/wikipedia/en/thumb/0/0e/Gujarat_Titans_Logo.svg/800px-Gujarat_Titans_Logo.svg.png" },
+      { name: "SRH", logo: "https://upload.wikimedia.org/wikipedia/en/thumb/8/81/Sunrisers_Hyderabad_Logo.svg/800px-Sunrisers_Hyderabad_Logo.svg.png" },
+      { name: "PBKS", logo: "https://upload.wikimedia.org/wikipedia/en/thumb/2/2e/Punjab_Kings_Logo.svg/800px-Punjab_Kings_Logo.svg.png" },
+      { name: "DC", logo: "https://upload.wikimedia.org/wikipedia/en/thumb/2/2d/Delhi_Capitals_Logo.svg/800px-Delhi_Capitals_Logo.svg.png" },
+      { name: "RR", logo: "https://upload.wikimedia.org/wikipedia/en/thumb/6/6f/Rajasthan_Royals_Logo.svg/800px-Rajasthan_Royals_Logo.svg.png" },
+      { name: "LSG", logo: "https://upload.wikimedia.org/wikipedia/en/thumb/2/2e/Lucknow_Super_Giants_Logo.svg/800px-Lucknow_Super_Giants_Logo.svg.png" }
     ];
 
     function showSection(section) {
@@ -188,6 +196,7 @@
       if (section === 'matches') {
         content.innerHTML = `
           <h2 style="margin:20px 0 15px; color:#22c55e;">IPL 2026 Live Matches</h2>
+          
           <div class="match-card">
             <div style="position:relative;">
               <img src="https://picsum.photos/id/1018/800/400" class="thumbnail">
@@ -196,32 +205,32 @@
             <div class="card-body">
               <div class="team-row">
                 <div class="team">
-                  <span class="team-logo" style="background:#facc15">🦁</span>
+                  <span class="team-logo"><img src="${iplTeams[0].logo}" alt="CSK"></span>
                   <span>CSK</span>
                 </div>
                 <div class="score">167/8</div>
               </div>
               <div class="team-row">
                 <div class="team">
-                  <span class="team-logo" style="background:#1e40af">⚡</span>
+                  <span class="team-logo"><img src="${iplTeams[4].logo}" alt="GT"></span>
                   <span>GT</span>
                 </div>
                 <div class="score">142/4</div>
               </div>
-              <p style="color:#ef4444; margin-top:8px;">GT needs 26 runs in 12 balls</p>
-              <button onclick="alert('🤖 AI Analyst: GT bowlers under pressure in death overs!')">🤖 AI Analyst</button>
+              <div class="detail">GT needs 26 runs in 12 balls • Narendra Modi Stadium</div>
+              <button onclick="alert('🤖 AI Analyst: CSK in strong position!')">🤖 AI Analyst</button>
             </div>
           </div>
         `;
       } 
       else if (section === 'community') {
         content.innerHTML = `
-          <h2 style="margin:20px 0 15px; text-align:center;">Join IPL Team Communities</h2>
+          <h2 style="margin:20px 0 15px; text-align:center;">Join Your Favourite Team Community</h2>
           <div class="community-grid">
-            ${teams.map(t => `
-              <div class="team-card" onclick="joinTeam('${t.name}')">
-                <div class="team-logo" style="background:\( {t.color}"> \){t.logo}</div>
-                <div style="font-weight:600;">${t.name}</div>
+            ${iplTeams.map(team => `
+              <div class="team-card" onclick="joinTeam('${team.name}')">
+                <div class="team-logo"><img src="\( {team.logo}" alt=" \){team.name}"></div>
+                <div style="font-weight:700; margin-top:8px;">${team.name}</div>
               </div>
             `).join('')}
           </div>
@@ -230,11 +239,11 @@
     }
 
     function joinTeam(team) {
-      alert(`✅ You joined ${team} Community!\n\nDiscuss live matches, share predictions & chat with other ${team} fans.`);
+      alert(`✅ You joined ${team} Community!\n\nDiscuss matches, share predictions and chat with other ${team} fans.`);
     }
 
     // Initial Load
     window.onload = () => showSection('matches');
   </script>
 </body>
-      </html>
+</html>
