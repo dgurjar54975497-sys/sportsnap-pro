@@ -1,22 +1,22 @@
-            <!DOCTYPE html>
+              <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Sportsnap PRO ⚽ LIVE</title>
+  <title>Sportsnap PRO - IPL 2026</title>
   <style>
     :root {
       --bg: #0a0f1c;
       --card: #1a2338;
       --accent: #22c55e;
       --live: #ef4444;
-      --text: #e2e8f0;
+      --gold: #fbbf24;
     }
     * { margin:0; padding:0; box-sizing:border-box; }
     body {
       font-family: system-ui, sans-serif;
       background: var(--bg);
-      color: var(--text);
+      color: #e2e8f0;
       min-height: 100vh;
     }
     header {
@@ -27,8 +27,8 @@
       top: 0;
       z-index: 100;
     }
-    h1 { font-size: 1.85rem; font-weight: 700; }
-    .subtitle { color: var(--accent); font-size: 0.95rem; }
+    h1 { font-size: 1.9rem; font-weight: 700; }
+    .subtitle { color: var(--accent); font-size: 1rem; }
 
     .tabs {
       display: flex;
@@ -64,7 +64,7 @@
     }
     .thumbnail {
       width: 100%;
-      height: 200px;
+      height: 210px;
       object-fit: cover;
     }
     .live-badge {
@@ -74,8 +74,8 @@
       color: white;
       padding: 4px 12px;
       border-radius: 20px;
-      font-size: 0.8rem;
       font-weight: bold;
+      font-size: 0.8rem;
     }
     .card-body {
       padding: 16px;
@@ -85,28 +85,34 @@
       font-weight: 700;
       margin-bottom: 8px;
     }
+    .competition {
+      color: #94a3b8;
+      margin-bottom: 10px;
+    }
     .score {
-      font-size: 1.6rem;
+      font-size: 1.55rem;
       font-weight: 800;
       color: var(--accent);
       margin: 10px 0;
     }
     .scoreboard {
       background: #111827;
-      padding: 12px;
+      padding: 14px;
       border-radius: 12px;
       margin: 12px 0;
       font-size: 0.95rem;
+      line-height: 1.6;
     }
     .analyst-btn {
       background: #3b82f6;
       color: white;
       border: none;
-      padding: 10px 20px;
+      padding: 12px 20px;
       border-radius: 8px;
       width: 100%;
       margin-top: 12px;
       cursor: pointer;
+      font-weight: 600;
     }
     button#refreshBtn {
       background: var(--accent);
@@ -124,18 +130,17 @@
 
   <header>
     <h1>Sportsnap PRO</h1>
-    <p class="subtitle">⚽ IPL 2026 • LIVE Scores & Highlights</p>
+    <p class="subtitle">🏏 IPL 2026 • LIVE Scores & Highlights</p>
   </header>
 
   <div class="tabs">
     <div class="tab active" data-sport="ipl">IPL 2026</div>
     <div class="tab" data-sport="football">Football</div>
     <div class="tab" data-sport="cricket">Other Cricket</div>
-    <div class="tab" data-sport="basketball">Basketball</div>
   </div>
 
   <div class="container">
-    <button id="refreshBtn">🔄 Refresh IPL & Matches</button>
+    <button id="refreshBtn">🔄 Refresh IPL Matches</button>
     <div id="matchesContainer"></div>
   </div>
 
@@ -154,35 +159,46 @@
 
     document.getElementById('refreshBtn').addEventListener('click', loadMatches);
 
-    function getIPLDemoMatches() {
+    function getIPLMatches() {
       return [
         {
           title: "Royal Challengers Bengaluru vs Chennai Super Kings",
           competition: "IPL 2026 • Match 34",
           score: "RCB 189/5 (19.2 ov)",
+          target: "Target: 198",
           status: "Live",
-          time: "RCB needs 12 runs in 5 balls",
+          time: "RCB needs 9 runs in 4 balls",
           thumbnail: "https://picsum.photos/id/1018/800/400"
         },
         {
           title: "Mumbai Indians vs Kolkata Knight Riders",
-          competition: "IPL 2026",
+          competition: "IPL 2026 • Match 35",
           score: "MI 167/8 • KKR 142/4",
+          target: "KKR winning",
           status: "In Progress",
-          time: "KKR winning",
+          time: "18th Over",
           thumbnail: "https://picsum.photos/id/237/800/400"
+        },
+        {
+          title: "Delhi Capitals vs Sunrisers Hyderabad",
+          competition: "IPL 2026",
+          score: "DC 156/6",
+          target: "Upcoming",
+          status: "Upcoming",
+          time: "7:30 PM",
+          thumbnail: "https://picsum.photos/id/201/800/400"
         }
       ];
     }
 
     function loadMatches() {
       const container = document.getElementById('matchesContainer');
-      container.innerHTML = '<p style="text-align:center; color:#94a3b8; padding:20px;">Loading IPL 2026 matches...</p>';
+      container.innerHTML = '<p style="text-align:center; padding:40px; color:#94a3b8;">Loading IPL 2026 live matches...</p>';
 
-      setTimeout(() => {  // Simulate API delay
+      setTimeout(() => {
         container.innerHTML = '';
 
-        const matches = currentSport === 'ipl' ? getIPLDemoMatches() : getOtherDemoMatches(currentSport);
+        const matches = currentSport === 'ipl' ? getIPLMatches() : getOtherMatches();
 
         matches.forEach(match => {
           const card = document.createElement('div');
@@ -194,19 +210,20 @@
             </div>
             <div class="card-body">
               <div class="match-title">${match.title}</div>
-              <div style="color:#94a3b8;">${match.competition}</div>
+              <div class="competition">${match.competition}</div>
               <div class="score">${match.score}</div>
-              <div style="color:#94a3b8; font-size:0.95rem;">${match.time}</div>
+              \( {match.target ? `<div style="color:#fbbf24; font-weight:600;"> \){match.target}</div>` : ''}
+              <div style="color:#94a3b8; margin:8px 0;">${match.time}</div>
 
               <div class="scoreboard">
                 <strong>Scoreboard:</strong><br>
                 ${match.score}<br>
-                Current Run Rate: 9.8
+                ${match.target || 'Match in progress'}
               </div>
 
-              <div style="background:#111827; padding:12px; border-radius:8px; margin:12px 0; text-align:center; color:#64748b;">
-                🎥 Highlights Video<br>
-                <small>Real IPL highlights will load here after API integration</small>
+              <div style="background:#111827; padding:16px; border-radius:12px; text-align:center; color:#64748b; margin:12px 0;">
+                🎥 IPL Highlights<br>
+                <small>Real video highlights coming soon after API integration</small>
               </div>
 
               <button class="analyst-btn" onclick="showAISummary('${match.title}')">
@@ -216,19 +233,28 @@
           `;
           container.appendChild(card);
         });
-      }, 800);
+      }, 600);
     }
 
-    function getOtherDemoMatches(sport) {
-      return [{ title: `${sport.toUpperCase()} Demo Match`, competition: "Demo League", score: "N/A", status: "Upcoming", time: "Coming Soon", thumbnail: "https://picsum.photos/id/201/800/400" }];
+    function getOtherMatches() {
+      return [{ 
+        title: "Demo Match", 
+        competition: "Other League", 
+        score: "N/A", 
+        target: "", 
+        status: "Upcoming", 
+        time: "Coming Soon", 
+        thumbnail: "https://picsum.photos/id/201/800/400" 
+      }];
     }
 
     function showAISummary(title) {
-      alert(`🤖 AI Analyst for ${title}\n\n• Strong batting performance\n• Key wickets in middle overs\n• Strategic field placement\n\nDetailed ball-by-ball AI summary coming soon!`);
+      alert(`🤖 AI Analyst for ${title}\n\n• Strong batting display\n• Crucial wickets in death overs\n• RCB looking strong to chase\n\nDetailed ball-by-ball analysis coming soon!`);
     }
 
+    // Load on start + Auto refresh
     window.onload = loadMatches;
-    setInterval(loadMatches, 45000);
+    setInterval(loadMatches, 40000);
   </script>
 </body>
-</html>
+            </html>
