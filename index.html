@@ -3,36 +3,34 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Sportsnap PRO</title>
+  <title>Sportsnap PRO - IPL 2026</title>
   <style>
     body {
       margin: 0;
-      font-family: system-ui, sans-serif;
-      background: #f8f9fa;
-      color: #333;
+      font-family: system-ui, -apple-system, sans-serif;
+      background: #0f1419;
+      color: #e2e8f0;
     }
 
-    /* Top Green Header - Exact Cricbuzz Style */
+    /* Top Header - ESPNcricinfo Style */
     .top-header {
-      background: #1e8e3e;
-      color: white;
+      background: #1e1e1e;
       padding: 12px 16px;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      position: sticky;
-      top: 0;
-      z-index: 100;
+      border-bottom: 1px solid #333;
     }
-    .logo { 
-      font-size: 1.9rem; 
-      font-weight: 700; 
+    .logo {
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: #22c55e;
     }
     .get-app {
-      background: white;
-      color: #1e8e3e;
-      padding: 8px 18px;
-      border-radius: 30px;
+      background: #22c55e;
+      color: #000;
+      padding: 8px 16px;
+      border-radius: 20px;
       font-weight: bold;
       font-size: 0.9rem;
     }
@@ -40,11 +38,11 @@
     .container { padding: 16px; }
 
     .match-card {
-      background: white;
+      background: #1a2338;
       border-radius: 12px;
       margin-bottom: 20px;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
       overflow: hidden;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.3);
     }
     .thumbnail {
       width: 100%;
@@ -57,9 +55,10 @@
       right: 12px;
       background: #ef4444;
       color: white;
-      padding: 6px 14px;
-      border-radius: 30px;
+      padding: 4px 12px;
+      border-radius: 20px;
       font-weight: bold;
+      font-size: 0.8rem;
     }
     .card-body {
       padding: 16px;
@@ -81,6 +80,7 @@
       height: 48px;
       border-radius: 50%;
       overflow: hidden;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.4);
     }
     .team-logo img {
       width: 100%;
@@ -88,13 +88,14 @@
       object-fit: cover;
     }
     .score {
-      font-size: 1.8rem;
+      font-size: 1.75rem;
       font-weight: 800;
-      color: #1e8e3e;
+      color: #22c55e;
     }
     .detail {
-      color: #555;
+      color: #94a3b8;
       margin-top: 8px;
+      font-size: 0.95rem;
     }
   </style>
 </head>
@@ -108,13 +109,13 @@
 
   <div class="container">
 
-    <h2 style="margin: 20px 0 15px; color: #1e8e3e;">IPL 2026 Live Matches</h2>
+    <h2 style="margin: 20px 0 15px; color: #22c55e;">IPL 2026 Live Matches</h2>
 
     <!-- Match 1 -->
     <div class="match-card">
       <div style="position:relative;">
-        <img src="https://picsum.photos/id/1018/800/400" class="thumbnail">
-        <div class="live-badge">● LIVE</div>
+        <img src="https://picsum.photos/id/1018/800/400" class="thumbnail" alt="IPL">
+        <div class="live-badge">LIVE</div>
       </div>
       <div class="card-body">
         <div class="team-row">
@@ -143,8 +144,8 @@
     <!-- Match 2 -->
     <div class="match-card">
       <div style="position:relative;">
-        <img src="https://picsum.photos/id/237/800/400" class="thumbnail">
-        <div class="live-badge">● LIVE</div>
+        <img src="https://picsum.photos/id/237/800/400" class="thumbnail" alt="IPL">
+        <div class="live-badge">LIVE</div>
       </div>
       <div class="card-body">
         <div class="team-row">
@@ -165,7 +166,7 @@
           </div>
           <div class="score">-</div>
         </div>
-        <div class="detail">RCB batting • 19.2 overs</div>
+        <div class="detail">RCB batting • 19.2 overs • M. Chinnaswamy Stadium</div>
         <button onclick="alert('🤖 AI Analyst: RCB death overs mein strong!')">🤖 AI Analyst</button>
       </div>
     </div>
@@ -173,5 +174,4 @@
   </div>
 
 </body>
-  </html>
-    
+        </html>
