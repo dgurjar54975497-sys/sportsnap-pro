@@ -1,108 +1,24 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <title>Sportsnap PRO</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-  <style>
-    body {
-      margin: 0;
-      font-family: Arial;
-      background: #0b1d3a;
-      color: white;
-    }
-
-    header {
-      text-align: center;
-      padding: 15px;
-      font-size: 22px;
-      font-weight: bold;
-      background: #08142a;
-    }
-
-    button {
-      padding: 10px 20px;
-      margin: 10px;
-      border: none;
-      border-radius: 10px;
-      background: orange;
-      cursor: pointer;
-    }
-
-    #matches {
-      padding: 10px;
-    }
-
-    .card {
-      background: #1e2f50;
-      padding: 12px;
-      border-radius: 10px;
-      margin-bottom: 10px;
-    }
-
-    .title {
-      font-weight: bold;
-      font-size: 16px;
-    }
-
-    .meta {
-      font-size: 13px;
-      color: #ccc;
-    }
-
-    .error {
-      text-align: center;
-      color: red;
-      margin-top: 20px;
-    }
-  </style>
-</head>
-
-<body>
-
-<header>Sportsnap ⚽ PRO</header>
-
-<center>
-  <button onclick="loadMatches()">🔄 Refresh</button>
-</center>
-
-<div id="matches">Loading...</div>
-
-<script>
 async function loadMatches() {
   const box = document.getElementById("matches");
-  box.innerHTML = "Loading... ⏳";
+  box.innerHTML = "Loading...";
 
   try {
     const res = await fetch("/api/live");
     const data = await res.json();
 
-    console.log("API DATA:", data);
-
-    // 🔥 Different possible structures handle कर रहे हैं
-    let events = data.events || data.data || data.results || [];
-
-    if (!events || events.length === 0) {
-      box.innerHTML = "<div class='error'>⚠️ No matches found (API empty)</div>";
+    if (!data || data.length === 0) {
+      box.innerHTML = "⚠️ No matches found";
       return;
     }
 
     let html = "";
 
-    events.slice(0, 10).forEach(m => {
+    data.forEach(m => {
       html += `
-        <div class="card">
-          <div class="title">
-            ${m.title || m.name || "Match"}
-          </div>
-
-          <div class="meta">
-            ${m.sport || m.category || ""}
-          </div>
-
-          <div class="meta">
-            ${m.date || m.startTime || ""}
-          </div>
+        <div style="background:#1e2f50;padding:10px;margin:10px;border-radius:10px">
+          <h3>${m.title}</h3>
+          <p>${m.league}</p>
+          <p>${m.date}</p>
         </div>
       `;
     });
@@ -110,14 +26,8 @@ async function loadMatches() {
     box.innerHTML = html;
 
   } catch (err) {
-    console.error(err);
-    box.innerHTML = "<div class='error'>❌ API Failed (Check backend)</div>";
+    box.innerHTML = "❌ Error loading data";
   }
 }
 
-// auto load
 loadMatches();
-</script>
-
-</body>
-</html>
