@@ -1,33 +1,124 @@
-async function loadMatches() {
-  const box = document.getElementById("matches");
-  box.innerHTML = "Loading...";
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Sportsnap PRO</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial;
+      background: #0b1e3c;
+      color: white;
+    }
+
+    header {
+      text-align: center;
+      padding: 15px;
+      font-size: 22px;
+      font-weight: bold;
+    }
+
+    .tabs {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .tab {
+      padding: 8px 15px;
+      border-radius: 20px;
+      background: #2c3e50;
+      cursor: pointer;
+    }
+
+    .active {
+      background: orange;
+      color: black;
+    }
+
+    .btn {
+      display: block;
+      margin: 10px auto;
+      padding: 10px 20px;
+      background: orange;
+      border: none;
+      border-radius: 10px;
+      font-weight: bold;
+    }
+
+    .card {
+      background: #1e2f4d;
+      margin: 10px;
+      padding: 12px;
+      border-radius: 10px;
+    }
+
+    iframe {
+      width: 100%;
+      height: 200px;
+      border-radius: 10px;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+
+<body>
+
+<header>Sportsnap ⚽ PRO</header>
+
+<div class="tabs">
+  <div class="tab active" onclick="load('football')">Football</div>
+  <div class="tab" onclick="load('cricket')">Cricket</div>
+  <div class="tab" onclick="load('basketball')">Basketball</div>
+  <div class="tab" onclick="load('tennis')">Tennis</div>
+</div>
+
+<button class="btn" onclick="load(current)">🔄 Refresh</button>
+
+<div id="matches"></div>
+
+<script>
+let current = "football";
+
+async function load(sport) {
+  current = sport;
+  document.getElementById("matches").innerHTML = "Loading...";
 
   try {
-    const res = await fetch("/api/live");
-    const data = await res.json();
-
-    if (!data || data.length === 0) {
-      box.innerHTML = "⚠️ No matches found";
-      return;
-    }
+    let res = await fetch("/api/highlightly?sport=" + sport);
+    let data = await res.json();
 
     let html = "";
 
-    data.forEach(m => {
-      html += `
-        <div style="background:#1e2f50;padding:10px;margin:10px;border-radius:10px">
-          <h3>${m.title}</h3>
-          <p>${m.league}</p>
-          <p>${m.date}</p>
-        </div>
-      `;
-    });
+    if (!data || data.length === 0) {
+      html = "<h3 style='text-align:center'>⚠️ No matches found</h3>";
+    } else {
+      data.slice(0, 10).forEach(m => {
+        html += `
+          <div class="card">
+            <b>${m.title}</b><br>
+            <small>${m.competition || ""}</small>
 
-    box.innerHTML = html;
+            ${m.video ? `<iframe src="${m.video}" allowfullscreen></iframe>` : ""}
 
-  } catch (err) {
-    box.innerHTML = "❌ Error loading data";
+          </div>
+        `;
+      });
+    }
+
+    document.getElementById("matches").innerHTML = html;
+
+  } catch (e) {
+    document.getElementById("matches").innerHTML = "❌ API Error";
+    console.log(e);
   }
 }
 
-loadMatches();
+// auto load
+load("football");
+</script>
+
+</body>
+</html>
