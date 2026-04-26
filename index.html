@@ -4,79 +4,85 @@
   <title>Sportsnap LIVE</title>
   <style>
     body {
-      background: #0b1b34;
-      color: white;
-      font-family: Arial;
-      text-align: center;
+      background:#0b1b34;
+      color:white;
+      font-family:Arial;
+      text-align:center;
     }
 
-    h1 {
-      color: #00ffcc;
-    }
+    h1 { color:#00ffcc; }
 
     button {
-      padding: 10px 20px;
-      background: orange;
-      border: none;
-      border-radius: 10px;
-      margin: 10px;
-      cursor: pointer;
+      padding:10px 20px;
+      background:orange;
+      border:none;
+      border-radius:10px;
+      margin:10px;
+      cursor:pointer;
     }
 
     .match {
-      background: #1e2a44;
-      margin: 10px;
-      padding: 10px;
-      border-radius: 10px;
+      background:#1e2a44;
+      margin:10px;
+      padding:10px;
+      border-radius:10px;
+    }
+
+    a {
+      color:#00ffcc;
+      text-decoration:none;
     }
   </style>
 </head>
 
 <body>
 
-  <h1>Sportsnap ⚽ LIVE</h1>
+<h1>Sportsnap ⚽ LIVE</h1>
 
-  <!-- Refresh Button -->
-  <button onclick="loadMatches()">🔄 Refresh</button>
+<button onclick="loadMatches()">🔄 Refresh</button>
 
-  <!-- Matches -->
-  <div id="matches">Loading...</div>
+<div id="matches">Loading...</div>
 
-  <script>
-    async function loadMatches() {
-      document.getElementById("matches").innerHTML = "Loading...";
+<script>
+async function loadMatches() {
+  document.getElementById("matches").innerHTML = "Loading...";
 
-      try {
-        const res = await fetch("https://www.thesportsdb.com/api/v1/json/3/eventsday.php?s=Soccer");
-        const data = await res.json();
+  try {
+    const res = await fetch("https://www.thesportsdb.com/api/v1/json/3/eventsday.php?s=Soccer");
+    const data = await res.json();
 
-        if (!data.events) {
-          document.getElementById("matches").innerHTML = "No matches today";
-          return;
-        }
-
-        let html = "";
-
-        data.events.slice(0, 10).forEach(m => {
-          html += `
-            <div class="match">
-              <h3>${m.strEvent}</h3>
-              <p>${m.strLeague}</p>
-              <p>${m.dateEvent}</p>
-            </div>
-          `;
-        });
-
-        document.getElementById("matches").innerHTML = html;
-
-      } catch (err) {
-        document.getElementById("matches").innerHTML = "⚠️ API Failed";
-      }
+    if (!data.events) {
+      document.getElementById("matches").innerHTML = "No matches found";
+      return;
     }
 
-    // Auto load on page open
-    loadMatches();
-  </script>
+    let html = "";
+
+    data.events.slice(0, 10).forEach(m => {
+      let search = encodeURIComponent(m.strEvent + " highlights");
+
+      html += `
+        <div class="match">
+          <h3>${m.strEvent}</h3>
+          <p>${m.strLeague}</p>
+          <p>${m.dateEvent}</p>
+
+          <a href="https://www.youtube.com/results?search_query=${search}" target="_blank">
+            ▶ Watch Highlights
+          </a>
+        </div>
+      `;
+    });
+
+    document.getElementById("matches").innerHTML = html;
+
+  } catch (err) {
+    document.getElementById("matches").innerHTML = "⚠️ API Failed";
+  }
+}
+
+loadMatches();
+</script>
 
 </body>
 </html>
