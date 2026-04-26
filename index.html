@@ -1,9 +1,9 @@
-<!DOCTYPE html>
+   <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Sportsnap PRO - IPL 2026</title>
+  <title>Sportsnap PRO</title>
   <style>
     body {
       margin: 0;
@@ -12,11 +12,11 @@
       color: #e2e8f0;
     }
 
-    /* Top Header - Clean & Professional */
+    /* Top Green Header - Cricbuzz Style */
     .top-header {
       background: #1e8e3e;
       color: white;
-      padding: 14px 16px;
+      padding: 12px 16px;
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -24,10 +24,7 @@
       top: 0;
       z-index: 100;
     }
-    .logo {
-      font-size: 1.95rem;
-      font-weight: 700;
-    }
+    .logo { font-size: 1.95rem; font-weight: 700; }
     .get-app {
       background: white;
       color: #1e8e3e;
@@ -36,14 +33,35 @@
       font-weight: bold;
     }
 
+    /* Main Tabs */
+    .main-tabs {
+      display: flex;
+      background: #111827;
+      padding: 12px 8px;
+      gap: 8px;
+      overflow-x: auto;
+    }
+    .main-tab {
+      padding: 10px 18px;
+      background: #1f2937;
+      border-radius: 50px;
+      white-space: nowrap;
+      cursor: pointer;
+      font-weight: 600;
+    }
+    .main-tab.active {
+      background: #22c55e;
+      color: black;
+    }
+
     .container { padding: 16px; }
 
     .match-card {
       background: #1a2338;
-      border-radius: 12px;
+      border-radius: 16px;
       margin-bottom: 20px;
       overflow: hidden;
-      box-shadow: 0 6px 20px rgba(0,0,0,0.4);
+      box-shadow: 0 8px 25px rgba(0,0,0,0.4);
     }
     .thumbnail {
       width: 100%;
@@ -59,10 +77,6 @@
       padding: 6px 14px;
       border-radius: 30px;
       font-weight: bold;
-      font-size: 0.85rem;
-    }
-    .card-body {
-      padding: 16px;
     }
     .team-row {
       display: flex;
@@ -88,7 +102,7 @@
       object-fit: cover;
     }
     .score {
-      font-size: 1.8rem;
+      font-size: 1.75rem;
       font-weight: 800;
       color: #22c55e;
     }
@@ -96,6 +110,26 @@
       color: #94a3b8;
       margin-top: 8px;
     }
+
+    /* Bottom Navigation */
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: #111827;
+      display: flex;
+      justify-content: space-around;
+      padding: 10px 0;
+      border-top: 1px solid #334155;
+    }
+    .nav-item {
+      text-align: center;
+      color: #94a3b8;
+      font-size: 0.82rem;
+      cursor: pointer;
+    }
+    .nav-item.active { color: #22c55e; }
   </style>
 </head>
 <body>
@@ -106,71 +140,93 @@
     <div class="get-app">GET APP</div>
   </div>
 
-  <div class="container">
-
-    <h2 style="margin: 20px 0 15px; color: #22c55e;">IPL 2026 Live Matches</h2>
-
-    <!-- Match 1: CSK vs GT -->
-    <div class="match-card">
-      <div style="position:relative;">
-        <img src="https://picsum.photos/id/1018/800/400" class="thumbnail">
-        <div class="live-badge">● LIVE</div>
-      </div>
-      <div class="card-body">
-        <div class="team-row">
-          <div class="team">
-            <span class="team-logo">
-              <img src="https://upload.wikimedia.org/wikipedia/en/thumb/2/2b/Chennai_Super_Kings_Logo.svg/800px-Chennai_Super_Kings_Logo.svg.png" alt="CSK">
-            </span>
-            <span>CSK</span>
-          </div>
-          <div class="score">167/8</div>
-        </div>
-        <div class="team-row">
-          <div class="team">
-            <span class="team-logo">
-              <img src="https://upload.wikimedia.org/wikipedia/en/thumb/0/0e/Gujarat_Titans_Logo.svg/800px-Gujarat_Titans_Logo.svg.png" alt="GT">
-            </span>
-            <span>GT</span>
-          </div>
-          <div class="score">142/4</div>
-        </div>
-        <div class="detail">GT needs 26 runs in 12 balls • Narendra Modi Stadium</div>
-        <button onclick="alert('🤖 AI Analyst: CSK strong position mein hai!')">🤖 AI Analyst</button>
-      </div>
-    </div>
-
-    <!-- Match 2: RCB vs CSK -->
-    <div class="match-card">
-      <div style="position:relative;">
-        <img src="https://picsum.photos/id/237/800/400" class="thumbnail">
-        <div class="live-badge">● LIVE</div>
-      </div>
-      <div class="card-body">
-        <div class="team-row">
-          <div class="team">
-            <span class="team-logo">
-              <img src="https://upload.wikimedia.org/wikipedia/en/thumb/4/4c/Royal_Challengers_Bengaluru_Logo.svg/800px-Royal_Challengers_Bengaluru_Logo.svg.png" alt="RCB">
-            </span>
-            <span>RCB</span>
-          </div>
-          <div class="score">189/5</div>
-        </div>
-        <div class="team-row">
-          <div class="team">
-            <span class="team-logo">
-              <img src="https://upload.wikimedia.org/wikipedia/en/thumb/2/2b/Chennai_Super_Kings_Logo.svg/800px-Chennai_Super_Kings_Logo.svg.png" alt="CSK">
-            </span>
-            <span>CSK</span>
-          </div>
-          <div class="score">-</div>
-        </div>
-        <div class="detail">RCB batting • 19.2 overs • Chinnaswamy Stadium</div>
-        <button onclick="alert('🤖 AI Analyst: RCB death overs mein strong!')">🤖 AI Analyst</button>
-      </div>
-    </div>
-
+  <!-- Main Tabs -->
+  <div class="main-tabs">
+    <div class="main-tab active" onclick="showSection('home')">Home</div>
+    <div class="main-tab" onclick="showSection('matches')">Matches</div>
+    <div class="main-tab" onclick="showSection('videos')">Videos</div>
+    <div class="main-tab" onclick="showSection('community')">Community</div>
+    <div class="main-tab" onclick="showSection('news')">News</div>
   </div>
 
+  <div class="container" id="mainContent"></div>
+
+  <!-- Bottom Navigation -->
+  <div class="bottom-nav">
+    <div class="nav-item active" onclick="showSection('home')">🏠 Home</div>
+    <div class="nav-item" onclick="showSection('matches')">🏏 Matches</div>
+    <div class="nav-item" onclick="showSection('videos')">🎥 Videos</div>
+    <div class="nav-item" onclick="showSection('community')">👥 Community</div>
+  </div>
+
+  <script>
+    function showSection(section) {
+      const content = document.getElementById('mainContent');
+
+      if (section === 'home') {
+        content.innerHTML = `<h2 style="margin:40px 0; text-align:center; color:#22c55e;">Welcome to Sportsnap PRO</h2>`;
+      } 
+      else if (section === 'matches') {
+        content.innerHTML = `
+          <h2 style="margin:20px 0 15px; color:#22c55e;">IPL 2026 Live Matches</h2>
+          
+          <div class="match-card">
+            <div style="position:relative;">
+              <img src="https://picsum.photos/id/1018/800/400" class="thumbnail">
+              <div class="live-badge">● LIVE</div>
+            </div>
+            <div class="card-body">
+              <div class="team-row">
+                <div class="team">
+                  <span class="team-logo"><img src="https://upload.wikimedia.org/wikipedia/en/thumb/2/2b/Chennai_Super_Kings_Logo.svg/800px-Chennai_Super_Kings_Logo.svg.png" alt="CSK"></span>
+                  <span>CSK</span>
+                </div>
+                <div class="score">167/8</div>
+              </div>
+              <div class="team-row">
+                <div class="team">
+                  <span class="team-logo"><img src="https://upload.wikimedia.org/wikipedia/en/thumb/0/0e/Gujarat_Titans_Logo.svg/800px-Gujarat_Titans_Logo.svg.png" alt="GT"></span>
+                  <span>GT</span>
+                </div>
+                <div class="score">142/4</div>
+              </div>
+              <div class="detail">GT needs 26 runs in 12 balls • Narendra Modi Stadium</div>
+              <button onclick="alert('🤖 AI Analyst: CSK strong position mein hai!')">🤖 AI Analyst</button>
+            </div>
+          </div>
+        `;
+      } 
+      else if (section === 'community') {
+        content.innerHTML = `
+          <h2 style="margin:20px 0 15px; text-align:center;">IPL Teams Community</h2>
+          <div style="display:grid; grid-template-columns: repeat(auto-fill, minmax(85px, 1fr)); gap:14px;">
+            ${[
+              {name:"CSK", logo:"https://upload.wikimedia.org/wikipedia/en/thumb/2/2b/Chennai_Super_Kings_Logo.svg/800px-Chennai_Super_Kings_Logo.svg.png"},
+              {name:"MI", logo:"https://upload.wikimedia.org/wikipedia/en/thumb/8/8d/Mumbai_Indians_Logo.svg/800px-Mumbai_Indians_Logo.svg.png"},
+              {name:"RCB", logo:"https://upload.wikimedia.org/wikipedia/en/thumb/4/4c/Royal_Challengers_Bengaluru_Logo.svg/800px-Royal_Challengers_Bengaluru_Logo.svg.png"},
+              {name:"KKR", logo:"https://upload.wikimedia.org/wikipedia/en/thumb/4/4c/Kolkata_Knight_Riders_Logo.svg/800px-Kolkata_Knight_Riders_Logo.svg.png"},
+              {name:"GT", logo:"https://upload.wikimedia.org/wikipedia/en/thumb/0/0e/Gujarat_Titans_Logo.svg/800px-Gujarat_Titans_Logo.svg.png"},
+              {name:"SRH", logo:"https://upload.wikimedia.org/wikipedia/en/thumb/8/81/Sunrisers_Hyderabad_Logo.svg/800px-Sunrisers_Hyderabad_Logo.svg.png"},
+              {name:"PBKS", logo:"https://upload.wikimedia.org/wikipedia/en/thumb/2/2e/Punjab_Kings_Logo.svg/800px-Punjab_Kings_Logo.svg.png"},
+              {name:"DC", logo:"https://upload.wikimedia.org/wikipedia/en/thumb/2/2d/Delhi_Capitals_Logo.svg/800px-Delhi_Capitals_Logo.svg.png"},
+              {name:"RR", logo:"https://upload.wikimedia.org/wikipedia/en/thumb/6/6f/Rajasthan_Royals_Logo.svg/800px-Rajasthan_Royals_Logo.svg.png"},
+              {name:"LSG", logo:"https://upload.wikimedia.org/wikipedia/en/thumb/2/2e/Lucknow_Super_Giants_Logo.svg/800px-Lucknow_Super_Giants_Logo.svg.png"}
+            ].map(team => `
+              <div onclick="alert('Joined ${team.name} Community!')" style="background:#1f2937; padding:12px; border-radius:12px; text-align:center; cursor:pointer;">
+                <img src="\( {team.logo}" style="width:50px; height:50px; border-radius:50%; margin-bottom:8px;" alt=" \){team.name}">
+                <div style="font-weight:700;">${team.name}</div>
+              </div>
+            `).join('')}
+          </div>
+        `;
+      } 
+      else {
+        content.innerHTML = `<p style="padding:100px 20px; text-align:center; color:#94a3b8;">${section.toUpperCase()} section coming soon...</p>`;
+      }
+    }
+
+    // Initial Load
+    window.onload = () => showSection('matches');
+  </script>
 </body>
-</html>
+  </html>   
