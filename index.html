@@ -74,7 +74,7 @@ async function loadMatches() {
   box.innerHTML = "Loading... ⏳";
 
   try {
-    const res = await fetch("/api/highlightly");
+    const res = await fetch("/api/live");
     const data = await res.json();
 
     console.log("API DATA:", data);
