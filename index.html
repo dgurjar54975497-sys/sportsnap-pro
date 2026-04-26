@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+          <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -10,22 +10,21 @@
       font-family: system-ui, sans-serif;
       background: #0a0f1c;
       color: #e2e8f0;
-      min-height: 100vh;
     }
     header {
-      background: #1e2937;
+      background: linear-gradient(#1e2937, #334155);
       padding: 1rem;
       text-align: center;
     }
     h1 { font-size: 2rem; margin: 0; }
-    .subtitle { color: #22c55e; }
+    .subtitle { color: #22c55e; font-size: 1rem; }
 
     .tabs {
       display: flex;
       background: #111827;
       padding: 12px;
-      overflow-x: auto;
       gap: 10px;
+      overflow-x: auto;
     }
     .tab {
       padding: 10px 20px;
@@ -50,7 +49,7 @@
     }
     .thumbnail {
       width: 100%;
-      height: 200px;
+      height: 210px;
       object-fit: cover;
     }
     .live-badge {
@@ -61,7 +60,7 @@
       color: white;
       padding: 4px 12px;
       border-radius: 20px;
-      font-size: 0.8rem;
+      font-weight: bold;
     }
     .card-body {
       padding: 16px;
@@ -69,21 +68,22 @@
     .match-title {
       font-size: 1.2rem;
       font-weight: bold;
+      margin-bottom: 8px;
     }
     .score {
       font-size: 1.6rem;
       color: #22c55e;
-      font-weight: bold;
+      font-weight: 800;
       margin: 10px 0;
     }
     button {
       background: #22c55e;
       color: black;
       border: none;
-      padding: 14px 30px;
+      padding: 12px 28px;
       border-radius: 50px;
       font-weight: bold;
-      margin: 20px auto;
+      margin: 15px auto;
       display: block;
     }
   </style>
@@ -92,77 +92,73 @@
 
   <header>
     <h1>Sportsnap PRO</h1>
-    <p class="subtitle">🏏 IPL 2026 LIVE</p>
+    <p class="subtitle">🏏 IPL 2026 LIVE Scores</p>
   </header>
 
   <div class="tabs">
-    <div class="tab active" onclick="switchSport('ipl')">IPL 2026</div>
-    <div class="tab" onclick="switchSport('football')">Football</div>
+    <div class="tab active" onclick="loadIPL()">IPL 2026</div>
+    <div class="tab" onclick="loadOther()">Other Sports</div>
   </div>
 
   <div class="container">
-    <button onclick="loadMatches()">🔄 Refresh Matches</button>
+    <button onclick="loadIPL()">🔄 Refresh IPL Matches</button>
     <div id="matchesContainer"></div>
   </div>
 
   <script>
-    let currentSport = 'ipl';
-
-    function switchSport(sport) {
-      currentSport = sport;
-      document.querySelectorAll('.tab').forEach(tab => {
-        tab.classList.toggle('active', tab.textContent.includes(sport.toUpperCase()));
-      });
-      loadMatches();
-    }
-
-    function loadMatches() {
+    function loadIPL() {
       const container = document.getElementById('matchesContainer');
-      container.innerHTML = '<p style="text-align:center; padding:50px; color:#94a3b8;">Loading IPL matches...</p>';
+      container.innerHTML = '';
 
-      setTimeout(() => {
-        container.innerHTML = '';
+      const iplMatches = [
+        {
+          title: "Royal Challengers Bengaluru vs Chennai Super Kings",
+          competition: "IPL 2026 • Match 34",
+          score: "RCB 189/5 (19.2 ov)",
+          detail: "Needs 9 runs in 4 balls",
+          status: "LIVE"
+        },
+        {
+          title: "Mumbai Indians vs Kolkata Knight Riders",
+          competition: "IPL 2026 • Match 35",
+          score: "MI 167/8",
+          detail: "KKR chasing 168",
+          status: "LIVE"
+        }
+      ];
 
-        const matches = [
-          {
-            title: "Royal Challengers Bengaluru vs Chennai Super Kings",
-            competition: "IPL 2026 • Match 34",
-            score: "RCB 189/5 (19.2 ov)",
-            time: "Needs 9 runs in 4 balls",
-            status: "LIVE"
-          },
-          {
-            title: "Mumbai Indians vs Kolkata Knight Riders",
-            competition: "IPL 2026 • Match 35",
-            score: "MI 167/8",
-            time: "KKR chasing",
-            status: "LIVE"
-          }
-        ];
-
-        matches.forEach(match => {
-          const cardHTML = `
-            <div class="match-card">
-              <div style="position:relative;">
-                <img src="https://picsum.photos/id/1018/800/400" class="thumbnail" alt="IPL">
-                <div class="live-badge">${match.status}</div>
-              </div>
-              <div class="card-body">
-                <div class="match-title">${match.title}</div>
-                <div style="color:#94a3b8;">${match.competition}</div>
-                <div class="score">${match.score}</div>
-                <div style="color:#94a3b8;">${match.time}</div>
-                <button onclick="alert('🤖 AI Analyst: RCB looking strong in death overs!')">AI Analyst</button>
-              </div>
-            </div>
-          `;
-          container.innerHTML += cardHTML;
-        });
-      }, 800);
+      iplMatches.forEach(match => {
+        const card = document.createElement('div');
+        card.className = 'match-card';
+        card.innerHTML = `
+          <div style="position:relative;">
+            <img src="https://picsum.photos/id/1018/800/400" class="thumbnail" alt="IPL">
+            <div class="live-badge">${match.status}</div>
+          </div>
+          <div class="card-body">
+            <div class="match-title">${match.title}</div>
+            <div style="color:#94a3b8;">${match.competition}</div>
+            <div class="score">${match.score}</div>
+            <div style="color:#94a3b8;">${match.detail}</div>
+            <button onclick="alert('🤖 AI Analyst:\\n\\n• RCB batting strongly\\n• CSK bowlers under pressure\\n• Virat Kohli in form')">🤖 AI Analyst</button>
+          </div>
+        `;
+        container.appendChild(card);
+      });
     }
 
-    // Load on start
-    window.onload = loadMatches;
+    function loadOther() {
+      const container = document.getElementById('matchesContainer');
+      container.innerHTML = `
+        <div style="text-align:center; padding:60px 20px; color:#94a3b8;">
+          <p>Other sports matches coming soon...</p>
+          <p style="margin-top:20px;">Football, Basketball, Tennis</p>
+        </div>
+      `;
+    }
+
+    // Initial load
+    window.onload = loadIPL;
   </script>
 </body>
-</html>     
+</html>
