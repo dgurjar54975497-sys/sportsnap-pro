@@ -1,62 +1,43 @@
-   <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Sportsnap PRO - IPL 2026</title>
   <style>
-    :root {
-      --bg: #0a0f1c;
-      --header: #1e3a8a;
-      --accent: #22c55e;
-      --card: #1a2338;
-    }
-    * { margin:0; padding:0; box-sizing:border-box; }
     body {
+      margin: 0;
       font-family: system-ui, sans-serif;
-      background: var(--bg);
+      background: #0a0f1c;
       color: #e2e8f0;
-      min-height: 100vh;
     }
-
-    /* Top Header like Cricbuzz */
-    .top-header {
-      background: var(--header);
-      padding: 12px 16px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
+    header {
+      background: linear-gradient(#1e2937, #334155);
+      padding: 1rem;
+      text-align: center;
       position: sticky;
       top: 0;
       z-index: 100;
     }
-    .logo { font-size: 1.8rem; font-weight: 700; }
-    .get-app {
-      background: white;
-      color: #1e3a8a;
-      padding: 8px 16px;
-      border-radius: 20px;
-      font-weight: bold;
-      font-size: 0.9rem;
-    }
+    h1 { font-size: 2rem; margin: 0; }
+    .subtitle { color: #22c55e; }
 
-    /* Main Tabs */
-    .main-tabs {
+    .tabs {
       display: flex;
-      overflow-x: auto;
       background: #111827;
-      padding: 10px 8px;
+      padding: 12px 8px;
       gap: 8px;
+      overflow-x: auto;
     }
-    .main-tab {
-      padding: 10px 18px;
+    .tab {
+      padding: 10px 20px;
       background: #1f2937;
       border-radius: 50px;
       white-space: nowrap;
       cursor: pointer;
       font-weight: 600;
     }
-    .main-tab.active {
+    .tab.active {
       background: #22c55e;
       color: black;
     }
@@ -64,159 +45,184 @@
     .container { padding: 16px; }
 
     .match-card {
-      background: var(--card);
+      background: #1a2338;
       border-radius: 16px;
       margin-bottom: 20px;
       overflow: hidden;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
     }
     .thumbnail {
       width: 100%;
-      height: 200px;
+      height: 210px;
       object-fit: cover;
     }
     .live-badge {
       position: absolute;
-      top: 12px; right: 12px;
+      top: 12px;
+      right: 12px;
       background: #ef4444;
       color: white;
-      padding: 4px 12px;
+      padding: 6px 14px;
       border-radius: 20px;
       font-weight: bold;
     }
-
-    /* Community Section */
-    .community-section {
-      margin: 20px 0;
+    .card-body {
+      padding: 16px;
     }
-    .community-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
-      gap: 12px;
+    .match-title {
+      font-size: 1.2rem;
+      font-weight: 700;
+      margin-bottom: 8px;
     }
-    .team-card {
-      background: #1f2937;
-      border-radius: 12px;
-      padding: 12px 8px;
-      text-align: center;
-      cursor: pointer;
+    .team-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin: 12px 0;
+    }
+    .team {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 600;
     }
     .team-logo {
-      width: 50px;
-      height: 50px;
+      width: 36px;
+      height: 36px;
       border-radius: 50%;
-      margin-bottom: 8px;
-      background: #334155;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 1.5rem;
+      font-size: 1.4rem;
     }
-
-    /* Bottom Navigation */
-    .bottom-nav {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      background: #111827;
-      display: flex;
-      justify-content: space-around;
-      padding: 10px 0;
-      border-top: 1px solid #334155;
-    }
-    .nav-item {
-      text-align: center;
-      color: #94a3b8;
-      font-size: 0.85rem;
-      cursor: pointer;
-    }
-    .nav-item.active {
+    .score {
+      font-size: 1.8rem;
+      font-weight: 800;
       color: #22c55e;
+    }
+    button {
+      background: #22c55e;
+      color: black;
+      border: none;
+      padding: 12px 28px;
+      border-radius: 50px;
+      font-weight: bold;
+      margin: 15px auto;
+      display: block;
     }
   </style>
 </head>
 <body>
 
-  <!-- Top Header -->
-  <div class="top-header">
-    <div class="logo">Sportsnap PRO</div>
-    <div class="get-app">GET APP</div>
+  <header>
+    <h1>Sportsnap PRO</h1>
+    <p class="subtitle">🏏 IPL 2026 LIVE</p>
+  </header>
+
+  <div class="tabs">
+    <div class="tab active" onclick="loadIPL()">IPL 2026</div>
+    <div class="tab" onclick="loadCommunity()">Community</div>
   </div>
 
-  <!-- Main Tabs -->
-  <div class="main-tabs">
-    <div class="main-tab active" onclick="showSection('home')">Home</div>
-    <div class="main-tab" onclick="showSection('matches')">Matches</div>
-    <div class="main-tab" onclick="showSection('series')">Series</div>
-    <div class="main-tab" onclick="showSection('videos')">Videos</div>
-    <div class="main-tab" onclick="showSection('news')">News</div>
-  </div>
-
-  <div class="container" id="mainContent">
-    <!-- Content will load here -->
-  </div>
-
-  <!-- Bottom Navigation -->
-  <div class="bottom-nav">
-    <div class="nav-item active" onclick="showSection('home')">🏠 Home</div>
-    <div class="nav-item" onclick="showSection('matches')">🏏 Matches</div>
-    <div class="nav-item" onclick="showSection('community')">👥 Community</div>
-    <div class="nav-item" onclick="showSection('videos')">🎥 Videos</div>
-  </div>
+  <div class="container" id="mainContainer"></div>
 
   <script>
-    function showSection(section) {
-      const content = document.getElementById('mainContent');
-      
-      if (section === 'home') {
-        content.innerHTML = `
-          <h2 style="margin:20px 0 10px;">IPL 2026</h2>
-          <div style="background:#1a2338; padding:16px; border-radius:16px;">
-            <p><strong>37th Match • CSK vs GT</strong></p>
-            <p>Gujarat Titans opt to bowl</p>
+    function loadIPL() {
+      const container = document.getElementById('mainContainer');
+      container.innerHTML = `<button onclick="loadIPL()">🔄 Refresh Matches</button>`;
+
+      const matches = [
+        {
+          team1: "CSK",
+          logo1: "🦁",
+          team2: "GT",
+          logo2: "⚡",
+          score1: "167/8",
+          score2: "142/4",
+          detail: "GT needs 26 runs in 12 balls",
+          status: "LIVE",
+          venue: "Narendra Modi Stadium"
+        },
+        {
+          team1: "RCB",
+          logo1: "🔴",
+          team2: "CSK",
+          logo2: "🦁",
+          score1: "189/5",
+          score2: "",
+          detail: "RCB batting • 19.2 overs",
+          status: "LIVE",
+          venue: "M. Chinnaswamy Stadium"
+        }
+      ];
+
+      matches.forEach(match => {
+        const card = document.createElement('div');
+        card.className = 'match-card';
+        card.innerHTML = `
+          <div style="position:relative;">
+            <img src="https://picsum.photos/id/1018/800/400" class="thumbnail" alt="IPL">
+            <div class="live-badge">${match.status}</div>
           </div>
-        `;
-      } 
-      else if (section === 'matches') {
-        content.innerHTML = `
-          <h2 style="margin:20px 0 10px;">Live & Upcoming Matches</h2>
-          <div class="match-card">
-            <div style="position:relative;">
-              <img src="https://picsum.photos/id/1018/800/400" class="thumbnail">
-              <div class="live-badge">LIVE</div>
-            </div>
-            <div class="card-body">
-              <div style="font-weight:700;">RCB vs CSK</div>
-              <div style="color:#22c55e; font-size:1.4rem; margin:8px 0;">189/5 (19.2 ov)</div>
-              <button onclick="alert('AI Analyst: RCB strong in death overs!')">🤖 AI Analyst</button>
-            </div>
-          </div>
-        `;
-      } 
-      else if (section === 'community') {
-        content.innerHTML = `
-          <h2 style="margin:20px 0 15px;">IPL Teams Community</h2>
-          <div class="community-grid">
-            ${['CSK','MI','RCB','KKR','GT','SRH','PBKS','DC','RR','LSG'].map(team => `
-              <div class="team-card" onclick="joinCommunity('${team}')">
-                <div class="team-logo">${team}</div>
-                <div>${team}</div>
+          <div class="card-body">
+            <div class="team-row">
+              <div class="team">
+                <span class="team-logo">${match.logo1}</span>
+                <span>${match.team1}</span>
               </div>
-            `).join('')}
+              <div class="score">${match.score1}</div>
+            </div>
+            <div class="team-row">
+              <div class="team">
+                <span class="team-logo">${match.logo2}</span>
+                <span>${match.team2}</span>
+              </div>
+              <div class="score">${match.score2 || '-'}</div>
+            </div>
+            <div style="color:#94a3b8; margin-top:8px;">${match.detail}</div>
+            <div style="color:#94a3b8; font-size:0.9rem;">${match.venue}</div>
+
+            <button onclick="alert('🤖 AI Analyst:\\n\\n• ${match.team1} batting strongly\\n• ${match.team2} under pressure in death overs\\n• Predicted winner: ${match.team1}')">
+              🤖 AI Analyst
+            </button>
           </div>
         `;
-      } 
-      else if (section === 'videos') {
-        content.innerHTML = `<p style="padding:60px 20px; text-align:center; color:#94a3b8;">Featured Videos & Highlights coming soon...</p>`;
-      }
+        container.appendChild(card);
+      });
     }
 
-    function joinCommunity(team) {
-      alert(`✅ You joined ${team} Community!\n\nDiscuss matches, polls, fan predictions with other ${team} fans.`);
+    function loadCommunity() {
+      const container = document.getElementById('mainContainer');
+      container.innerHTML = `
+        <h2 style="margin:20px 0 15px; text-align:center;">IPL Teams Community</h2>
+        <div style="display:grid; grid-template-columns: repeat(auto-fill, minmax(90px,1fr)); gap:12px;">
+          ${[
+            {name:"CSK", emoji:"🦁"}, 
+            {name:"MI", emoji:"🏴‍☠️"}, 
+            {name:"RCB", emoji:"🔴"}, 
+            {name:"KKR", emoji:"🟣"}, 
+            {name:"GT", emoji:"⚡"}, 
+            {name:"SRH", emoji:"☀️"}, 
+            {name:"PBKS", emoji:"🏹"}, 
+            {name:"DC", emoji:"🟥"}, 
+            {name:"RR", emoji:"🦁"}, 
+            {name:"LSG", emoji:"🦁"}
+          ].map(team => `
+            <div onclick="joinTeam('${team.name}')" style="background:#1f2937; padding:12px; border-radius:12px; text-align:center; cursor:pointer;">
+              <div style="font-size:2.2rem; margin-bottom:8px;">${team.emoji}</div>
+              <div style="font-weight:600;">${team.name}</div>
+            </div>
+          `).join('')}
+        </div>
+      `;
+    }
+
+    function joinTeam(team) {
+      alert(`✅ You joined ${team} Community!\n\nDiscuss matches, share predictions & chat with fans.`);
     }
 
     // Initial Load
-    window.onload = () => showSection('home');
+    window.onload = loadIPL;
   </script>
 </body>
 </html>
