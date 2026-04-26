@@ -1,4 +1,4 @@
-    <!DOCTYPE html>
+        <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -11,6 +11,7 @@
       --accent: #22c55e;
       --live: #ef4444;
       --text: #e2e8f0;
+      --secondary: #94a3b8;
     }
     * { margin:0; padding:0; box-sizing:border-box; }
     body {
@@ -27,7 +28,7 @@
       top: 0;
       z-index: 100;
     }
-    h1 { font-size: 1.8rem; font-weight: 700; }
+    h1 { font-size: 1.85rem; font-weight: 700; }
     .subtitle { color: var(--accent); font-size: 0.95rem; }
 
     .tabs {
@@ -41,16 +42,18 @@
       z-index: 90;
     }
     .tab {
-      padding: 10px 18px;
+      padding: 10px 20px;
       background: #1f2937;
       border-radius: 50px;
       white-space: nowrap;
       font-weight: 600;
       cursor: pointer;
+      transition: 0.3s;
     }
     .tab.active {
       background: var(--accent);
       color: #000;
+      font-weight: 700;
     }
 
     .container { padding: 16px; }
@@ -60,7 +63,15 @@
       border-radius: 16px;
       overflow: hidden;
       margin-bottom: 20px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    }
+    .thumbnail-container {
+      position: relative;
+    }
+    .thumbnail {
+      width: 100%;
+      height: 220px;
+      object-fit: cover;
     }
     .live-badge {
       position: absolute;
@@ -69,15 +80,9 @@
       background: var(--live);
       color: white;
       font-size: 0.75rem;
-      padding: 4px 10px;
+      padding: 4px 12px;
       border-radius: 20px;
       font-weight: bold;
-    }
-    .thumbnail {
-      width: 100%;
-      height: 220px;
-      object-fit: cover;
-      position: relative;
     }
     .card-body {
       padding: 16px;
@@ -87,46 +92,49 @@
       font-weight: 700;
       margin-bottom: 6px;
     }
+    .competition {
+      color: var(--secondary);
+      font-size: 0.95rem;
+      margin-bottom: 10px;
+    }
     .score {
-      font-size: 1.4rem;
+      font-size: 1.5rem;
       font-weight: 800;
       color: var(--accent);
       margin: 8px 0;
     }
     .time {
-      color: #94a3b8;
+      color: var(--secondary);
       font-size: 0.95rem;
+    }
+    .highlight-section {
+      margin-top: 12px;
+      background: #111827;
+      padding: 16px;
+      border-radius: 12px;
+      text-align: center;
+      color: #64748b;
     }
     .analyst-btn {
       background: #3b82f6;
       color: white;
       border: none;
-      padding: 8px 16px;
+      padding: 10px 20px;
       border-radius: 8px;
       margin-top: 12px;
       cursor: pointer;
-      font-size: 0.95rem;
-    }
-    .video-placeholder {
-      height: 220px;
-      background: #111827;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: #64748b;
-      font-size: 1rem;
-      text-align: center;
-      padding: 20px;
+      width: 100%;
+      font-weight: 600;
     }
     button#refreshBtn {
       background: var(--accent);
       color: #000;
       border: none;
-      padding: 14px 28px;
+      padding: 14px 32px;
       border-radius: 50px;
       font-weight: 700;
-      margin: 10px auto 20px;
       display: block;
+      margin: 20px auto;
     }
   </style>
 </head>
@@ -150,9 +158,9 @@
   </div>
 
   <script>
-    const tabs = document.querySelectorAll('.tab');
     let currentSport = 'football';
 
+    const tabs = document.querySelectorAll('.tab');
     tabs.forEach(tab => {
       tab.addEventListener('click', () => {
         tabs.forEach(t => t.classList.remove('active'));
@@ -165,23 +173,23 @@
     document.getElementById('refreshBtn').addEventListener('click', loadMatches);
 
     function getDemoMatches(sport) {
-      const base = {
+      const data = {
         football: [
-          { title: "Real Madrid vs Barcelona", competition: "La Liga", score: "2 - 1", time: "67'", status: "Live", thumbnail: "https://picsum.photos/id/1015/600/300" },
-          { title: "Manchester City vs Arsenal", competition: "Premier League", score: "3 - 0", time: "Full Time", status: "FT", thumbnail: "https://picsum.photos/id/237/600/300" }
+          { title: "Real Madrid vs FC Barcelona", competition: "La Liga 2026", score: "2 - 1", time: "67'", status: "Live", thumbnail: "https://picsum.photos/id/1015/800/400" },
+          { title: "Manchester City vs Arsenal", competition: "Premier League", score: "3 - 2", time: "FT", status: "FT", thumbnail: "https://picsum.photos/id/237/800/400" }
         ],
         cricket: [
-          { title: "India vs Australia", competition: "Border-Gavaskar Trophy", score: "289/6", time: "Day 2", status: "Live", thumbnail: "https://picsum.photos/id/1018/600/300" },
-          { title: "RCB vs CSK", competition: "IPL 2026", score: "167/4", time: "18.3 ov", status: "Live", thumbnail: "https://picsum.photos/id/102/600/300" }
+          { title: "India vs Australia", competition: "Border-Gavaskar Trophy", score: "312/7", time: "Day 3", status: "Live", thumbnail: "https://picsum.photos/id/1018/800/400" },
+          { title: "RCB vs CSK", competition: "IPL 2026", score: "189/5", time: "19.2 ov", status: "Live", thumbnail: "https://picsum.photos/id/102/800/400" }
         ],
         basketball: [
-          { title: "Lakers vs Warriors", competition: "NBA", score: "98 - 87", time: "Q3", status: "Live", thumbnail: "https://picsum.photos/id/201/600/300" }
+          { title: "Los Angeles Lakers vs Golden State Warriors", competition: "NBA 2026", score: "112 - 98", time: "Q4", status: "Live", thumbnail: "https://picsum.photos/id/201/800/400" }
         ],
         tennis: [
-          { title: "Djokovic vs Alcaraz", competition: "Wimbledon", score: "2 - 1", time: "Set 3", status: "Live", thumbnail: "https://picsum.photos/id/133/600/300" }
+          { title: "Novak Djokovic vs Carlos Alcaraz", competition: "French Open 2026", score: "2 Sets - 1", time: "Set 3", status: "Live", thumbnail: "https://picsum.photos/id/133/800/400" }
         ]
       };
-      return base[sport] || base.football;
+      return data[sport] || data.football;
     }
 
     function loadMatches() {
@@ -190,30 +198,28 @@
 
       const matches = getDemoMatches(currentSport);
 
-      matches.forEach(match => {
+      matches.forEach((match, index) => {
         const card = document.createElement('div');
         card.className = 'match-card';
         card.innerHTML = `
-          <div style="position:relative;">
-            <img src="${match.thumbnail}" class="thumbnail" alt="match">
-            ${match.status === 'Live' ? `<div class="live-badge">LIVE</div>` : ''}
+          <div class="thumbnail-container">
+            <img src="\( {match.thumbnail}" class="thumbnail" alt=" \){match.title}">
+            ${match.status === 'Live' ? `<div class="live-badge">● LIVE</div>` : ''}
           </div>
           <div class="card-body">
             <div class="match-title">${match.title}</div>
-            <div style="color:#94a3b8; font-size:0.95rem;">${match.competition}</div>
+            <div class="competition">${match.competition}</div>
             <div class="score">${match.score}</div>
             <div class="time">${match.time} • ${match.status}</div>
-            
-            <div class="video-placeholder">
-              <div>
-                <p>🎥 Highlight Video</p>
-                <p style="font-size:0.9rem; margin-top:8px;">This highlight is currently unavailable</p>
-                <p style="font-size:0.85rem; color:#64748b;">(Real videos will appear after API integration)</p>
-              </div>
+
+            <div class="highlight-section">
+              <p>🎥 Match Highlights</p>
+              <p style="font-size:0.9rem; margin-top:8px;">Video highlights will appear here once real API is connected.</p>
+              <p style="font-size:0.85rem; color:#64748b;">Currently showing demo mode.</p>
             </div>
 
-            <button class="analyst-btn" onclick="showAI summary('${match.title}')">
-              🤖 AI Analyst
+            <button class="analyst-btn" onclick="showAISummary('${match.title}')">
+              🤖 AI Match Analyst
             </button>
           </div>
         `;
@@ -221,15 +227,14 @@
       });
     }
 
-    function showAI summary(title) {
-      alert(`🤖 AI Analyst for: ${title}\n\nKey Moments:\n• Dramatic comeback in second half\n• Star player scored a brace\n• Tactical masterclass by coach\n\nFull AI Summary coming soon with real integration!`);
+    function showAISummary(title) {
+      const summary = `AI Analysis for ${title}:\n\n• High intensity match\n• Key player performed exceptionally\n• Tactical battle in midfield\n• Expected winner based on current form\n\nFull detailed AI summary coming soon with real integration!`;
+      alert(summary);
     }
 
-    // Initial load
+    // Initial load + Auto refresh
     window.onload = loadMatches;
-
-    // Auto refresh
-    setInterval(loadMatches, 45000);
+    setInterval(loadMatches, 40000);
   </script>
 </body>
 </html>
