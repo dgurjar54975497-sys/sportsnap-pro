@@ -2,122 +2,72 @@
 <html>
 <head>
   <title>Sportsnap PRO</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-
   <style>
     body {
-      margin: 0;
-      font-family: Arial;
-      background: #0b1e3c;
-      color: white;
+      background:#0b1e3c;
+      color:white;
+      font-family:sans-serif;
+      text-align:center;
     }
-
-    header {
-      text-align: center;
-      padding: 15px;
-      font-size: 22px;
-      font-weight: bold;
+    h1 { margin-top:20px; }
+    button {
+      background:orange;
+      border:none;
+      padding:10px 20px;
+      border-radius:10px;
+      cursor:pointer;
+      margin:10px;
     }
-
-    .tabs {
-      display: flex;
-      justify-content: center;
-      gap: 10px;
-      margin-bottom: 10px;
-    }
-
-    .tab {
-      padding: 8px 15px;
-      border-radius: 20px;
-      background: #2c3e50;
-      cursor: pointer;
-    }
-
-    .active {
-      background: orange;
-      color: black;
-    }
-
-    .btn {
-      display: block;
-      margin: 10px auto;
-      padding: 10px 20px;
-      background: orange;
-      border: none;
-      border-radius: 10px;
-      font-weight: bold;
-    }
-
     .card {
-      background: #1e2f4d;
-      margin: 10px;
-      padding: 12px;
-      border-radius: 10px;
+      background:#1c2f4a;
+      margin:15px;
+      padding:15px;
+      border-radius:12px;
     }
-
-    iframe {
-      width: 100%;
-      height: 200px;
-      border-radius: 10px;
-      margin-top: 10px;
-    }
+    img { width:100%; border-radius:10px; }
   </style>
 </head>
 
 <body>
 
-<header>Sportsnap ⚽ PRO</header>
+<h1>Sportsnap ⚽ PRO</h1>
+<button onclick="load()">🔄 Refresh</button>
 
-<div class="tabs">
-  <div class="tab active" onclick="load('football')">Football</div>
-  <div class="tab" onclick="load('cricket')">Cricket</div>
-  <div class="tab" onclick="load('basketball')">Basketball</div>
-  <div class="tab" onclick="load('tennis')">Tennis</div>
-</div>
-
-<button class="btn" onclick="load(current)">🔄 Refresh</button>
-
-<div id="matches"></div>
+<div id="matches">Loading...</div>
 
 <script>
-let current = "football";
-
-async function load(sport) {
-  current = sport;
-  document.getElementById("matches").innerHTML = "Loading...";
+async function load(){
+  document.getElementById("matches").innerHTML="Loading...";
 
   try {
-    let res = await fetch("/api/highlightly?sport=" + sport);
+    let res = await fetch("/api/matches");
     let data = await res.json();
 
-    let html = "";
-
-    if (!data || data.length === 0) {
-      html = "<h3 style='text-align:center'>⚠️ No matches found</h3>";
-    } else {
-      data.slice(0, 10).forEach(m => {
-        html += `
-          <div class="card">
-            <b>${m.title}</b><br>
-            <small>${m.competition || ""}</small>
-
-            ${m.video ? `<iframe src="${m.video}" allowfullscreen></iframe>` : ""}
-
-          </div>
-        `;
-      });
+    if(!data || data.length===0){
+      document.getElementById("matches").innerHTML="❌ No matches found";
+      return;
     }
 
-    document.getElementById("matches").innerHTML = html;
+    let html="";
+    data.slice(0,10).forEach(m=>{
+      html+=`
+        <div class="card">
+          <h3>${m.title}</h3>
+          <p>${m.competition}</p>
+          <img src="${m.thumbnail}">
+          <div>${m.video}</div>
+        </div>
+      `;
+    });
 
-  } catch (e) {
-    document.getElementById("matches").innerHTML = "❌ API Error";
-    console.log(e);
+    document.getElementById("matches").innerHTML=html;
+
+  } catch(e){
+    document.getElementById("matches").innerHTML="❌ Error loading data";
   }
 }
 
-// auto load
-load("football");
+load();
 </script>
 
 </body>
