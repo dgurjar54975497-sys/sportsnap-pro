@@ -1,222 +1,460 @@
-     <!DOCTYPE html>
-<html>
+  <!DOCTYPE html>
+<html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>Sportsnap PRO</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sportsnap PRO | Live Scores & Highlights</title>
+    <style>
+        :root {
+            --bg-dark: #0f172a;
+            --card-bg: #1e293b;
+            --accent: #38bdf8;
+            --text-main: #f8fafc;
+            --text-dim: #94a3b8;
+            --live-red: #ef4444;
+            --nav-bg: #111827;
+        }
 
-<style>
-body {
-  margin: 0;
-  font-family: Arial;
-  background: #0f172a;
-  color: white;
-}
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        }
 
-header {
-  background: #16a34a;
-  padding: 15px;
-  text-align: center;
-  font-size: 22px;
-  font-weight: bold;
-}
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            line-height: 1.6;
+            padding-bottom: 70px;
+        }
 
-.tabs {
-  display: flex;
-  justify-content: center;
-  gap: 10px;
-  padding: 10px;
-}
+        /* Header & Navigation */
+        header {
+            background-color: var(--nav-bg);
+            padding: 1rem;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 1px solid #334155;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
 
-.tabs button {
-  padding: 8px 15px;
-  border: none;
-  border-radius: 20px;
-  background: #1e293b;
-  color: white;
-}
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--accent);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
 
-.tabs button.active {
-  background: #f59e0b;
-}
+        .fantasy-btn {
+            background: linear-gradient(45deg, #f59e0b, #ef4444);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 0.8rem;
+            animation: pulse 2s infinite;
+        }
 
-.match-card {
-  background: #1e293b;
-  border-radius: 16px;
-  padding: 15px;
-  margin: 12px;
-}
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
 
-.live {
-  color: red;
-  font-weight: bold;
-}
+        /* Top Sports Selector */
+        .tabs-container {
+            background: var(--nav-bg);
+            display: flex;
+            overflow-x: auto;
+            white-space: nowrap;
+            padding: 10px;
+            gap: 10px;
+            border-bottom: 1px solid #334155;
+        }
 
-.teams {
-  display: flex;
-  justify-content: space-between;
-  margin: 8px 0;
-}
+        .tab {
+            padding: 8px 20px;
+            border-radius: 20px;
+            background: var(--card-bg);
+            color: var(--text-dim);
+            cursor: pointer;
+            font-weight: 600;
+            transition: 0.3s;
+            border: none;
+        }
 
-.team {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
+        .tab.active {
+            background: var(--accent);
+            color: var(--bg-dark);
+        }
 
-.team img {
-  width: 25px;
-}
+        /* Main Content */
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 15px;
+        }
 
-.score {
-  font-weight: bold;
-}
+        .section-title {
+            font-size: 1.2rem;
+            margin: 15px 0;
+            color: var(--text-dim);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
 
-.status {
-  font-size: 12px;
-  color: #94a3b8;
-}
-</style>
+        /* Scorecard UI */
+        .match-card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 15px;
+            transition: transform 0.2s;
+            border: 1px solid #334155;
+        }
+
+        .match-card:hover {
+            transform: translateY(-2px);
+        }
+
+        .match-header {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.75rem;
+            color: var(--text-dim);
+            margin-bottom: 12px;
+            border-bottom: 1px solid #334155;
+            padding-bottom: 8px;
+        }
+
+        .status-live {
+            color: var(--live-red);
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .status-live::before {
+            content: "";
+            width: 8px;
+            height: 8px;
+            background: var(--live-red);
+            border-radius: 50%;
+            display: inline-block;
+            animation: blink 1s infinite;
+        }
+
+        @keyframes blink {
+            0% { opacity: 1; }
+            50% { opacity: 0.3; }
+            100% { opacity: 1; }
+        }
+
+        .match-body {
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .team {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+
+        .team img {
+            width: 48px;
+            height: 48px;
+            object-fit: contain;
+            margin-bottom: 8px;
+            background: #fff;
+            border-radius: 50%;
+            padding: 4px;
+        }
+
+        .team-name {
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .score-area {
+            text-align: center;
+        }
+
+        .score {
+            font-size: 1.5rem;
+            font-weight: 800;
+            letter-spacing: 2px;
+        }
+
+        .match-footer {
+            margin-top: 15px;
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn-highlights {
+            flex: 1;
+            background: #334155;
+            color: white;
+            text-align: center;
+            padding: 8px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .btn-highlights:hover {
+            background: #475569;
+        }
+
+        /* IPL Community Section */
+        .ipl-teams-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .ipl-team-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-size: 0.7rem;
+            color: var(--text-dim);
+        }
+
+        .ipl-team-item img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-bottom: 5px;
+            border: 2px solid #334155;
+        }
+
+        /* Bottom Menu (Cricbuzz Style) */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: var(--nav-bg);
+            display: flex;
+            justify-content: space-around;
+            padding: 10px 0;
+            border-top: 1px solid #334155;
+            z-index: 1000;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-size: 0.7rem;
+            color: var(--text-dim);
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .nav-item.active {
+            color: var(--accent);
+        }
+
+        .nav-icon {
+            font-size: 1.2rem;
+            margin-bottom: 2px;
+        }
+
+        /* Loading & Messages */
+        .loader {
+            text-align: center;
+            padding: 40px;
+            color: var(--text-dim);
+        }
+
+        .hidden { display: none; }
+    </style>
 </head>
-
 <body>
 
-<header>Sportsnap PRO ⚽</header>
+    <header>
+        <div class="logo">SPORTSNAP PRO</div>
+        <a href="https://www.dream11.com/" target="_blank" class="fantasy-btn">💰 Play Fantasy & Win</a>
+    </header>
 
-<div class="tabs">
-  <button onclick="loadSport('football')">Football</button>
-  <button onclick="loadSport('cricket')">Cricket</button>
-  <button onclick="loadSport('basketball')">Basketball</button>
-  <button onclick="loadSport('tennis')">Tennis</button>
-</div>
+    <nav class="tabs-container" id="sportsTabs">
+        <button class="tab active" onclick="loadSports('football')">Football</button>
+        <button class="tab" onclick="loadSports('cricket')">Cricket</button>
+        <button class="tab" onclick="loadSports('ipl')">IPL 2026</button>
+        <button class="tab" onclick="loadSports('basketball')">Basketball</button>
+        <button class="tab" onclick="loadSports('tennis')">Tennis</button>
+    </nav>
 
-<div id="matches">Loading...</div>
-
-<script>
-
-// ===== TEAM LOGOS =====
-const logos = {
-  "India": "https://flagcdn.com/w40/in.png",
-  "Australia": "https://flagcdn.com/w40/au.png",
-  "England": "https://flagcdn.com/w40/gb.png",
-  "CSK": "https://upload.wikimedia.org/wikipedia/en/2/2e/Chennai_Super_Kings_Logo.svg",
-  "MI": "https://upload.wikimedia.org/wikipedia/en/2/2c/Mumbai_Indians_Logo.svg"
-};
-
-function getLogo(team) {
-  return logos[team] || "https://via.placeholder.com/25";
-}
-
-// ===== MAIN LOAD FUNCTION =====
-async function loadSport(sport) {
-  document.getElementById("matches").innerHTML = "Loading...";
-
-  try {
-
-    let data = [];
-
-    // ===== FOOTBALL (Scorebat) =====
-    if (sport === "football") {
-      let res = await fetch("https://www.scorebat.com/video-api/v3/");
-      let json = await res.json();
-
-      data = json.response.map(m => ({
-        team1: m.title.split(" - ")[0],
-        team2: m.title.split(" - ")[1],
-        score1: "",
-        score2: "",
-        status: m.competition,
-      }));
-    }
-
-    // ===== CRICKET (FREE FALLBACK) =====
-    if (sport === "cricket") {
-      data = [
-        {
-          team1: "CSK",
-          team2: "MI",
-          score1: "167/8",
-          score2: "142/4",
-          status: "GT needs 26 runs in 12 balls"
-        }
-      ];
-    }
-
-    // ===== BASKETBALL =====
-    if (sport === "basketball") {
-      data = [
-        {
-          team1: "Lakers",
-          team2: "Warriors",
-          score1: "102",
-          score2: "99",
-          status: "4th Quarter"
-        }
-      ];
-    }
-
-    // ===== TENNIS =====
-    if (sport === "tennis") {
-      data = [
-        {
-          team1: "Djokovic",
-          team2: "Nadal",
-          score1: "2",
-          score2: "1",
-          status: "Set 4"
-        }
-      ];
-    }
-
-    render(data);
-
-  } catch (err) {
-    document.getElementById("matches").innerHTML = "API Error ❌";
-  }
-}
-
-// ===== RENDER FUNCTION =====
-function render(data) {
-  let html = "";
-
-  if (!data.length) {
-    html = "No matches found ❌";
-  }
-
-  data.forEach(m => {
-    html += `
-      <div class="match-card">
-
-        <div class="live">LIVE</div>
-
-        <div class="teams">
-          <div class="team">
-            <img src="${getLogo(m.team1)}">
-            ${m.team1}
-          </div>
-          <div class="score">${m.score1}</div>
+    <div class="container">
+        <div id="ipl-community" class="hidden">
+            <div class="section-title">IPL Community</div>
+            <div class="ipl-teams-grid">
+                <div class="ipl-team-item"><img src="https://scores.iplt20.com/ipl/teamlogos/CSK.png" alt="CSK"><span>CSK</span></div>
+                <div class="ipl-team-item"><img src="https://scores.iplt20.com/ipl/teamlogos/MI.png" alt="MI"><span>MI</span></div>
+                <div class="ipl-team-item"><img src="https://scores.iplt20.com/ipl/teamlogos/RCB.png" alt="RCB"><span>RCB</span></div>
+                <div class="ipl-team-item"><img src="https://scores.iplt20.com/ipl/teamlogos/KKR.png" alt="KKR"><span>KKR</span></div>
+                <div class="ipl-team-item"><img src="https://scores.iplt20.com/ipl/teamlogos/GT.png" alt="GT"><span>GT</span></div>
+                <div class="ipl-team-item"><img src="https://scores.iplt20.com/ipl/teamlogos/LSG.png" alt="LSG"><span>LSG</span></div>
+                <div class="ipl-team-item"><img src="https://scores.iplt20.com/ipl/teamlogos/RR.png" alt="RR"><span>RR</span></div>
+                <div class="ipl-team-item"><img src="https://scores.iplt20.com/ipl/teamlogos/DC.png" alt="DC"><span>DC</span></div>
+                <div class="ipl-team-item"><img src="https://scores.iplt20.com/ipl/teamlogos/PBKS.png" alt="PBKS"><span>PBKS</span></div>
+                <div class="ipl-team-item"><img src="https://scores.iplt20.com/ipl/teamlogos/SRH.png" alt="SRH"><span>SRH</span></div>
+            </div>
         </div>
 
-        <div class="teams">
-          <div class="team">
-            <img src="${getLogo(m.team2)}">
-            ${m.team2}
-          </div>
-          <div class="score">${m.score2}</div>
+        <div id="content-area">
+            <div class="loader">Fetching live matches...</div>
         </div>
+    </div>
 
-        <div class="status">${m.status}</div>
+    <nav class="bottom-nav">
+        <div class="nav-item active" onclick="loadSports('football')">
+            <span class="nav-icon">🏠</span>
+            <span>Home</span>
+        </div>
+        <div class="nav-item" onclick="loadSports('cricket')">
+            <span class="nav-icon">🏏</span>
+            <span>Series</span>
+        </div>
+        <div class="nav-item" onclick="loadSports('ipl')">
+            <span class="nav-icon">🏆</span>
+            <span>IPL</span>
+        </div>
+        <div class="nav-item" onclick="window.open('https://www.youtube.com/results?search_query=sports+highlights', '_blank')">
+            <span class="nav-icon">▶️</span>
+            <span>Videos</span>
+        </div>
+        <div class="nav-item">
+            <span class="nav-icon">📰</span>
+            <span>News</span>
+        </div>
+    </nav>
 
-      </div>
-    `;
-  });
+    <script>
+        const API_FOOTBALL = "https://www.scorebat.com/video-api/v3/";
+        const FALLBACK_LOGO = "https://via.placeholder.com/50/334155/FFFFFF?text=Team";
 
-  document.getElementById("matches").innerHTML = html;
-}
+        const MOCK_DATA = {
+            cricket: [
+                { team1: "India", team2: "Australia", score: "284/4 (45.2)", status: "LIVE", league: "ICC WTC Final", t1logo: "https://upload.wikimedia.org/wikipedia/en/thumb/8/8d/BCCI_logo.svg/1200px-BCCI_logo.svg.png", t2logo: "https://upload.wikimedia.org/wikipedia/en/thumb/c/c9/Cricket_Australia_logo.svg/1200px-Cricket_Australia_logo.svg.png" },
+                { team2: "Pakistan", team1: "England", score: "152/2 & 340", status: "Stumps", league: "Test Series", t1logo: "https://upload.wikimedia.org/wikipedia/en/thumb/b/be/England_and_Wales_Cricket_Board_logo.svg/1200px-England_and_Wales_Cricket_Board_logo.svg.png", t2logo: "https://upload.wikimedia.org/wikipedia/en/thumb/f/ff/Pakistan_Cricket_Board_Logo.svg/1200px-Pakistan_Cricket_Board_Logo.svg.png" }
+            ],
+            ipl: [
+                { team1: "CSK", team2: "RCB", score: "182/3 (17.4)", status: "LIVE", league: "IPL 2026 - Match 42", t1logo: "https://scores.iplt20.com/ipl/teamlogos/CSK.png", t2logo: "https://scores.iplt20.com/ipl/teamlogos/RCB.png" },
+                { team1: "MI", team2: "KKR", score: "Result: MI won by 5 wickets", status: "Finished", league: "IPL 2026 - Match 41", t1logo: "https://scores.iplt20.com/ipl/teamlogos/MI.png", t2logo: "https://scores.iplt20.com/ipl/teamlogos/KKR.png" }
+            ],
+            basketball: [
+                { team1: "Lakers", team2: "Warriors", score: "102 - 98", status: "Q4 2:15", league: "NBA Regular Season", t1logo: "https://upload.wikimedia.org/wikipedia/commons/3/3c/Los_Angeles_Lakers_logo.svg", t2logo: "https://upload.wikimedia.org/wikipedia/en/0/01/Golden_State_Warriors_logo.svg" }
+            ],
+            tennis: [
+                { team1: "C. Alcaraz", team2: "N. Djokovic", score: "6-4, 3-2", status: "LIVE", league: "Wimbledon Final", t1logo: FALLBACK_LOGO, t2logo: FALLBACK_LOGO }
+            ]
+        };
 
-// AUTO LOAD
-loadSport("football");
+        async function loadSports(sport) {
+            // UI Updates
+            document.querySelectorAll('.tab, .nav-item').forEach(el => el.classList.remove('active'));
+            event.currentTarget.classList.add('active');
+            
+            const content = document.getElementById('content-area');
+            const iplSection = document.getElementById('ipl-community');
+            content.innerHTML = '<div class="loader">Loading latest ' + sport + ' matches...</div>';
+            
+            if(sport === 'ipl') iplSection.classList.remove('hidden');
+            else iplSection.classList.add('hidden');
 
-</script>
+            try {
+                if (sport === 'football') {
+                    await fetchFootball();
+                } else {
+                    renderMatches(MOCK_DATA[sport] || []);
+                }
+            } catch (err) {
+                content.innerHTML = '<div class="loader">Error loading data. Showing fallback.</div>';
+                renderMatches(MOCK_DATA.cricket);
+            }
+        }
 
+        async function fetchFootball() {
+            try {
+                const response = await fetch(API_FOOTBALL);
+                const data = await response.json();
+                const matches = data.response.slice(0, 10).map(m => ({
+                    league: m.competition,
+                    team1: m.title.split(' - ')[0],
+                    team2: m.title.split(' - ')[1],
+                    score: "FT",
+                    status: "Finished",
+                    t1logo: m.thumbnail,
+                    t2logo: m.thumbnail,
+                    highlight: m.url
+                }));
+                renderMatches(matches);
+            } catch (e) {
+                renderMatches([]);
+            }
+        }
+
+        function renderMatches(matches) {
+            const content = document.getElementById('content-area');
+            if (matches.length === 0) {
+                content.innerHTML = '<div class="loader">No live matches found at the moment.</div>';
+                return;
+            }
+
+            content.innerHTML = matches.map(match => `
+                <div class="match-card">
+                    <div class="match-header">
+                        <span>${match.league}</span>
+                        <span class="${match.status === 'LIVE' ? 'status-live' : ''}">${match.status}</span>
+                    </div>
+                    <div class="match-body">
+                        <div class="team">
+                            <img src="${match.t1logo || FALLBACK_LOGO}" onerror="this.src='${FALLBACK_LOGO}'">
+                            <span class="team-name">${match.team1}</span>
+                        </div>
+                        <div class="score-area">
+                            <div class="score">${match.score || 'v/s'}</div>
+                        </div>
+                        <div class="team">
+                            <img src="${match.t2logo || FALLBACK_LOGO}" onerror="this.src='${FALLBACK_LOGO}'">
+                            <span class="team-name">${match.team2}</span>
+                        </div>
+                    </div>
+                    <div class="match-footer">
+                        <a href="${match.highlight || 'https://www.youtube.com/results?search_query=' + match.team1 + '+vs+' + match.team2 + '+highlights'}" 
+                           target="_blank" class="btn-highlights">
+                           📺 Watch Highlights
+                        </a>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Auto Refresh
+        setInterval(() => {
+            const activeTab = document.querySelector('.tab.active').innerText.toLowerCase();
+            loadSports(activeTab.includes('ipl') ? 'ipl' : activeTab);
+        }, 30000);
+
+        // Initial Load
+        window.onload = () => loadSports('football');
+    </script>
 </body>
-</html>
+     </html>             
