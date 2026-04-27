@@ -1,460 +1,365 @@
-  <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sportsnap PRO | Live Scores & Highlights</title>
+    <title>Sportsnap PRO | Elite Live Scores</title>
     <style>
         :root {
-            --bg-dark: #0f172a;
-            --card-bg: #1e293b;
-            --accent: #38bdf8;
-            --text-main: #f8fafc;
-            --text-dim: #94a3b8;
-            --live-red: #ef4444;
-            --nav-bg: #111827;
+            --glass-bg: rgba(30, 41, 59, 0.7);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --accent-blue: #0ea5e9;
+            --accent-green: #10b981;
+            --live-red: #ff4757;
+            --bg-deep: #020617;
+            --text-glow: 0 0 10px rgba(14, 165, 233, 0.5);
         }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-        }
-
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', system-ui, sans-serif; }
+        
         body {
-            background-color: var(--bg-dark);
-            color: var(--text-main);
-            line-height: 1.6;
-            padding-bottom: 70px;
+            background: radial-gradient(circle at top, #0f172a 0%, var(--bg-deep) 100%);
+            color: #f8fafc;
+            min-height: 100vh;
+            padding-bottom: 80px;
+            overflow-x: hidden;
         }
 
-        /* Header & Navigation */
+        /* --- Header --- */
         header {
-            background-color: var(--nav-bg);
-            padding: 1rem;
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-            border-bottom: 1px solid #334155;
+            background: rgba(15, 23, 42, 0.8);
+            backdrop-filter: blur(12px);
+            padding: 15px 20px;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 1px solid var(--glass-border);
         }
 
-        .logo {
-            font-size: 1.5rem;
+        .logo-pro {
+            font-size: 1.4rem;
+            font-weight: 900;
+            background: linear-gradient(90deg, #fff, var(--accent-blue));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -1px;
+        }
+
+        .fantasy-chip {
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+            padding: 6px 14px;
+            border-radius: 50px;
+            font-size: 0.75rem;
             font-weight: 800;
-            color: var(--accent);
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .fantasy-btn {
-            background: linear-gradient(45deg, #f59e0b, #ef4444);
-            color: white;
-            padding: 8px 16px;
-            border-radius: 20px;
             text-decoration: none;
-            font-weight: bold;
-            font-size: 0.8rem;
-            animation: pulse 2s infinite;
+            color: white;
+            box-shadow: 0 0 15px rgba(245, 158, 11, 0.3);
         }
 
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-            100% { transform: scale(1); }
-        }
-
-        /* Top Sports Selector */
-        .tabs-container {
-            background: var(--nav-bg);
+        /* --- Custom Tabs --- */
+        .nav-scroller {
             display: flex;
             overflow-x: auto;
-            white-space: nowrap;
-            padding: 10px;
-            gap: 10px;
-            border-bottom: 1px solid #334155;
+            padding: 15px;
+            gap: 12px;
+            scrollbar-width: none;
         }
+        .nav-scroller::-webkit-scrollbar { display: none; }
 
         .tab {
-            padding: 8px 20px;
-            border-radius: 20px;
-            background: var(--card-bg);
-            color: var(--text-dim);
+            padding: 10px 22px;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            white-space: nowrap;
             cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            color: #94a3b8;
             font-weight: 600;
-            transition: 0.3s;
-            border: none;
         }
 
         .tab.active {
-            background: var(--accent);
-            color: var(--bg-dark);
-        }
-
-        /* Main Content */
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 15px;
-        }
-
-        .section-title {
-            font-size: 1.2rem;
-            margin: 15px 0;
-            color: var(--text-dim);
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        /* Scorecard UI */
-        .match-card {
-            background: var(--card-bg);
-            border-radius: 12px;
-            padding: 15px;
-            margin-bottom: 15px;
-            transition: transform 0.2s;
-            border: 1px solid #334155;
-        }
-
-        .match-card:hover {
+            background: var(--accent-blue);
+            color: white;
+            border-color: var(--accent-blue);
+            box-shadow: 0 0 20px rgba(14, 165, 233, 0.4);
             transform: translateY(-2px);
         }
 
-        .match-header {
+        /* --- Match Cards --- */
+        .container { max-width: 600px; margin: 0 auto; padding: 10px; }
+
+        .card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 20px;
+            margin-bottom: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 4px; height: 100%;
+            background: var(--accent-blue);
+        }
+
+        .match-info {
             display: flex;
             justify-content: space-between;
-            font-size: 0.75rem;
-            color: var(--text-dim);
-            margin-bottom: 12px;
-            border-bottom: 1px solid #334155;
-            padding-bottom: 8px;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            color: #64748b;
+            margin-bottom: 15px;
+            font-weight: 700;
         }
 
-        .status-live {
+        .live-tag {
             color: var(--live-red);
-            font-weight: bold;
             display: flex;
             align-items: center;
-            gap: 4px;
+            gap: 5px;
         }
 
-        .status-live::before {
-            content: "";
-            width: 8px;
-            height: 8px;
+        .live-tag::after {
+            content: '';
+            width: 6px;
+            height: 6px;
             background: var(--live-red);
             border-radius: 50%;
-            display: inline-block;
-            animation: blink 1s infinite;
+            animation: pulse 1s infinite;
         }
 
-        @keyframes blink {
-            0% { opacity: 1; }
-            50% { opacity: 0.3; }
-            100% { opacity: 1; }
-        }
-
-        .match-body {
+        .scoreboard {
             display: grid;
-            grid-template-columns: 1fr auto 1fr;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .team {
-            display: flex;
-            flex-direction: column;
+            grid-template-columns: 1fr 80px 1fr;
             align-items: center;
             text-align: center;
         }
 
         .team img {
-            width: 48px;
-            height: 48px;
-            object-fit: contain;
-            margin-bottom: 8px;
+            width: 55px;
+            height: 55px;
             background: #fff;
-            border-radius: 50%;
-            padding: 4px;
+            padding: 5px;
+            border-radius: 15px;
+            margin-bottom: 8px;
         }
 
-        .team-name {
-            font-weight: 600;
-            font-size: 0.9rem;
-        }
+        .team-name { font-weight: 700; font-size: 0.9rem; }
 
-        .score-area {
-            text-align: center;
-        }
-
-        .score {
-            font-size: 1.5rem;
-            font-weight: 800;
-            letter-spacing: 2px;
-        }
-
-        .match-footer {
-            margin-top: 15px;
-            display: flex;
-            gap: 10px;
-        }
-
-        .btn-highlights {
-            flex: 1;
-            background: #334155;
+        .score-box {
+            font-size: 1.8rem;
+            font-weight: 900;
             color: white;
-            text-align: center;
-            padding: 8px;
-            border-radius: 6px;
-            text-decoration: none;
-            font-size: 0.85rem;
-            font-weight: 600;
+            text-shadow: var(--text-glow);
         }
 
-        .btn-highlights:hover {
-            background: #475569;
+        .btn-vid {
+            margin-top: 15px;
+            width: 100%;
+            padding: 12px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            color: var(--accent-blue);
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.3s;
         }
 
-        /* IPL Community Section */
-        .ipl-teams-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
-            gap: 10px;
-            margin-bottom: 20px;
-        }
+        .btn-vid:hover { background: var(--accent-blue); color: white; }
 
-        .ipl-team-item {
-            display: flex;
+        /* --- Video Modal --- */
+        #video-modal {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.95);
+            display: none;
             flex-direction: column;
-            align-items: center;
-            font-size: 0.7rem;
-            color: var(--text-dim);
+            z-index: 2000;
+            padding: 20px;
         }
 
-        .ipl-team-item img {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            margin-bottom: 5px;
-            border: 2px solid #334155;
+        .close-vid {
+            align-self: flex-end;
+            font-size: 2rem;
+            color: white;
+            cursor: pointer;
+            margin-bottom: 10px;
         }
 
-        /* Bottom Menu (Cricbuzz Style) */
-        .bottom-nav {
+        #vid-frame {
+            width: 100%;
+            height: 300px;
+            border-radius: 15px;
+            background: #000;
+        }
+
+        /* --- Bottom Nav --- */
+        .bottom-bar {
             position: fixed;
             bottom: 0;
-            left: 0;
-            right: 0;
-            background: var(--nav-bg);
+            width: 100%;
+            background: rgba(15, 23, 42, 0.95);
+            backdrop-filter: blur(20px);
             display: flex;
             justify-content: space-around;
-            padding: 10px 0;
-            border-top: 1px solid #334155;
-            z-index: 1000;
+            padding: 12px 0;
+            border-top: 1px solid var(--glass-border);
         }
 
-        .nav-item {
+        .nav-btn {
             display: flex;
             flex-direction: column;
             align-items: center;
-            font-size: 0.7rem;
-            color: var(--text-dim);
+            color: #64748b;
             text-decoration: none;
-            cursor: pointer;
+            font-size: 0.65rem;
+            font-weight: 600;
         }
 
-        .nav-item.active {
-            color: var(--accent);
-        }
+        .nav-btn.active { color: var(--accent-blue); }
 
-        .nav-icon {
-            font-size: 1.2rem;
-            margin-bottom: 2px;
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 1; }
+            100% { transform: scale(2.5); opacity: 0; }
         }
-
-        /* Loading & Messages */
-        .loader {
-            text-align: center;
-            padding: 40px;
-            color: var(--text-dim);
-        }
-
-        .hidden { display: none; }
     </style>
 </head>
 <body>
 
     <header>
-        <div class="logo">SPORTSNAP PRO</div>
-        <a href="https://www.dream11.com/" target="_blank" class="fantasy-btn">💰 Play Fantasy & Win</a>
+        <div class="logo-pro">SPORTSNAP <span style="color:var(--accent-blue)">PRO</span></div>
+        <a href="https://www.dream11.com" target="_blank" class="fantasy-chip">💰 WIN CASH</a>
     </header>
 
-    <nav class="tabs-container" id="sportsTabs">
-        <button class="tab active" onclick="loadSports('football')">Football</button>
-        <button class="tab" onclick="loadSports('cricket')">Cricket</button>
-        <button class="tab" onclick="loadSports('ipl')">IPL 2026</button>
-        <button class="tab" onclick="loadSports('basketball')">Basketball</button>
-        <button class="tab" onclick="loadSports('tennis')">Tennis</button>
-    </nav>
-
-    <div class="container">
-        <div id="ipl-community" class="hidden">
-            <div class="section-title">IPL Community</div>
-            <div class="ipl-teams-grid">
-                <div class="ipl-team-item"><img src="https://scores.iplt20.com/ipl/teamlogos/CSK.png" alt="CSK"><span>CSK</span></div>
-                <div class="ipl-team-item"><img src="https://scores.iplt20.com/ipl/teamlogos/MI.png" alt="MI"><span>MI</span></div>
-                <div class="ipl-team-item"><img src="https://scores.iplt20.com/ipl/teamlogos/RCB.png" alt="RCB"><span>RCB</span></div>
-                <div class="ipl-team-item"><img src="https://scores.iplt20.com/ipl/teamlogos/KKR.png" alt="KKR"><span>KKR</span></div>
-                <div class="ipl-team-item"><img src="https://scores.iplt20.com/ipl/teamlogos/GT.png" alt="GT"><span>GT</span></div>
-                <div class="ipl-team-item"><img src="https://scores.iplt20.com/ipl/teamlogos/LSG.png" alt="LSG"><span>LSG</span></div>
-                <div class="ipl-team-item"><img src="https://scores.iplt20.com/ipl/teamlogos/RR.png" alt="RR"><span>RR</span></div>
-                <div class="ipl-team-item"><img src="https://scores.iplt20.com/ipl/teamlogos/DC.png" alt="DC"><span>DC</span></div>
-                <div class="ipl-team-item"><img src="https://scores.iplt20.com/ipl/teamlogos/PBKS.png" alt="PBKS"><span>PBKS</span></div>
-                <div class="ipl-team-item"><img src="https://scores.iplt20.com/ipl/teamlogos/SRH.png" alt="SRH"><span>SRH</span></div>
-            </div>
-        </div>
-
-        <div id="content-area">
-            <div class="loader">Fetching live matches...</div>
-        </div>
+    <div class="nav-scroller" id="tabs">
+        <div class="tab active" onclick="loadTab('football', this)">Football</div>
+        <div class="tab" onclick="loadTab('ipl', this)">IPL 2026</div>
+        <div class="tab" onclick="loadTab('cricket', this)">Cricket</div>
+        <div class="tab" onclick="loadTab('basketball', this)">NBA</div>
+        <div class="tab" onclick="loadTab('tennis', this)">Tennis</div>
     </div>
 
-    <nav class="bottom-nav">
-        <div class="nav-item active" onclick="loadSports('football')">
-            <span class="nav-icon">🏠</span>
-            <span>Home</span>
+    <div class="container" id="match-list">
         </div>
-        <div class="nav-item" onclick="loadSports('cricket')">
-            <span class="nav-icon">🏏</span>
-            <span>Series</span>
-        </div>
-        <div class="nav-item" onclick="loadSports('ipl')">
-            <span class="nav-icon">🏆</span>
-            <span>IPL</span>
-        </div>
-        <div class="nav-item" onclick="window.open('https://www.youtube.com/results?search_query=sports+highlights', '_blank')">
-            <span class="nav-icon">▶️</span>
-            <span>Videos</span>
-        </div>
-        <div class="nav-item">
-            <span class="nav-icon">📰</span>
-            <span>News</span>
-        </div>
+
+    <div id="video-modal">
+        <span class="close-vid" onclick="closeVideo()">×</span>
+        <div id="vid-container"></div>
+    </div>
+
+    <nav class="bottom-bar">
+        <a class="nav-btn active"><span>🏠</span>Home</a>
+        <a class="nav-btn"><span>🏆</span>IPL</a>
+        <a class="nav-btn"><span>▶️</span>Highlights</a>
+        <a class="nav-btn"><span>👤</span>Me</a>
     </nav>
 
     <script>
-        const API_FOOTBALL = "https://www.scorebat.com/video-api/v3/";
-        const FALLBACK_LOGO = "https://via.placeholder.com/50/334155/FFFFFF?text=Team";
+        const API_KEY = "https://www.scorebat.com/video-api/v3/";
+        const PLACEHOLDER = "https://ui-avatars.com/api/?background=1e293b&color=fff&name=";
 
-        const MOCK_DATA = {
-            cricket: [
-                { team1: "India", team2: "Australia", score: "284/4 (45.2)", status: "LIVE", league: "ICC WTC Final", t1logo: "https://upload.wikimedia.org/wikipedia/en/thumb/8/8d/BCCI_logo.svg/1200px-BCCI_logo.svg.png", t2logo: "https://upload.wikimedia.org/wikipedia/en/thumb/c/c9/Cricket_Australia_logo.svg/1200px-Cricket_Australia_logo.svg.png" },
-                { team2: "Pakistan", team1: "England", score: "152/2 & 340", status: "Stumps", league: "Test Series", t1logo: "https://upload.wikimedia.org/wikipedia/en/thumb/b/be/England_and_Wales_Cricket_Board_logo.svg/1200px-England_and_Wales_Cricket_Board_logo.svg.png", t2logo: "https://upload.wikimedia.org/wikipedia/en/thumb/f/ff/Pakistan_Cricket_Board_Logo.svg/1200px-Pakistan_Cricket_Board_Logo.svg.png" }
-            ],
+        async function fetchLiveFootball() {
+            try {
+                const res = await fetch(API_KEY);
+                const data = await res.json();
+                return data.response.map(m => ({
+                    league: m.competition,
+                    t1: m.title.split(' - ')[0],
+                    t2: m.title.split(' - ')[1],
+                    score: "FT",
+                    status: "Finished",
+                    t1img: m.thumbnail,
+                    t2img: m.thumbnail,
+                    vid: m.videos[0].embed
+                }));
+            } catch (e) { return null; }
+        }
+
+        const MOCK = {
             ipl: [
-                { team1: "CSK", team2: "RCB", score: "182/3 (17.4)", status: "LIVE", league: "IPL 2026 - Match 42", t1logo: "https://scores.iplt20.com/ipl/teamlogos/CSK.png", t2logo: "https://scores.iplt20.com/ipl/teamlogos/RCB.png" },
-                { team1: "MI", team2: "KKR", score: "Result: MI won by 5 wickets", status: "Finished", league: "IPL 2026 - Match 41", t1logo: "https://scores.iplt20.com/ipl/teamlogos/MI.png", t2logo: "https://scores.iplt20.com/ipl/teamlogos/KKR.png" }
+                { league: "IPL 2026", t1: "Mumbai Indians", t2: "CSK", score: "186/4 (18.2)", status: "LIVE", t1img: "https://scores.iplt20.com/ipl/teamlogos/MI.png", t2img: "https://scores.iplt20.com/ipl/teamlogos/CSK.png", vid: "ipl" },
+                { league: "IPL 2026", t1: "RCB", t2: "Gujarat Titans", score: "Result: RCB won", status: "Finished", t1img: "https://scores.iplt20.com/ipl/teamlogos/RCB.png", t2img: "https://scores.iplt20.com/ipl/teamlogos/GT.png", vid: "ipl" }
             ],
-            basketball: [
-                { team1: "Lakers", team2: "Warriors", score: "102 - 98", status: "Q4 2:15", league: "NBA Regular Season", t1logo: "https://upload.wikimedia.org/wikipedia/commons/3/3c/Los_Angeles_Lakers_logo.svg", t2logo: "https://upload.wikimedia.org/wikipedia/en/0/01/Golden_State_Warriors_logo.svg" }
-            ],
-            tennis: [
-                { team1: "C. Alcaraz", team2: "N. Djokovic", score: "6-4, 3-2", status: "LIVE", league: "Wimbledon Final", t1logo: FALLBACK_LOGO, t2logo: FALLBACK_LOGO }
+            cricket: [
+                { league: "T20 International", t1: "India", t2: "South Africa", score: "210/2", status: "LIVE", t1img: PLACEHOLDER+"IND", t2img: PLACEHOLDER+"SA", vid: "cricket" }
             ]
         };
 
-        async function loadSports(sport) {
-            // UI Updates
-            document.querySelectorAll('.tab, .nav-item').forEach(el => el.classList.remove('active'));
-            event.currentTarget.classList.add('active');
+        async function loadTab(sport, el) {
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            el.classList.add('active');
             
-            const content = document.getElementById('content-area');
-            const iplSection = document.getElementById('ipl-community');
-            content.innerHTML = '<div class="loader">Loading latest ' + sport + ' matches...</div>';
-            
-            if(sport === 'ipl') iplSection.classList.remove('hidden');
-            else iplSection.classList.add('hidden');
+            const list = document.getElementById('match-list');
+            list.innerHTML = `<div style="text-align:center; padding:50px; color:#64748b">Fetching Pro Data...</div>`;
 
-            try {
-                if (sport === 'football') {
-                    await fetchFootball();
-                } else {
-                    renderMatches(MOCK_DATA[sport] || []);
-                }
-            } catch (err) {
-                content.innerHTML = '<div class="loader">Error loading data. Showing fallback.</div>';
-                renderMatches(MOCK_DATA.cricket);
+            let matches = [];
+            if (sport === 'football') {
+                matches = await fetchLiveFootball() || [];
+            } else {
+                matches = MOCK[sport] || [MOCK.ipl[0]]; // Fallback
             }
+
+            render(matches);
         }
 
-        async function fetchFootball() {
-            try {
-                const response = await fetch(API_FOOTBALL);
-                const data = await response.json();
-                const matches = data.response.slice(0, 10).map(m => ({
-                    league: m.competition,
-                    team1: m.title.split(' - ')[0],
-                    team2: m.title.split(' - ')[1],
-                    score: "FT",
-                    status: "Finished",
-                    t1logo: m.thumbnail,
-                    t2logo: m.thumbnail,
-                    highlight: m.url
-                }));
-                renderMatches(matches);
-            } catch (e) {
-                renderMatches([]);
-            }
-        }
-
-        function renderMatches(matches) {
-            const content = document.getElementById('content-area');
-            if (matches.length === 0) {
-                content.innerHTML = '<div class="loader">No live matches found at the moment.</div>';
-                return;
-            }
-
-            content.innerHTML = matches.map(match => `
-                <div class="match-card">
-                    <div class="match-header">
-                        <span>${match.league}</span>
-                        <span class="${match.status === 'LIVE' ? 'status-live' : ''}">${match.status}</span>
+        function render(matches) {
+            const list = document.getElementById('match-list');
+            list.innerHTML = matches.map(m => `
+                <div class="card">
+                    <div class="match-info">
+                        <span>${m.league}</span>
+                        <span class="${m.status === 'LIVE' ? 'live-tag' : ''}">${m.status}</span>
                     </div>
-                    <div class="match-body">
+                    <div class="scoreboard">
                         <div class="team">
-                            <img src="${match.t1logo || FALLBACK_LOGO}" onerror="this.src='${FALLBACK_LOGO}'">
-                            <span class="team-name">${match.team1}</span>
+                            <img src="${m.t1img}" onerror="this.src='${PLACEHOLDER+m.t1}'">
+                            <div class="team-name">${m.t1}</div>
                         </div>
-                        <div class="score-area">
-                            <div class="score">${match.score || 'v/s'}</div>
-                        </div>
+                        <div class="score-box">${m.score}</div>
                         <div class="team">
-                            <img src="${match.t2logo || FALLBACK_LOGO}" onerror="this.src='${FALLBACK_LOGO}'">
-                            <span class="team-name">${match.team2}</span>
+                            <img src="${m.t2img}" onerror="this.src='${PLACEHOLDER+m.t2}'">
+                            <div class="team-name">${m.t2}</div>
                         </div>
                     </div>
-                    <div class="match-footer">
-                        <a href="${match.highlight || 'https://www.youtube.com/results?search_query=' + match.team1 + '+vs+' + match.team2 + '+highlights'}" 
-                           target="_blank" class="btn-highlights">
-                           📺 Watch Highlights
-                        </a>
-                    </div>
+                    <button class="btn-vid" onclick="playVid('${btoa(m.vid)}')">📺 In-App Highlights</button>
                 </div>
             `).join('');
         }
 
-        // Auto Refresh
-        setInterval(() => {
-            const activeTab = document.querySelector('.tab.active').innerText.toLowerCase();
-            loadSports(activeTab.includes('ipl') ? 'ipl' : activeTab);
-        }, 30000);
+        function playVid(encoded) {
+            const embed = atob(encoded);
+            const modal = document.getElementById('video-modal');
+            const container = document.getElementById('vid-container');
+            
+            modal.style.display = 'flex';
+            
+            if (embed.includes('<iframe')) {
+                container.innerHTML = embed;
+                const iframe = container.querySelector('iframe');
+                iframe.style.width = "100%";
+                iframe.style.height = "350px";
+                iframe.style.borderRadius = "15px";
+            } else {
+                container.innerHTML = `<div style="padding:40px; text-align:center">Highlight Stream starting in-app...</div>`;
+            }
+        }
 
-        // Initial Load
-        window.onload = () => loadSports('football');
+        function closeVideo() {
+            document.getElementById('video-modal').style.display = 'none';
+            document.getElementById('vid-container').innerHTML = '';
+        }
+
+        // Default Load
+        window.onload = () => loadTab('football', document.querySelector('.tab'));
     </script>
 </body>
-     </html>             
+</html>          
