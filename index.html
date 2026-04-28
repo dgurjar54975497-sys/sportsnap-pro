@@ -3,217 +3,237 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sportsnap PRO | Multi-Sport & Community</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&family=Bebas+Neue&display=swap" rel="stylesheet">
+    <title>Sportsnap Ultimate | Pro Hub</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&family=Bebas+Neue&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary: #1a73e8; /* Vibrant Blue */
-            --secondary: #ff3e3e; /* Action Red */
+            --cb-green: #009270;
+            --accent: #ffcc00;
             --dark: #0f172a;
-            --success: #22c55e;
-            --gold: #f59e0b;
-            --bg: #f8fafc;
+            --light-bg: #f1f5f9;
+            --card-white: #ffffff;
+            --red: #ef4444;
+            --glass: rgba(255, 255, 255, 0.9);
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
-        body { background: var(--bg); color: var(--dark); padding-bottom: 90px; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; }
+        body { background: var(--light-bg); color: var(--dark); padding-bottom: 80px; overflow-x: hidden; }
 
-        /* --- Header & Branding --- */
+        /* --- STICKY HEADER --- */
         header { 
-            background: linear-gradient(135deg, var(--dark) 0%, #1e293b 100%); 
-            color: white; padding: 20px; text-align: center; position: sticky; top: 0; z-index: 1000;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+            background: var(--cb-green); color: white; padding: 15px 20px; 
+            display: flex; justify-content: space-between; align-items: center;
+            position: sticky; top: 0; z-index: 1000; box-shadow: 0 4px 15px rgba(0,0,0,0.1);
         }
-        header h1 { font-family: 'Bebas Neue'; font-size: 2.2rem; letter-spacing: 2px; color: var(--gold); }
-        .live-status { font-size: 0.7rem; background: var(--secondary); padding: 2px 8px; border-radius: 20px; animation: blink 1s infinite; }
-        @keyframes blink { 0% {opacity: 1;} 50% {opacity: 0.5;} 100% {opacity: 1;} }
+        .brand { font-family: 'Bebas Neue'; font-size: 1.8rem; letter-spacing: 1px; }
+        .live-badge { background: var(--red); font-size: 0.65rem; padding: 3px 8px; border-radius: 4px; font-weight: 800; animation: blink 1.2s infinite; }
+        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
 
-        /* --- Multi-Sport Tabs --- */
-        .tabs { display: flex; background: white; padding: 10px; gap: 10px; overflow-x: auto; border-bottom: 1px solid #e2e8f0; }
-        .tab-btn { padding: 10px 20px; border-radius: 30px; border: 1px solid #ddd; background: white; font-weight: 700; white-space: nowrap; cursor: pointer; transition: 0.3s; }
-        .tab-btn.active { background: var(--primary); color: white; border-color: var(--primary); box-shadow: 0 4px 10px rgba(26,115,232,0.3); }
+        /* --- PRO NAVIGATION --- */
+        .tabs-nav { background: white; display: flex; overflow-x: auto; padding: 12px; gap: 12px; border-bottom: 1px solid #e2e8f0; }
+        .tab { 
+            padding: 10px 22px; border-radius: 12px; background: #f8fafc; border: 1px solid #e2e8f0; 
+            font-weight: 700; font-size: 0.85rem; white-space: nowrap; cursor: pointer; transition: 0.3s;
+        }
+        .tab.active { background: var(--cb-green); color: white; border-color: var(--cb-green); box-shadow: 0 4px 10px rgba(0,146,112,0.3); }
 
-        /* --- Highlights Section (Real API) --- */
-        .section-title { padding: 15px; font-weight: 800; font-size: 1.1rem; color: var(--dark); display: flex; align-items: center; gap: 8px; }
-        .highlights-row { display: flex; overflow-x: auto; gap: 15px; padding: 0 15px 15px; scrollbar-width: none; }
-        .highlights-row::-webkit-scrollbar { display: none; }
-        .v-card { min-width: 260px; background: white; border-radius: 15px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.08); position: relative; }
-        .v-card img { width: 100%; height: 140px; object-fit: cover; }
-        .v-card .play-btn { position: absolute; top: 50px; left: 50%; transform: translateX(-50%); background: rgba(255,255,255,0.9); width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--secondary); font-size: 1.5rem; }
-        .v-info { padding: 12px; font-size: 0.85rem; font-weight: 600; }
+        .container { max-width: 500px; margin: 0 auto; padding: 15px; }
 
-        /* --- Live Match Card (Dream11 Style) --- */
-        .container { padding: 15px; }
-        .match-card { background: white; border-radius: 20px; padding: 20px; margin-bottom: 20px; border-left: 6px solid var(--success); box-shadow: 0 10px 25px rgba(0,0,0,0.05); }
-        .match-header { display: flex; justify-content: space-between; font-size: 0.7rem; color: #64748b; font-weight: 700; margin-bottom: 15px; }
+        /* --- VIDEO HIGHLIGHTS (API POWERED) --- */
+        .section-header { font-weight: 800; font-size: 1.1rem; margin: 15px 0 10px; display: flex; align-items: center; justify-content: space-between; }
+        .video-reel { display: flex; overflow-x: auto; gap: 15px; padding-bottom: 10px; scrollbar-width: none; }
+        .video-reel::-webkit-scrollbar { display: none; }
+        .v-card { min-width: 240px; background: white; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.05); position: relative; cursor: pointer; }
+        .v-card img { width: 100%; height: 130px; object-fit: cover; }
+        .v-card .play-btn { position: absolute; top: 45px; left: 50%; transform: translateX(-50%); background: white; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
+        .v-title { padding: 10px; font-size: 0.8rem; font-weight: 700; line-height: 1.3; }
+
+        /* --- LIVE MATCH CARDS --- */
+        .match-card { background: white; border-radius: 20px; padding: 20px; margin-bottom: 20px; border: 1px solid #e2e8f0; position: relative; }
+        .match-card::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 4px; background: var(--cb-green); border-radius: 20px 20px 0 0; }
         
-        .teams-container { display: flex; justify-content: space-between; align-items: center; text-align: center; }
-        .team-box { flex: 1; }
-        .team-logo { width: 50px; height: 50px; margin: 0 auto 8px; border-radius: 50%; background: #f1f5f9; display: flex; align-items: center; justify-content: center; font-weight: 800; border: 2px solid #e2e8f0; }
-        .score-main { font-family: 'Bebas Neue'; font-size: 1.8rem; color: var(--dark); }
+        .teams { display: flex; justify-content: space-between; align-items: center; text-align: center; }
+        .team-info { flex: 1; }
+        .team-logo { width: 50px; height: 50px; border-radius: 50%; margin: 0 auto 8px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; background: #f8fafc; border: 1px solid #eee; }
+        .score { font-family: 'Bebas Neue'; font-size: 1.8rem; color: var(--dark); letter-spacing: 1px; }
 
-        /* --- Community/Contest Section --- */
-        .contest-card { background: linear-gradient(90deg, #6366f1, #a855f7); color: white; border-radius: 15px; padding: 15px; margin-top: 15px; display: flex; justify-content: space-between; align-items: center; }
-        .contest-info h4 { font-size: 0.9rem; margin-bottom: 4px; }
-        .contest-info p { font-size: 0.7rem; opacity: 0.9; }
-        .join-btn { background: var(--gold); color: var(--dark); border: none; padding: 8px 15px; border-radius: 8px; font-weight: 800; font-size: 0.75rem; cursor: pointer; }
+        .btn-action { width: 100%; padding: 12px; border-radius: 12px; border: none; font-weight: 800; margin-top: 15px; cursor: pointer; transition: 0.2s; font-size: 0.85rem; }
+        .btn-ticket { background: var(--accent); color: var(--dark); }
+        .btn-stats { background: var(--cb-green); color: white; margin-top: 8px; }
 
-        /* --- Bottom Nav --- */
-        .bottom-nav { position: fixed; bottom: 0; width: 100%; background: white; display: flex; justify-content: space-around; padding: 15px; border-top: 1px solid #e2e8f0; box-shadow: 0 -5px 20px rgba(0,0,0,0.05); }
-        .nav-item { display: flex; flex-direction: column; align-items: center; font-size: 0.7rem; font-weight: 700; color: #94a3b8; text-decoration: none; }
-        .nav-item.active { color: var(--primary); }
+        /* --- COMMUNITY SECTION --- */
+        .comm-box { background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%); color: white; border-radius: 20px; padding: 20px; margin-bottom: 20px; }
+        .comm-header { font-weight: 800; font-size: 1rem; margin-bottom: 10px; }
+        .chat-preview { font-size: 0.8rem; opacity: 0.9; background: rgba(255,255,255,0.1); padding: 10px; border-radius: 10px; margin-bottom: 15px; }
 
-        /* --- Modal Player --- */
-        .modal { position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 2000; display: none; align-items: center; justify-content: center; }
-        .modal-body { width: 95%; max-width: 800px; }
-        iframe { width: 100%; aspect-ratio: 16/9; border-radius: 12px; }
+        /* --- NEWS LIST --- */
+        .news-item { display: flex; gap: 15px; background: white; padding: 15px; border-radius: 15px; margin-bottom: 12px; border: 1px solid #e2e8f0; }
+        .news-img { width: 80px; height: 80px; border-radius: 10px; object-fit: cover; }
+        .news-content h4 { font-size: 0.85rem; margin-bottom: 5px; color: var(--dark); }
+        .news-content span { font-size: 0.7rem; color: #94a3b8; font-weight: 600; }
+
+        /* --- MODAL SYSTEM --- */
+        .modal { position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 2000; display: none; align-items: center; justify-content: center; }
+        .modal-content { width: 95%; max-width: 600px; background: white; border-radius: 20px; overflow: hidden; position: relative; }
+        .close-m { position: absolute; top: 15px; right: 15px; color: #999; font-size: 1.5rem; cursor: pointer; z-index: 10; }
+        iframe { width: 100%; aspect-ratio: 16/9; border: none; }
+
+        /* --- BOTTOM NAV --- */
+        .bottom-nav { position: fixed; bottom: 0; width: 100%; background: white; display: flex; justify-content: space-around; padding: 15px; border-top: 1px solid #e2e8f0; }
+        .nav-link { color: #94a3b8; text-decoration: none; font-size: 0.7rem; font-weight: 800; display: flex; flex-direction: column; align-items: center; gap: 5px; }
+        .nav-link.active { color: var(--cb-green); }
     </style>
 </head>
 <body>
 
     <header>
-        <h1>SPORTSNAP <span style="color:white">V10</span></h1>
-        <span class="live-status">● LIVE API CONNECTED</span>
+        <div class="brand">SPORTSNAP <span style="color:var(--accent)">PRO</span></div>
+        <div class="live-badge">🔴 LIVE HUB</div>
     </header>
 
-    <div class="tabs">
-        <button class="tab-btn active" onclick="changeSport('cricket', this)">🏏 Cricket</button>
-        <button class="tab-btn" onclick="changeSport('football', this)">⚽ Football</button>
-        <button class="tab-btn" onclick="changeSport('basketball', this)">🏀 NBA</button>
-        <button class="tab-btn" onclick="changeSport('community', this)">👥 Community</button>
-    </div>
+    <nav class="tabs-nav">
+        <div class="tab active" onclick="switchSport('cricket', this)">🏏 CRICKET</div>
+        <div class="tab" onclick="switchSport('football', this)">⚽ FOOTBALL</div>
+        <div class="tab" onclick="switchSport('nba', this)">🏀 NBA</div>
+        <div class="tab" onclick="switchSport('community', this)">👥 COMMUNITY</div>
+    </nav>
 
-    <div class="section-title">📺 <span style="color:var(--secondary)">REAL</span> VIDEO HIGHLIGHTS</div>
-    <div class="highlights-row" id="highlightly-feed">
-        <p style="padding: 20px; font-size: 0.8rem;">Fetching data from Highlightly...</p>
-    </div>
-
-    <div class="container" id="main-feed">
+    <div class="container">
+        <div class="section-header">📺 LATEST HIGHLIGHTS <span style="color:var(--cb-green); font-size:0.7rem;">VIEW ALL</span></div>
+        <div class="video-reel" id="videoFeed">
+            <p style="padding:20px; font-size:0.8rem;">Loading real-time clips...</p>
         </div>
 
-    <div class="modal" id="videoModal">
-        <div class="modal-body">
-            <div style="text-align:right; color:white; font-size:2rem; cursor:pointer;" onclick="closeVideo()">&times;</div>
-            <iframe id="videoIframe" src="" frameborder="0" allowfullscreen allow="autoplay"></iframe>
+        <div id="dynamicContent">
+            </div>
+
+        <div class="section-header">📰 TOP STORIES</div>
+        <div id="newsFeed">
+            <div class="news-item">
+                <img src="https://images.unsplash.com/photo-1531415074968-036ba1b575da?w=200" class="news-img">
+                <div class="news-content">
+                    <h4>IPL 2026: The rise of new talent in domestic circuit.</h4>
+                    <span>10 MINS AGO • BIZ NEWS</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="appModal">
+        <div class="modal-content">
+            <span class="close-m" onclick="closeModal()">&times;</span>
+            <div id="modalBody"></div>
         </div>
     </div>
 
     <nav class="bottom-nav">
-        <a href="#" class="nav-item active"><span>🏠</span> HOME</a>
-        <a href="#" class="nav-item"><span>🏆</span> CONTEST</a>
-        <a href="#" class="nav-item"><span>💬</span> CHAT</a>
-        <a href="#" class="nav-item"><span>⚙️</span> SETTINGS</a>
+        <a href="#" class="nav-link active"><span>🏠</span> HOME</a>
+        <a href="#" class="nav-link"><span>📊</span> STATS</a>
+        <a href="#" class="nav-link"><span>🎟️</span> TICKETS</a>
+        <a href="#" class="nav-link"><span>👤</span> ME</a>
     </nav>
 
     <script>
         const API_KEY = 'f6bd71c9-fbd8-426d-9bc9-f7e83b340403';
         const API_HOST = 'highlightly-video-api.p.rapidapi.com';
 
-        // 1. Fetch REAL HIGHLIGHTS
-        async function fetchHighlights(sport = 'cricket') {
-            const feed = document.getElementById('highlightly-feed');
-            const url = `https://${API_HOST}/api/v1/highlights?sport=${sport}`;
-            
+        // 1. FETCH REAL VIDEOS
+        async function loadVideos(sport = 'cricket') {
+            const feed = document.getElementById('videoFeed');
             try {
-                const response = await fetch(url, {
-                    method: 'GET',
+                const res = await fetch(`https://${API_HOST}/api/v1/highlights?sport=${sport}`, {
                     headers: { 'X-RapidAPI-Key': API_KEY, 'X-RapidAPI-Host': API_HOST }
                 });
-                const result = await response.json();
-                
-                if (result.data && result.data.length > 0) {
-                    feed.innerHTML = '';
-                    result.data.slice(0, 8).forEach(vid => {
-                        feed.innerHTML += `
-                            <div class="v-card" onclick="playVideo('${vid.embed_url}')">
-                                <img src="${vid.thumbnail}" alt="thumb">
-                                <div class="play-btn">▶</div>
-                                <div class="v-info">${vid.title}</div>
-                            </div>
-                        `;
-                    });
-                } else {
-                    feed.innerHTML = '<p style="padding:15px; font-size:0.8rem;">No highlights found for this sport.</p>';
+                const json = await res.json();
+                if(json.data) {
+                    feed.innerHTML = json.data.slice(0, 6).map(v => `
+                        <div class="v-card" onclick="playVideo('${v.embed_url}')">
+                            <img src="${v.thumbnail}">
+                            <div class="play-btn">▶</div>
+                            <div class="v-title">${v.title}</div>
+                        </div>
+                    `).join('');
                 }
-            } catch (err) {
-                feed.innerHTML = '<p style="padding:15px; color:red;">API Error: Check Key or Connection</p>';
-            }
+            } catch (e) { feed.innerHTML = "<p>Connect API to load videos</p>"; }
         }
 
-        // 2. Render Multi-Sport Matches
-        function renderMatches(sport) {
-            const container = document.getElementById('main-feed');
-            let html = `<div class="section-title">🔥 LIVE ${sport.toUpperCase()} MATCHES</div>`;
+        // 2. SWITCH SPORT & UI
+        function switchSport(sport, el) {
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            el.classList.add('active');
+            loadVideos(sport);
+            renderMatches(sport);
+        }
 
-            const mockData = {
+        // 3. RENDER MATCHES & COMMUNITY
+        function renderMatches(type) {
+            const content = document.getElementById('dynamicContent');
+            if(type === 'community') {
+                content.innerHTML = `
+                    <div class="comm-box">
+                        <div class="comm-header">👥 Global Fan Chat</div>
+                        <div class="chat-preview"><b>@User123:</b> Rohit Sharma is on fire today! 🔥</div>
+                        <div class="chat-preview"><b>@KingKohli:</b> Waiting for the second innings...</div>
+                        <button class="btn-action btn-ticket" onclick="alert('Chat Joining...')">JOIN DISCUSSION</button>
+                    </div>
+                    <div class="match-card" style="border-left:5px solid #6366f1">
+                        <span style="font-size:0.7rem; font-weight:800; color:#6366f1">WEEKLY CONTEST</span>
+                        <h4 style="margin:10px 0">Predict & Win ₹10,000</h4>
+                        <button class="btn-action btn-stats">ENTER CONTEST</button>
+                    </div>
+                `;
+                return;
+            }
+
+            // Real Team Logos Simulation
+            const teams = {
                 cricket: [
-                    { t1: 'IND', t2: 'AUS', s1: '245/4', s2: 'Yet to bat', status: 'LIVE - 1st Innings', logo1: '🇮🇳', logo2: '🇦🇺' },
-                    { t1: 'RCB', t2: 'CSK', s1: '182/6', s2: '45/1', status: 'LIVE - Chasing 183', logo1: '🦁', logo2: '🐯' }
+                    { n1: 'IND', l1: '🇮🇳', n2: 'AUS', l2: '🇦🇺', s1: '284/5', s2: 'Yet to bat', st: 'LIVE • FINAL OVERS' },
+                    { n1: 'MI', l1: '🦁', n2: 'CSK', l2: '🐯', s1: '165/2', s2: '40/0', st: 'LIVE • IPL 2026' }
                 ],
                 football: [
-                    { t1: 'RMAD', t2: 'BARC', s1: '2', s2: '1', status: '78th Minute', logo1: '👑', logo2: '🔵' },
-                    { t1: 'LIV', t2: 'MUN', s1: '0', s2: '0', status: '15th Minute', logo1: '🔴', logo2: '😈' }
+                    { n1: 'MCI', l1: '👕', n2: 'LIV', l2: '🧣', s1: '2', s2: '2', st: '85\' MINUTE' }
                 ]
-            };
+            }[type] || [];
 
-            const selected = mockData[sport] || mockData['cricket'];
-            
-            selected.forEach(m => {
-                html += `
-                    <div class="match-card">
-                        <div class="match-header"><span>${m.status}</span> <span style="color:var(--secondary)">T20 CUP</span></div>
-                        <div class="teams-container">
-                            <div class="team-box"><div class="team-logo">${m.logo1}</div><b>${m.t1}</b></div>
-                            <div class="score-main">${m.s1} - ${m.s2}</div>
-                            <div class="team-box"><div class="team-logo">${m.logo2}</div><b>${m.t2}</b></div>
-                        </div>
-                        <div class="contest-card">
-                            <div class="contest-info">
-                                <h4>🏆 Mega Contest: ₹50 Crores</h4>
-                                <p>Create your team now like Dream11</p>
-                            </div>
-                            <button class="join-btn" onclick="alert('Team Builder Opening...')">CREATE TEAM</button>
-                        </div>
+            content.innerHTML = teams.map(m => `
+                <div class="match-card">
+                    <div class="match-header"><span>${m.st}</span> <span style="color:var(--red)">● DIRECT</span></div>
+                    <div class="teams">
+                        <div class="team-info"><div class="team-logo">${m.l1}</div><b>${m.n1}</b></div>
+                        <div class="score">${m.s1} - ${m.s2}</div>
+                        <div class="team-info"><div class="team-logo">${m.l2}</div><b>${m.n2}</b></div>
                     </div>
-                `;
-            });
-            container.innerHTML = html;
+                    <button class="btn-action btn-ticket" onclick="openTickets()">🎟️ BOOK STADIUM TICKETS</button>
+                    <button class="btn-action btn-stats">📊 FULL LIVE STATS</button>
+                </div>
+            `).join('');
         }
 
-        // 3. Tab Switching
-        function changeSport(sport, btn) {
-            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-            
-            if(sport === 'community') {
-                document.getElementById('main-feed').innerHTML = `
-                    <div class="match-card" style="text-align:center; padding:40px;">
-                        <h2 style="color:var(--primary)">👥 Fan Community</h2>
-                        <p style="margin:15px 0;">Join 1 Million fans and discuss the game!</p>
-                        <button class="btn-group btn tab-btn active" style="width:100%">Join Global Chat</button>
-                    </div>
-                `;
-            } else {
-                fetchHighlights(sport);
-                renderMatches(sport);
-            }
-        }
-
-        // 4. Video Player
+        // 4. MODAL & TICKETS
         function playVideo(url) {
-            document.getElementById('videoIframe').src = url;
-            document.getElementById('videoModal').style.display = 'flex';
-        }
-        function closeVideo() {
-            document.getElementById('videoModal').style.display = 'none';
-            document.getElementById('videoIframe').src = '';
+            document.getElementById('modalBody').innerHTML = `<iframe src="${url}" allowfullscreen allow="autoplay"></iframe>`;
+            document.getElementById('appModal').style.display = 'flex';
         }
 
-        // Init
-        window.onload = () => {
-            fetchHighlights('cricket');
-            renderMatches('cricket');
-        };
+        function openTickets() {
+            document.getElementById('modalBody').innerHTML = `
+                <div style="padding:25px; text-align:center;">
+                    <h2 style="font-family:'Bebas Neue'">Stadium Seat Booking</h2>
+                    <div style="background:#eee; height:150px; margin:20px 0; border-radius:10px; display:flex; align-items:center; justify-content:center;">🏟️ STADIUM MAP VIEW</div>
+                    <p>VIP Stand: <b>₹4,500</b></p>
+                    <button class="btn-action btn-stats" onclick="alert('Redirecting to Payment Gate...')">PAY & CONFIRM</button>
+                </div>
+            `;
+            document.getElementById('appModal').style.display = 'flex';
+        }
+
+        function closeModal() {
+            document.getElementById('appModal').style.display = 'none';
+            document.getElementById('modalBody').innerHTML = '';
+        }
+
+        window.onload = () => { switchSport('cricket', document.querySelector('.tab')); };
     </script>
 </body>
     </html>
