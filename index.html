@@ -432,5 +432,36 @@
             }
         }, 4000);
     </script>
+    <!-- REAL-TIME SCORE API SCRIPT -->
+<script>
+    // 1. Apni CricketData API Key yahan dalein
+    const CRICKET_API_KEY = "e39b71a0-9c0c-4b8a-XXXX-XXXXXXXXXXXX"; 
+
+    async function updateLiveScores() {
+        try {
+            const res = await fetch(`https://api.cricketdata.org/v1/currentMatches?apikey=${CRICKET_API_KEY}`);
+            const result = await res.json();
+
+            if (result.status === "success" && result.data.length > 0) {
+                const match = result.data[0]; 
+                
+                // Score Update logic
+                document.getElementById('live-score-ind').innerHTML = `
+                    ${match.score[0].r}/${match.score[0].w} 
+                    <span style="font-size:0.8rem; color:var(--text-muted);">(${match.score[0].o})</span>
+                `;
+                
+                // Official Team Logo Update
+                document.querySelector('.sport-cricket .flag').src = match.teamInfo[0].img;
+            }
+        } catch (err) {
+            console.log("Score Load Error:", err);
+        }
+    }
+
+    // Har 60 second mein update hoga
+    setInterval(updateLiveScores, 60000);
+    updateLiveScores();
+</script>
 </body>
                                                                            </html>
