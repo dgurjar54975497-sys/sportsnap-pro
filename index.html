@@ -2,297 +2,359 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sportsnap V14 | Ultimate All-in-One</title>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;500;700;900&family=Bebas+Neue&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Sportsnap | Live Cricket Score & Updates</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&display=swap" rel="stylesheet">
     <style>
-        /* --- PREMIUM DARK THEME --- */
+        /* CRICBUZZ THEME COLORS */
         :root {
-            --bg-main: #0b1120; --bg-card: #1e293b; --primary: #10b981; 
-            --accent: #3b82f6; --danger: #ef4444; --text-main: #f8fafc;
-            --text-muted: #94a3b8; --gold: #f59e0b; --purple: #8b5cf6;
+            --cb-green: #009270;
+            --cb-dark: #222222;
+            --cb-light: #f1f2f6;
+            --cb-white: #ffffff;
+            --cb-text: #333333;
+            --cb-muted: #666666;
+            --cb-red: #d32f2f;
+            --cb-blue: #1a73e8;
         }
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Outfit', sans-serif; }
-        body { background: var(--bg-main); color: var(--text-main); padding-bottom: 90px; }
 
-        /* HEADER & TICKER */
-        header { background: rgba(11, 17, 32, 0.95); backdrop-filter: blur(10px); padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100; border-bottom: 1px solid #334155; }
-        .brand { font-family: 'Bebas Neue'; font-size: 2rem; background: linear-gradient(to right, var(--primary), #34d399); -webkit-background-clip: text; color: transparent; }
-        .live-badge { border: 1px solid var(--danger); color: var(--danger); font-size: 0.7rem; padding: 4px 10px; border-radius: 20px; font-weight: 800; animation: pulse 2s infinite; }
-        @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4); } 70% { box-shadow: 0 0 0 10px rgba(239, 68, 68, 0); } 100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); } }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Roboto', sans-serif; }
+        body { background: var(--cb-light); color: var(--cb-text); padding-bottom: 70px; }
+
+        /* HEADER */
+        header { background: var(--cb-green); color: var(--cb-white); padding: 15px 20px; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 5px rgba(0,0,0,0.2); display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-size: 1.5rem; font-weight: 900; letter-spacing: 1px; }
+        .head-icons { font-size: 1.2rem; }
+
+        /* SCROLLABLE NAVIGATION TABS */
+        .nav-tabs { background: var(--cb-white); display: flex; overflow-x: auto; scrollbar-width: none; border-bottom: 1px solid #e0e0e0; position: sticky; top: 56px; z-index: 99; }
+        .nav-tabs::-webkit-scrollbar { display: none; }
+        .tab { padding: 12px 20px; font-weight: 500; color: var(--cb-muted); white-space: nowrap; cursor: pointer; border-bottom: 3px solid transparent; transition: 0.2s; font-size: 0.9rem; text-transform: uppercase;}
+        .tab.active { color: var(--cb-green); border-bottom: 3px solid var(--cb-green); }
+
+        /* MAIN CONTAINER */
+        .container { max-width: 800px; margin: 0 auto; padding: 10px; }
+        .section { display: none; animation: fadeIn 0.3s; }
+        .section.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        /* CARDS */
+        .card { background: var(--cb-white); border-radius: 8px; padding: 15px; margin-bottom: 15px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+        .card-header { font-size: 0.75rem; color: var(--cb-muted); font-weight: 700; border-bottom: 1px solid #eee; padding-bottom: 8px; margin-bottom: 10px; display: flex; justify-content: space-between; }
         
-        .news-ticker { background: var(--accent); color: white; padding: 6px 15px; font-size: 0.75rem; font-weight: 700; white-space: nowrap; overflow: hidden; display: flex; align-items: center; }
-        .news-ticker span { display: inline-block; animation: scroll 15s linear infinite; }
-        @keyframes scroll { 0% { transform: translateX(100%); } 100% { transform: translateX(-100%); } }
+        /* MATCH UI */
+        .team-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+        .team-name { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 1.1rem; }
+        .flag { width: 30px; height: 20px; border-radius: 3px; object-fit: cover; border: 1px solid #eee; }
+        .score { font-weight: 900; font-size: 1.2rem; }
+        .match-status { color: var(--cb-red); font-size: 0.85rem; font-weight: 500; margin-top: 5px; }
 
-        /* TABS */
-        .tabs-nav { padding: 15px; display: flex; gap: 10px; overflow-x: auto; scrollbar-width: none; }
-        .tab { padding: 8px 20px; border-radius: 30px; background: #334155; color: var(--text-muted); font-weight: 700; font-size: 0.8rem; cursor: pointer; white-space: nowrap; transition: 0.3s; }
-        .tab.active { background: rgba(16, 185, 129, 0.1); color: var(--primary); border: 1px solid var(--primary); }
+        /* AI ANALYST */
+        .ai-title { font-size: 0.8rem; font-weight: 700; color: var(--cb-blue); margin: 15px 0 5px; display:flex; align-items:center; gap:5px;}
+        .ai-bar { width: 100%; height: 8px; background: #eee; border-radius: 10px; display: flex; overflow: hidden; }
+        .ai-ind { width: 65%; background: var(--cb-blue); transition: 0.5s; }
+        .ai-aus { width: 35%; background: #ffc107; transition: 0.5s; }
 
-        .container { max-width: 600px; margin: 0 auto; padding: 0 15px 15px; }
-        .section-title { font-weight: 900; font-size: 1.1rem; margin: 20px 0 15px; text-transform: uppercase; display: flex; justify-content: space-between; align-items: center; }
+        /* SCOREBOARD TABLE */
+        table { width: 100%; border-collapse: collapse; font-size: 0.85rem; margin-top: 10px; }
+        th { background: #f8f9fa; color: var(--cb-muted); text-align: left; padding: 8px; font-weight: 500; }
+        td { padding: 8px; border-bottom: 1px solid #eee; }
+        .font-bold { font-weight: 700; }
 
-        /* HIGHLIGHTS (FAILSAFE) */
-        .video-reel { display: flex; gap: 15px; overflow-x: auto; padding-bottom: 10px; scrollbar-width: none; }
-        .v-card { min-width: 240px; background: var(--bg-card); border-radius: 12px; overflow: hidden; position: relative; border: 1px solid #334155; cursor:pointer;}
-        .v-card img { width: 100%; height: 130px; object-fit: cover; opacity: 0.8; }
-        .v-play { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: rgba(16, 185, 129, 0.9); width: 40px; height: 40px; border-radius: 50%; display: flex; justify-content: center; align-items: center; color: #000; font-size: 1.2rem; }
-        .v-title { padding: 10px; font-size: 0.8rem; font-weight: 500; }
+        /* NEWS & CLUBS */
+        .news-item { display: flex; gap: 15px; border-bottom: 1px solid #eee; padding-bottom: 15px; margin-bottom: 15px; }
+        .news-item:last-child { border: none; margin-bottom: 0; padding-bottom: 0; }
+        .news-img { width: 100px; height: 70px; border-radius: 6px; object-fit: cover; }
+        .news-title { font-size: 0.95rem; font-weight: 500; line-height: 1.3; }
 
-        /* LIVE MATCH CARD & SCOREBOARD */
-        .match-card { background: var(--bg-card); border-radius: 20px; padding: 20px; margin-bottom: 20px; border: 1px solid #334155; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
-        .teams { display: flex; justify-content: space-between; align-items: center; text-align: center; margin: 15px 0;}
-        .team-logo { width: 50px; height: 50px; border-radius: 50%; margin: 0 auto 5px; background: #334155; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; }
-        .score-val { font-family: 'Bebas Neue'; font-size: 2.5rem; color: var(--primary); transition: 0.3s ease; }
-        .score-update-glow { text-shadow: 0 0 15px var(--primary); }
+        .club-card { display: flex; align-items: center; justify-content: space-between; padding: 12px; border: 1px solid #eee; border-radius: 8px; margin-bottom: 10px; }
+        .club-logo { width: 40px; height: 40px; border-radius: 50%; }
+        .btn-join { background: var(--cb-green); color: white; border: none; padding: 8px 15px; border-radius: 4px; font-weight: 700; cursor: pointer; }
 
-        /* AI PREDICTOR */
-        .ai-bar { width: 100%; height: 6px; background: #334155; border-radius: 10px; display: flex; overflow: hidden; margin: 15px 0; }
-        .ai-ind { width: 70%; background: var(--accent); } .ai-aus { width: 30%; background: var(--danger); }
+        /* TICKET SEATING (FIREBASE) */
+        .pitch { background: #81c784; height: 40px; border-radius: 50px 50px 0 0; display:flex; justify-content:center; align-items:center; font-weight:bold; color:white; margin-bottom: 20px;}
+        .seat-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; margin-bottom: 20px; }
+        .seat { background: #e0e0e0; height: 40px; border-radius: 6px; display:flex; justify-content:center; align-items:center; font-weight:700; font-size:0.8rem; cursor:pointer; border:1px solid #ccc; transition: 0.3s;}
+        .seat.booked { background: var(--cb-red); color: white; border-color: var(--cb-red); pointer-events: none; }
+        .seat.mine { background: var(--cb-green); color: white; }
 
-        /* DETAILS SCOREBOARD (HIDDEN DEFAULT) */
-        .scoreboard { display: none; margin-top: 15px; border-top: 1px solid #475569; padding-top: 15px; }
-        table { width: 100%; border-collapse: collapse; font-size: 0.8rem; text-align: left; }
-        th { color: var(--text-muted); padding-bottom: 8px; border-bottom: 1px solid #334155; }
-        td { padding: 8px 0; font-weight: 700; }
-        .highlight-txt { color: var(--primary); }
+        /* HIGHLIGHTS */
+        .vid-card { position: relative; margin-bottom: 15px; border-radius: 8px; overflow: hidden; }
+        .vid-card img { width: 100%; height: 200px; object-fit: cover; }
+        .play-btn { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: rgba(0,0,0,0.6); color: white; width: 50px; height: 50px; border-radius: 50%; display:flex; justify-content:center; align-items:center; font-size: 1.5rem; }
 
-        /* BUTTONS */
-        .btn-group { display: flex; gap: 10px; margin-top: 15px; }
-        .btn { flex: 1; padding: 12px; border-radius: 10px; border: none; font-weight: 800; font-size: 0.8rem; cursor: pointer; }
-        .btn-stats { background: rgba(59, 130, 246, 0.1); color: var(--accent); border: 1px solid var(--accent); }
-        .btn-ticket { background: var(--primary); color: var(--bg-main); }
-        .btn-fantasy { background: linear-gradient(135deg, var(--purple), #4f46e5); color: white; width: 100%; margin-top: 10px; }
-
-        /* POINTS TABLE */
-        .points-table-section { background: var(--bg-card); border-radius: 15px; padding: 15px; border: 1px solid #334155; overflow-x: auto; display: none; }
-        .points-table-section table { min-width: 300px; }
-        .pos-1 { background: rgba(16, 185, 129, 0.1); border-left: 3px solid var(--primary); }
-
-        /* NEWS GRID */
-        .news-item { display: flex; gap: 15px; background: var(--bg-card); padding: 12px; border-radius: 12px; border: 1px solid #334155; align-items: center; margin-bottom: 10px; }
-        .news-img { width: 80px; height: 60px; border-radius: 8px; object-fit: cover; }
-        .news-tag { color: var(--gold); font-size: 0.6rem; font-weight: 900; background: rgba(245, 158, 11, 0.2); padding: 2px 6px; border-radius: 4px; }
-        
-        /* MODALS */
-        .modal { position: fixed; inset: 0; background: rgba(11, 17, 32, 0.95); z-index: 2000; display: none; align-items: center; justify-content: center; }
-        .modal-content { width: 95%; max-width: 500px; background: var(--bg-card); border-radius: 20px; padding: 20px; position: relative; border: 1px solid #334155; }
-        .close-m { position: absolute; top: 15px; right: 20px; color: var(--text-muted); font-size: 1.5rem; cursor: pointer; }
-        
-        /* SEAT MAP UI */
-        .seat-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 10px; justify-items: center; margin: 20px 0; }
-        .seat { width: 35px; height: 35px; background: #334155; border-radius: 8px 8px 4px 4px; cursor: pointer; display:flex; align-items:center; justify-content:center; font-size:0.6rem; font-weight:700; transition:0.2s;}
-        .seat.booked { background: var(--danger); opacity: 0.5; pointer-events: none; }
-        .seat.selected { background: var(--gold); color: #000; transform: scale(1.1); }
     </style>
 </head>
 <body>
 
     <header>
-        <div class="brand">SPORTSNAP</div>
-        <div class="live-badge">🔴 API SYNCED</div>
+        <div class="logo">Sportsnap</div>
+        <div class="head-icons">🔍 👤</div>
     </header>
 
-    <div class="news-ticker">
-        <span>⚡ LIVE: Automatic Score Fetching Enabled • Real-time stats updating • New AC Stadium bookings open now ⚡</span>
+    <div class="nav-tabs">
+        <div class="tab active" onclick="window.switchTab('live')">Live</div>
+        <div class="tab" onclick="window.switchTab('scorecard')">Scorecard</div>
+        <div class="tab" onclick="window.switchTab('ipl')">IPL 2026</div>
+        <div class="tab" onclick="window.switchTab('news')">News</div>
+        <div class="tab" onclick="window.switchTab('clubs')">Clubs</div>
+        <div class="tab" onclick="window.switchTab('highlights')">Videos</div>
+        <div class="tab" onclick="window.switchTab('tickets')" style="color:var(--cb-red); font-weight:bold;">🎫 Tickets</div>
     </div>
 
-    <nav class="tabs-nav">
-        <div class="tab active" onclick="switchMainTab('feed', this)">🔥 LIVE FEED</div>
-        <div class="tab" onclick="switchMainTab('table', this)">📊 POINTS TABLE</div>
-        <div class="tab" onclick="switchMainTab('football', this)">⚽ FOOTBALL</div>
-    </nav>
-
-    <div class="container" id="feedSection">
-        <div class="section-title">📺 HIGHLIGHTS</div>
-        <div class="video-reel" id="videoFeed">Loading...</div>
-
-        <div class="section-title">⚡ REAL-TIME LIVE SCORE</div>
-        <div class="match-card">
-            <div style="display:flex; justify-content:space-between; font-size:0.75rem; color:var(--text-muted); font-weight:700;">
-                <span>WANKHEDE STADIUM</span>
-                <span id="liveStatusText" style="color:var(--primary)">OVERS: 18.5</span>
-            </div>
-            
-            <div class="teams">
-                <div><div class="team-logo">🇮🇳</div><b>IND</b></div>
-                <div>
-                    <div class="score-val" id="liveScore">214/4</div> 
+    <div class="container">
+        
+        <div id="live" class="section active">
+            <div class="card">
+                <div class="card-header">
+                    <span>🔴 LIVE • FINAL • WANKHEDE</span>
+                    <span>T20</span>
                 </div>
-                <div><div class="team-logo">🇦🇺</div><b>AUS</b></div>
-            </div>
+                
+                <div class="team-row">
+                    <div class="team-name">
+                        <img src="https://flagcdn.com/w40/in.png" class="flag"> IND
+                    </div>
+                    <div class="score" id="live-score">214/4 <span style="font-size:0.8rem; color:var(--cb-muted); font-weight:400;">(18.5)</span></div>
+                </div>
+                
+                <div class="team-row">
+                    <div class="team-name">
+                        <img src="https://flagcdn.com/w40/au.png" class="flag"> AUS
+                    </div>
+                    <div class="score" style="color:var(--cb-muted)">Yet to bat</div>
+                </div>
 
-            <div style="font-size:0.7rem; color:var(--gold); font-weight:900; display:flex; justify-content:space-between;">
-                <span>🤖 AI WIN: IND 70%</span><span>AUS 30%</span>
-            </div>
-            <div class="ai-bar"><div class="ai-ind"></div><div class="ai-aus"></div></div>
+                <div class="match-status" id="live-status">India won the toss and elected to bat</div>
 
-            <div class="btn-group">
-                <button class="btn btn-stats" onclick="toggleScoreboard()">📊 STATS</button>
-                <button class="btn btn-ticket" onclick="openModal('ticketModal')">🎟️ TICKETS</button>
+                <div class="ai-title">🤖 AI Win Predictor</div>
+                <div style="display:flex; justify-content:space-between; font-size:0.7rem; font-weight:bold; margin-bottom:3px;">
+                    <span style="color:var(--cb-blue)">IND 65%</span>
+                    <span style="color:#f57f17">AUS 35%</span>
+                </div>
+                <div class="ai-bar">
+                    <div class="ai-ind" id="ai-ind-bar"></div>
+                    <div class="ai-aus"></div>
+                </div>
             </div>
-            <button class="btn btn-fantasy" onclick="openModal('clubModal')">🏆 JOIN FANTASY CLUB (₹10 CR)</button>
+        </div>
 
-            <div class="scoreboard" id="detailStats">
+        <div id="scorecard" class="section">
+            <div class="card">
+                <h3 style="margin-bottom:10px; font-size:1rem;">India Innings <span style="float:right; color:var(--cb-green)">214/4 (18.5)</span></h3>
                 <table>
-                    <tr><th>BATSMAN</th><th>R</th><th>B</th><th>SR</th></tr>
-                    <tr><td>V. Kohli*</td><td class="highlight-txt">82</td><td>45</td><td>182.2</td></tr>
-                    <tr><td>S. Yadav</td><td class="highlight-txt">45</td><td>20</td><td>225.0</td></tr>
+                    <tr><th>Batter</th><th>R</th><th>B</th><th>4s</th><th>6s</th><th>SR</th></tr>
+                    <tr><td class="font-bold">V. Kohli*</td><td class="font-bold">82</td><td>45</td><td>6</td><td>4</td><td>182.2</td></tr>
+                    <tr><td class="font-bold">S. Yadav</td><td class="font-bold">45</td><td>20</td><td>3</td><td>4</td><td>225.0</td></tr>
+                    <tr><td>R. Sharma (c)</td><td>35</td><td>22</td><td>5</td><td>1</td><td>159.0</td></tr>
                 </table>
-                <table style="margin-top: 10px;">
-                    <tr><th>BOWLER</th><th>O</th><th>R</th><th>W</th></tr>
-                    <tr><td>M. Starc</td><td>3.5</td><td>42</td><td class="highlight-txt">2</td></tr>
+                <br>
+                <table>
+                    <tr><th>Bowler</th><th>O</th><th>M</th><th>R</th><th>W</th><th>ECO</th></tr>
+                    <tr><td class="font-bold">M. Starc</td><td>3.5</td><td>0</td><td>42</td><td class="font-bold">2</td><td>10.9</td></tr>
+                    <tr><td>P. Cummins</td><td>4.0</td><td>0</td><td>38</td><td>1</td><td>9.5</td></tr>
                 </table>
             </div>
         </div>
 
-        <div class="section-title">📰 TOP NEWS</div>
-        <div class="news-item">
-            <img src="https://images.unsplash.com/photo-1540747913346-19e32dc3e97e?w=200" class="news-img">
-            <div>
-                <div class="news-tag">STADIUM</div>
-                <h4 style="font-size:0.85rem; margin:5px 0;">New VIP stands opening for Final.</h4>
-                <div style="font-size:0.7rem; color:var(--text-muted)">1 Hour Ago</div>
+        <div id="ipl" class="section">
+            <div class="card">
+                <h3 style="margin-bottom:15px;">IPL 2026 Points Table</h3>
+                <table>
+                    <tr><th>Team</th><th>P</th><th>W</th><th>L</th><th>Pts</th><th>NRR</th></tr>
+                    <tr style="background:#e8f5e9"><td class="font-bold">1. CSK</td><td>14</td><td>10</td><td>4</td><td class="font-bold">20</td><td>+1.240</td></tr>
+                    <tr style="background:#e8f5e9"><td class="font-bold">2. MI</td><td>14</td><td>9</td><td>5</td><td class="font-bold">18</td><td>+0.850</td></tr>
+                    <tr><td class="font-bold">3. RCB</td><td>14</td><td>8</td><td>6</td><td class="font-bold">16</td><td>+0.450</td></tr>
+                    <tr><td class="font-bold">4. KKR</td><td>14</td><td>7</td><td>7</td><td class="font-bold">14</td><td>-0.100</td></tr>
+                </table>
             </div>
         </div>
-    </div>
 
-    <div class="container points-table-section" id="tableSection">
-        <h3 style="margin-bottom:15px; color:var(--gold);">🏆 IPL 2026 STANDINGS</h3>
-        <table>
-            <tr style="border-bottom:2px solid #334155;"><th>TEAM</th><th>P</th><th>W</th><th>L</th><th>PTS</th><th>NRR</th></tr>
-            <tr class="pos-1"><td><b>CSK</b></td><td>10</td><td>8</td><td>2</td><td class="highlight-txt">16</td><td>+1.20</td></tr>
-            <tr><td><b>MI</b></td><td>10</td><td>7</td><td>3</td><td class="highlight-txt">14</td><td>+0.85</td></tr>
-            <tr><td><b>RCB</b></td><td>10</td><td>6</td><td>4</td><td class="highlight-txt">12</td><td>+0.45</td></tr>
-            <tr><td><b>KKR</b></td><td>10</td><td>5</td><td>5</td><td class="highlight-txt">10</td><td>-0.10</td></tr>
-        </table>
-    </div>
-
-    <div class="modal" id="ticketModal">
-        <div class="modal-content">
-            <span class="close-m" onclick="closeModal('ticketModal')">&times;</span>
-            <h2 style="color:var(--primary); font-family:'Bebas Neue';">MAP BOOKING</h2>
-            <div style="background:var(--primary); height:20px; border-radius:50px 50px 0 0; text-align:center; color:#000; font-size:0.7rem; font-weight:800; margin-top:10px;">PITCH</div>
-            <div class="seat-grid" id="seatGrid"></div>
-            <button class="btn btn-ticket" style="width:100%" onclick="alert('Payment Gateway Opening...')">PAY ₹1,500/SEAT</button>
-        </div>
-    </div>
-
-    <div class="modal" id="clubModal">
-        <div class="modal-content">
-            <span class="close-m" onclick="closeModal('clubModal')">&times;</span>
-            <h2 style="color:var(--purple); font-family:'Bebas Neue';">FANTASY CLUB</h2>
-            <p style="font-size:0.8rem; color:var(--text-muted);">Choose your Captain</p>
-            <div style="display:flex; justify-content:space-between; background:#0f172a; padding:15px; border-radius:10px; margin:15px 0; align-items:center;">
-                <div><b>V. Kohli</b> <br><span style="font-size:0.7rem; color:var(--text-muted)">BAT • IND</span></div>
-                <button style="background:var(--gold); border:none; padding:8px; border-radius:50%; font-weight:900;">C</button>
-            </div>
-            <button class="btn btn-fantasy" onclick="alert('Successfully Joined the Club!')">JOIN CONTEST (₹49)</button>
-        </div>
-    </div>
-
-    <script>
-        // ==========================================
-        // 1. LIVE SCORE API SIMULATION (AUTO UPDATE)
-        // ==========================================
-        let currentRuns = 214;
-        let balls = 5; // 18.5 overs
-
-        function fetchLiveScore() {
-            /* REAL API LOGIC (Commented out so it doesn't break without paid key):
-               fetch('https://cricbuzz-cricket.p.rapidapi.com/matches/v1/live', { headers: {'X-RapidAPI-Key': 'YOUR_KEY'} })
-               .then(res => res.json()).then(data => { update DOM })
-            */
-
-            // SIMULATION: Update score automatically every 4 seconds to show client how it works
-            setInterval(() => {
-                const runScored = Math.floor(Math.random() * 5); // 0, 1, 2, 3, 4 runs
-                if(runScored > 0 && runScored !== 3) {
-                    currentRuns += runScored;
-                    balls++;
-                    
-                    let overStr = `18.${balls}`;
-                    if(balls === 6) { overStr = "19.0"; balls = 0; }
-
-                    const scoreEl = document.getElementById('liveScore');
-                    scoreEl.innerText = `${currentRuns}/4`;
-                    document.getElementById('liveStatusText').innerText = `OVERS: ${overStr} (Last ball: ${runScored} runs)`;
-                    
-                    // Add Flash/Glow Effect
-                    scoreEl.classList.add('score-update-glow');
-                    setTimeout(() => scoreEl.classList.remove('score-update-glow'), 1000);
-                }
-            }, 4000); // 4000ms = 4 seconds
-        }
-
-        // ==========================================
-        // 2. FAILSAFE HIGHLIGHTS
-        // ==========================================
-        function loadHighlights() {
-            const fallbackData = [
-                { title: "IND vs AUS Thriller", thumb: "https://img.youtube.com/vi/l44vHwV_i_M/hqdefault.jpg" },
-                { title: "Best Yorker Wickets", thumb: "https://img.youtube.com/vi/kC_YgH5T5q0/hqdefault.jpg" },
-                { title: "MS Dhoni Sixes", thumb: "https://img.youtube.com/vi/PjRkE1z2U-o/hqdefault.jpg" }
-            ];
-            document.getElementById('videoFeed').innerHTML = fallbackData.map(v => `
-                <div class="v-card">
-                    <img src="${v.thumb}">
-                    <div class="v-play">▶</div>
-                    <div class="v-title">${v.title}</div>
+        <div id="news" class="section">
+            <div class="card">
+                <div class="news-item">
+                    <img src="https://images.unsplash.com/photo-1540747913346-19e32dc3e97e?w=200" class="news-img">
+                    <div>
+                        <div style="font-size:0.7rem; color:var(--cb-muted); margin-bottom:5px;">2 HOURS AGO</div>
+                        <div class="news-title">Wankhede Stadium completely sold out for the Mega Final.</div>
+                    </div>
                 </div>
-            `).join('');
+                <div class="news-item">
+                    <img src="https://images.unsplash.com/photo-1624526267942-ab06bc6526cb?w=200" class="news-img">
+                    <div>
+                        <div style="font-size:0.7rem; color:var(--cb-muted); margin-bottom:5px;">5 HOURS AGO</div>
+                        <div class="news-title">Virat Kohli touches another milestone in T20 Internationals.</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="clubs" class="section">
+            <div class="card">
+                <h3 style="margin-bottom:5px;">Mega Contests</h3>
+                <p style="font-size:0.8rem; color:var(--cb-muted); margin-bottom:15px;">Join clubs and win real rewards.</p>
+                
+                <div class="club-card">
+                    <div style="display:flex; align-items:center; gap:10px;">
+                        <img src="https://ui-avatars.com/api/?name=W+C&background=009270&color=fff" class="club-logo">
+                        <div>
+                            <div class="font-bold">World Cup Pool</div>
+                            <div style="font-size:0.75rem; color:var(--cb-red)">Prize: ₹10 Crores</div>
+                        </div>
+                    </div>
+                    <button class="btn-join" onclick="alert('Joining Code Running...')">Join ₹49</button>
+                </div>
+
+                <div class="club-card">
+                    <div style="display:flex; align-items:center; gap:10px;">
+                        <img src="https://ui-avatars.com/api/?name=H+H&background=1a73e8&color=fff" class="club-logo">
+                        <div>
+                            <div class="font-bold">Head to Head</div>
+                            <div style="font-size:0.75rem; color:var(--cb-red)">Prize: ₹10,000</div>
+                        </div>
+                    </div>
+                    <button class="btn-join" onclick="alert('Joining Code Running...')">Join ₹599</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="highlights" class="section">
+            <div class="card">
+                <div class="vid-card" onclick="alert('Playing Video...')">
+                    <img src="https://img.youtube.com/vi/l44vHwV_i_M/hqdefault.jpg">
+                    <div class="play-btn">▶</div>
+                    <div style="padding:10px; font-weight:700;">IND vs AUS Thriller Highlights</div>
+                </div>
+                <div class="vid-card" onclick="alert('Playing Video...')">
+                    <img src="https://img.youtube.com/vi/kC_YgH5T5q0/hqdefault.jpg">
+                    <div class="play-btn">▶</div>
+                    <div style="padding:10px; font-weight:700;">Best Yorker Wickets 2026</div>
+                </div>
+            </div>
+        </div>
+
+        <div id="tickets" class="section">
+            <div class="card">
+                <h3 style="margin-bottom:5px; color:var(--cb-green);">Book Your Seats</h3>
+                <p style="font-size:0.8rem; color:var(--cb-muted); margin-bottom:15px;">Real-time sync enabled via Firebase.</p>
+                
+                <div class="pitch">PITCH SIDE</div>
+                
+                <div class="seat-grid" id="seating-area">
+                    </div>
+
+                <div style="display:flex; gap:15px; font-size:0.8rem; justify-content:center; margin-top:20px;">
+                    <div style="display:flex; align-items:center; gap:5px;"><div style="width:15px; height:15px; background:#e0e0e0; border-radius:3px;"></div> Available</div>
+                    <div style="display:flex; align-items:center; gap:5px;"><div style="width:15px; height:15px; background:var(--cb-red); border-radius:3px;"></div> Booked</div>
+                    <div style="display:flex; align-items:center; gap:5px;"><div style="width:15px; height:15px; background:var(--cb-green); border-radius:3px;"></div> Yours</div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getDatabase, ref, set, onValue } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+
+        // AAPKA DIYA HUA EXACT CONFIG
+        const firebaseConfig = {
+            apiKey: "AIzaSyAEEhyRLAXlEDPx0Yt2K8e5sZ2Ev5F8GN4",
+            authDomain: "sportsnap-aff3d.firebaseapp.com",
+            databaseURL: "https://sportsnap-aff3d-default-rtdb.asia-southeast1.firebasedatabase.app",
+            projectId: "sportsnap-aff3d",
+            storageBucket: "sportsnap-aff3d.firebasestorage.app",
+            messagingSenderId: "701928746962",
+            appId: "1:701928746962:web:6ea1b690e543717091e20b"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+
+        // Generate 20 Seats HTML
+        const seatGrid = document.getElementById('seating-area');
+        for(let i=1; i<=20; i++) {
+            let seat = document.createElement('div');
+            seat.className = 'seat';
+            seat.id = 'seat-' + i;
+            seat.innerText = i;
+            seat.onclick = () => window.bookRealSeat('seat-' + i);
+            seatGrid.appendChild(seat);
         }
 
-        // ==========================================
-        // 3. UI CONTROLS (TABS & MODALS)
-        // ==========================================
-        function switchMainTab(target, btn) {
-            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-            btn.classList.add('active');
-
-            if(target === 'table') {
-                document.getElementById('feedSection').style.display = 'none';
-                document.getElementById('tableSection').style.display = 'block';
-            } else {
-                document.getElementById('feedSection').style.display = 'block';
-                document.getElementById('tableSection').style.display = 'none';
+        // 🟢 REAL-TIME LISTENER: Check database and update colors
+        const matchRef = ref(db, 'matches/ind_aus/seats');
+        onValue(matchRef, (snapshot) => {
+            const data = snapshot.val();
+            // Reset all seats to gray first
+            document.querySelectorAll('.seat').forEach(s => s.className = 'seat');
+            
+            if(data) {
+                Object.keys(data).forEach(key => {
+                    let seatEl = document.getElementById(key);
+                    if(seatEl) {
+                        seatEl.classList.add('booked');
+                        seatEl.innerText = "✖";
+                    }
+                });
             }
-        }
+        });
 
-        function toggleScoreboard() {
-            const sb = document.getElementById('detailStats');
-            sb.style.display = (sb.style.display === "block") ? "none" : "block";
-        }
+        // 🟢 WRITE FUNCTION: Book the seat in Firebase
+        window.bookRealSeat = function(seatId) {
+            let seatEl = document.getElementById(seatId);
+            if(seatEl.classList.contains('booked')) return; // Already booked by someone else
 
-        function openModal(id) {
-            document.getElementById(id).style.display = 'flex';
-            if(id === 'ticketModal') generateSeats();
-        }
-
-        function closeModal(id) { document.getElementById(id).style.display = 'none'; }
-
-        // ==========================================
-        // 4. SEAT GENERATION LOGIC
-        // ==========================================
-        function generateSeats() {
-            const grid = document.getElementById('seatGrid');
-            grid.innerHTML = '';
-            for(let i=1; i<=24; i++) {
-                let div = document.createElement('div');
-                div.className = 'seat';
-                div.innerText = 'S'+i;
-                if(Math.random() < 0.3) div.classList.add('booked');
-                else div.onclick = function() { this.classList.toggle('selected'); };
-                grid.appendChild(div);
-            }
-        }
-
-        // INITIALIZE ALL
-        window.onload = () => {
-            loadHighlights();
-            fetchLiveScore(); // Starts the auto-update API simulation
+            seatEl.innerText = "⏳"; // Loading state
+            
+            // Save to Firebase database
+            set(ref(db, 'matches/ind_aus/seats/' + seatId), {
+                status: 'booked',
+                timestamp: Date.now()
+            }).then(() => {
+                seatEl.classList.add('mine');
+                alert("🎉 Seat " + seatId.replace('seat-','') + " successfully booked in Firebase!");
+            }).catch((error) => {
+                alert("Database Error! Make sure your Realtime Database Rules allow read/write (true).");
+                seatEl.innerText = seatId.replace('seat-',''); // Revert text on error
+            });
         };
     </script>
+
+    <script>
+        // Tab Switching Logic
+        window.switchTab = function(tabId) {
+            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            
+            document.getElementById(tabId).classList.add('active');
+            event.currentTarget.classList.add('active');
+        }
+
+        // Live Score Simulation (To make it feel real without paid APIs)
+        let runs = 214;
+        let balls = 5;
+        setInterval(() => {
+            if(Math.random() > 0.5) {
+                let randomRuns = Math.floor(Math.random() * 5);
+                if(randomRuns > 0 && randomRuns !== 3) {
+                    runs += randomRuns;
+                    balls++;
+                    let overText = balls === 6 ? "19.0" : `18.${balls}`;
+                    if(balls===6) balls = 0; // reset for simulation
+                    
+                    let scoreEl = document.getElementById('live-score');
+                    scoreEl.innerHTML = `${runs}/4 <span style="font-size:0.8rem; color:var(--cb-muted); font-weight:400;">(${overText})</span>`;
+                    document.getElementById('live-status').innerText = `Last ball: ${randomRuns} runs scored!`;
+                    
+                    // Update AI Bar slightly
+                    let currentInd = parseInt(document.getElementById('ai-ind-bar').style.width || "65");
+                    let newInd = currentInd + (randomRuns > 2 ? 1 : -1);
+                    document.getElementById('ai-ind-bar').style.width = newInd + "%";
+                }
+            }
+        }, 5000);
+    </script>
 </body>
-        </html>
+    </html>
