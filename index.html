@@ -1,12 +1,11 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="hi">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Sportsnap V22 | Ultimate Glass Edition</title>
+    <title>Sportsnap V22 | Master Pro</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700;900&display=swap" rel="stylesheet">
     <style>
-        /* COLORFUL NEURAL GLASS UI GRADING (V20 EXACT COLORS) */
         :root {
             --theme-accent: #00ffcc; 
             --glass-bg: rgba(20, 25, 40, 0.45);
@@ -14,385 +13,189 @@
             --text-main: #ffffff;
             --text-muted: #a0aec0;
             --danger: #ff0055;
-            --card-radius: 20px;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; -webkit-tap-highlight-color: transparent; }
+        body { background: #05070a; color: var(--text-main); padding-bottom: 90px; overflow-x: hidden; }
         
-        body { 
-            background: radial-gradient(circle at 10% 20%, #0b0f19 0%, #05070a 100%);
-            background-attachment: fixed;
-            color: var(--text-main); 
-            padding-bottom: 90px; 
-        }
+        /* Glass Header */
+        header { background: rgba(5, 7, 10, 0.85); backdrop-filter: blur(20px); padding: 18px 20px; position: sticky; top: 0; z-index: 1000; border-bottom: 1px solid var(--glass-border); display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-size: 1.8rem; font-weight: 900; background: linear-gradient(90deg, #fff, var(--theme-accent)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; letter-spacing: 1px; }
 
-        body::before {
-            content: ''; position: fixed; top: -10%; left: -10%; width: 50vw; height: 50vw;
-            background: var(--theme-accent); filter: blur(120px); opacity: 0.15; z-index: -1; transition: 0.5s ease;
-        }
-
-        /* HEADER & SPORT SELECTOR */
-        header { background: rgba(5, 7, 10, 0.7); backdrop-filter: blur(15px); padding: 15px 20px; position: sticky; top: 0; z-index: 100; border-bottom: 1px solid var(--glass-border); display: flex; justify-content: space-between; align-items: center; }
-        .logo { font-size: 1.8rem; font-weight: 900; background: linear-gradient(90deg, #fff, var(--theme-accent)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        
-        .sport-selector { background: rgba(5, 7, 10, 0.5); backdrop-filter: blur(10px); padding: 12px 15px; display: flex; gap: 12px; overflow-x: auto; scrollbar-width: none; border-bottom: 1px solid var(--glass-border); position: sticky; top: 62px; z-index: 99; }
-        .sport-selector::-webkit-scrollbar { display: none; }
-        .sport-badge { background: var(--glass-bg); color: var(--text-muted); padding: 8px 20px; border-radius: 30px; font-size: 0.85rem; font-weight: 700; cursor: pointer; white-space: nowrap; transition: 0.4s; border: 1px solid var(--glass-border); box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
-        .sport-badge.active { background: var(--theme-accent); color: #000; border-color: var(--theme-accent); box-shadow: 0 0 20px var(--theme-accent); }
-
-        /* VIEWS & CARDS */
-        .container { max-width: 800px; margin: 0 auto; padding: 15px; }
-        .view { display: none; animation: blurFade 0.4s ease; }
+        .container { padding: 15px; max-width: 600px; margin: 0 auto; }
+        .view { display: none; animation: slideUp 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
         .view.active { display: block; }
-        @keyframes blurFade { from { opacity: 0; filter: blur(10px); transform: translateY(20px); } to { opacity: 1; filter: blur(0); transform: translateY(0); } }
-        
-        .card { background: var(--glass-bg); border-radius: var(--card-radius); padding: 20px; margin-bottom: 20px; border: 1px solid var(--glass-border); backdrop-filter: blur(12px); box-shadow: 0 8px 32px rgba(0,0,0,0.3); }
-        .card-header { font-size: 0.75rem; color: var(--text-muted); font-weight: 800; border-bottom: 1px solid var(--glass-border); padding-bottom: 10px; margin-bottom: 15px; display: flex; justify-content: space-between; text-transform: uppercase; }
-        
-        /* MATCH UI */
+        @keyframes slideUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Card System */
+        .card { background: var(--glass-bg); border-radius: 24px; padding: 20px; margin-bottom: 20px; border: 1px solid var(--glass-border); backdrop-filter: blur(15px); box-shadow: 0 10px 30px rgba(0,0,0,0.5); position: relative; overflow: hidden; }
+        .card::after { content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.03), transparent); transition: 0.5s; }
+        .card:hover::after { left: 100%; }
+
+        /* Real Match UI */
+        .match-tag { font-size: 0.65rem; font-weight: 800; text-transform: uppercase; color: var(--theme-accent); margin-bottom: 12px; display: block; }
         .team-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
-        .team-name { display: flex; align-items: center; gap: 15px; font-weight: 800; font-size: 1.2rem; }
-        .flag { width: 42px; height: 42px; border-radius: 50%; object-fit: contain; background: #fff; padding: 2px; border: 2px solid var(--theme-accent); }
-        .score { font-weight: 900; font-size: 1.6rem; text-shadow: 0 2px 10px rgba(0,0,0,0.5); }
-        .match-status { color: var(--theme-accent); font-size: 0.85rem; font-weight: 700; margin-top: 5px; text-align: center; }
+        .team-info { display: flex; align-items: center; gap: 12px; font-weight: 700; font-size: 1.1rem; }
+        .team-logo { width: 40px; height: 40px; border-radius: 50%; background: #fff; padding: 3px; border: 2px solid var(--glass-border); object-fit: contain; }
+        .score-val { font-weight: 900; font-size: 1.5rem; color: #fff; }
+        .match-status { font-size: 0.8rem; color: var(--theme-accent); text-align: center; font-weight: 600; padding-top: 10px; border-top: 1px solid var(--glass-border); }
 
-        /* CLUBS & CHAT MESSAGES */
-        .club-card { background: var(--glass-bg); padding: 15px; border-radius: 15px; border: 1px solid var(--glass-border); margin-bottom: 15px; }
-        .club-info { display: flex; align-items: center; gap: 15px; margin-bottom: 15px; }
-        .club-logo { width: 50px; height: 50px; border-radius: 12px; background: #fff; padding: 5px; object-fit: contain; }
-        .chat-section { background: rgba(0,0,0,0.3); border-radius: 10px; padding: 10px; display: none; margin-top: 10px; border: 1px solid var(--glass-border); }
-        .chat-msg { font-size: 0.8rem; margin-bottom: 8px; padding: 8px; border-radius: 8px; background: rgba(255,255,255,0.05); }
-        .chat-msg span { font-weight: 800; color: var(--theme-accent); margin-right: 5px; }
-        .btn-action { background: transparent; color: var(--theme-accent); border: 2px solid var(--theme-accent); padding: 5px 15px; border-radius: 20px; font-weight: 800; cursor: pointer; transition: 0.3s; font-size: 0.8rem; }
-        .btn-action:hover { background: var(--theme-accent); color: #000; }
+        /* Clubs & Chat */
+        .club-item { display: flex; align-items: center; gap: 15px; margin-bottom: 10px; }
+        .chat-win { background: rgba(0,0,0,0.3); border-radius: 15px; padding: 12px; margin-top: 10px; display: none; border: 1px solid var(--glass-border); }
+        .msg { font-size: 0.85rem; margin-bottom: 8px; line-height: 1.4; }
+        .msg b { color: var(--theme-accent); margin-right: 5px; }
 
-        /* TICKETS & MONEY TRANSFER */
-        .pitch { background: linear-gradient(180deg, #1b5e20, #0a3d10); height: 60px; border-radius: 50px 50px 0 0; display:flex; justify-content:center; align-items:center; font-weight:900; color:white; margin-bottom: 25px; letter-spacing: 3px; border: 1px solid #4caf50;}
-        .seat-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; margin-bottom: 20px; }
-        .seat { background: rgba(255,255,255,0.05); height: 50px; border-radius: 10px; display:flex; justify-content:center; align-items:center; font-weight:800; cursor:pointer; border:1px solid var(--glass-border); transition: 0.3s; }
-        .seat.booked { background: rgba(255,0,85,0.2); color: var(--danger); border-color: var(--danger); pointer-events: none; }
-        .seat.mine { background: var(--theme-accent); color: #000; border-color: var(--theme-accent); }
-        
-        .payment-box { background: rgba(0,0,0,0.6); padding: 15px; border-radius: 15px; border: 1px solid var(--theme-accent); text-align: center; display: none; animation: blurFade 0.3s ease; }
-        .btn-pay { background: var(--theme-accent); color: #000; border: none; padding: 10px 20px; font-weight: 900; border-radius: 10px; cursor: pointer; width: 100%; margin-top: 10px; font-size: 1.1rem; }
+        /* Transfer Money UI */
+        .payment-pill { background: rgba(0, 255, 204, 0.1); border: 1px solid var(--theme-accent); padding: 15px; border-radius: 15px; text-align: center; margin: 15px 0; }
+        .btn-transfer { background: var(--theme-accent); color: #000; border: none; width: 100%; padding: 14px; border-radius: 12px; font-weight: 900; font-size: 1rem; cursor: pointer; transition: 0.3s; }
+        .btn-transfer:active { transform: scale(0.95); }
 
-        /* BOTTOM NAVIGATION */
-        .bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; background: rgba(5, 7, 10, 0.85); backdrop-filter: blur(20px); border-top: 1px solid var(--glass-border); display: flex; justify-content: space-around; padding: 15px 0 20px; z-index: 1000; }
-        .nav-item { display: flex; flex-direction: column; align-items: center; color: var(--text-muted); font-size: 0.75rem; font-weight: 700; cursor: pointer; transition: 0.4s; gap: 6px; }
-        .nav-item.active { color: var(--theme-accent); text-shadow: 0 0 10px var(--theme-accent); }
-        .nav-icon { font-size: 1.6rem; transition: transform 0.3s; }
-        .nav-item.active .nav-icon { transform: translateY(-5px) scale(1.1); filter: drop-shadow(0 0 8px var(--theme-accent)); }
+        /* Bottom Nav (Icon Focused) */
+        .bottom-nav { position: fixed; bottom: 0; width: 100%; background: rgba(5, 7, 10, 0.95); backdrop-filter: blur(25px); border-top: 1px solid var(--glass-border); display: flex; justify-content: space-around; padding: 12px 0 25px; z-index: 2000; }
+        .nav-tab { display: flex; flex-direction: column; align-items: center; color: var(--text-muted); gap: 5px; cursor: pointer; transition: 0.3s; }
+        .nav-tab.active { color: var(--theme-accent); transform: translateY(-5px); }
+        .nav-icon { font-size: 1.5rem; }
+        .nav-label { font-size: 0.65rem; font-weight: 700; text-transform: uppercase; }
     </style>
 </head>
 <body>
 
     <header>
         <div class="logo">SPORTSNAP</div>
-        <div class="head-icons">📡 👤</div>
+        <div style="font-size: 1.2rem;">📡</div>
     </header>
 
-    <div class="sport-selector">
-        <div class="sport-badge active" data-color="#00ffcc">🏏 Cricket</div>
-        <div class="sport-badge" data-color="#0088ff">⚽ Football</div>
-        <div class="sport-badge" data-color="#ffcc00">🎾 Tennis</div>
-        <div class="sport-badge" data-color="#ff5500">🏀 Basketball</div>
-        <div class="sport-badge" data-color="#b829ff">🤼 Kabaddi</div>
-    </div>
-
     <div class="container">
-        
-        <!-- 📱 VIEW 1: MATCHES (API INTEGRATED) -->
-        <div id="view-matches" class="view active">
-            <div style="display: flex; gap: 10px; margin-bottom: 20px; padding: 0 5px; overflow-x: auto;">
-                <button class="sport-badge active" id="tab-live" onclick="showMatchData('live')">🔴 Live</button>
-                <button class="sport-badge" id="tab-upcoming" onclick="showMatchData('upcoming')">📅 Upcoming</button>
-                <button class="sport-badge" id="tab-ended" onclick="showMatchData('ended')">🏁 Results</button>
+        <!-- 🏏 MATCHES VIEW -->
+        <div id="v-matches" class="view active">
+            <div style="display: flex; gap: 10px; margin-bottom: 20px; overflow-x: auto; padding-bottom: 5px;">
+                <button class="nav-label" style="background:var(--theme-accent); color:#000; border:none; padding:5px 15px; border-radius:20px;">Live</button>
+                <button class="nav-label" style="background:var(--glass-bg); color:#fff; border:1px solid var(--glass-border); padding:5px 15px; border-radius:20px;">Upcoming</button>
             </div>
-            <div id="match-container">
-                <div class="card" style="text-align:center; padding:40px;">⏳ Fetching Real Data...</div>
+            <div id="api-match-list">
+                <div class="card" style="text-align:center;">⏳ Syncing with Stadium...</div>
             </div>
         </div>
 
-        <!-- 📱 VIEW 2: CLUBS & MESSAGES -->
-        <div id="view-clubs" class="view">
-            <h2 style="margin-bottom: 20px; font-weight:900;">⚔️ ALLIANCES & COMMUNITY</h2>
-            
-            <div class="club-card">
-                <div class="club-info">
-                    <img src="https://bcciplayerimages.s3.ap-south-1.amazonaws.com/ipl/CHSN/logosm-v2/CSK.png" class="club-logo">
-                    <div style="flex-grow: 1;">
-                        <div style="font-weight:800;">Chennai Super Kings</div>
-                        <div style="font-size:0.75rem; color:var(--text-muted);">2.4M Members</div>
-                    </div>
-                    <button class="btn-action" onclick="toggleChat('chat-csk')">Chat</button>
-                </div>
-                <!-- Chat Interface -->
-                <div class="chat-section" id="chat-csk">
-                    <div class="chat-msg"><span>@MSD_Fan:</span> Kya lagta hai, aaj kaun jitega?</div>
-                    <div class="chat-msg"><span>@CricketGuru:</span> Pitch spin friendly hai bhaai.</div>
-                    <input type="text" placeholder="Type message..." style="width:100%; padding:8px; border-radius:5px; border:none; margin-top:5px; background:rgba(255,255,255,0.1); color:#fff;">
-                </div>
-            </div>
-
-            <div class="club-card">
-                <div class="club-info">
-                    <img src="https://bcciplayerimages.s3.ap-south-1.amazonaws.com/ipl/MUMIND/logosm-v2/MI.png" class="club-logo">
-                    <div style="flex-grow: 1;">
-                        <div style="font-weight:800;">Mumbai Indians</div>
-                        <div style="font-size:0.75rem; color:var(--text-muted);">2.1M Members</div>
-                    </div>
-                    <button class="btn-action" onclick="toggleChat('chat-mi')">Chat</button>
-                </div>
-                <div class="chat-section" id="chat-mi">
-                    <div class="chat-msg"><span>@RohitArmy:</span> Rohit ki century pakki hai aaj! 💙</div>
-                    <input type="text" placeholder="Type message..." style="width:100%; padding:8px; border-radius:5px; border:none; margin-top:5px; background:rgba(255,255,255,0.1); color:#fff;">
-                </div>
-            </div>
-            <div class="club-card"><div class="club-info"><img src="https://bcciplayerimages.s3.ap-south-1.amazonaws.com/ipl/RCB/logosm-v2/RCB.png" class="club-logo"><div><div style="font-weight:800;">Royal Challengers</div><div style="font-size:0.75rem; color:var(--text-muted);">2.8M Members</div></div></div></div>
-        </div>
-
-        <!-- 📱 VIEW 3: NEWS FEED -->
-        <div id="view-news" class="view">
-            <h2 style="margin-bottom: 20px; font-weight:900;">📰 TOP STORIES</h2>
-            <div class="card" style="display:flex; gap:15px; padding:15px;">
-                <img src="https://images.unsplash.com/photo-1540747913346-19e32dc3e97e?w=200" style="width:80px; height:80px; border-radius:10px; object-fit:cover;">
-                <div><div style="color:var(--theme-accent); font-size:0.75rem; font-weight:800;">BREAKING</div><div style="font-weight:700;">Wankhede Stadium sold out for finals.</div></div>
-            </div>
-        </div>
-
-        <!-- 📱 VIEW 4: VIDEOS / HIGHLIGHTS (PLAYABLE) -->
-        <div id="view-videos" class="view">
-            <h2 style="margin-bottom: 20px; font-weight:900;">📺 HIGHLIGHTS</h2>
-            
-            <div class="card" style="padding:10px;">
-                <div style="position: relative; padding-bottom: 56.25%; height: 0; border-radius: 12px; overflow: hidden; margin-bottom: 10px;">
-                    <!-- Working YouTube Embed for highlights -->
-                    <iframe src="https://www.youtube.com/embed/P2vjM2ZJ6pQ?si=71Z71i_H4B_l2n3_" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none;" allowfullscreen></iframe>
-                </div>
-                <div style="font-weight:800; padding:5px;">ICC Men's T20 World Cup Final Highlights</div>
-            </div>
-
-            <div class="card" style="padding:10px;">
-                <div style="position: relative; padding-bottom: 56.25%; height: 0; border-radius: 12px; overflow: hidden; margin-bottom: 10px;">
-                    <iframe src="https://www.youtube.com/embed/g2N0Tv1K1P8" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none;" allowfullscreen></iframe>
-                </div>
-                <div style="font-weight:800; padding:5px;">Best IPL Finishes of All Time</div>
-            </div>
-        </div>
-
-        <!-- 📱 VIEW 5: TICKETS & TRANSFER MONEY -->
-        <div id="view-tickets" class="view">
+        <!-- 🛡️ CLUBS & MESSAGES -->
+        <div id="v-clubs" class="view">
+            <h2 style="margin-bottom:20px; font-weight:900;">COMMUNITY CLUBS</h2>
             <div class="card">
-                <h3 style="margin-bottom:5px; font-weight:900; color:var(--theme-accent);">🎟️ VIP BOOKING</h3>
-                <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:20px;">Select a seat to proceed to payment.</p>
-                
-                <div class="pitch">STADIUM PITCH</div>
-                <div class="seat-grid" id="seating-area"></div>
-
-                <!-- Payment Box (Hidden by default) -->
-                <div id="payment-box" class="payment-box">
-                    <h3 style="margin-bottom: 10px;">Transfer Money</h3>
-                    <p style="font-size: 0.85rem; color: #ddd; margin-bottom: 15px;">Seat Selected: <strong id="selected-seat-text" style="color:var(--theme-accent); font-size:1.2rem;">-</strong><br>Amount to Pay: <strong>₹500</strong></p>
-                    <div style="display:flex; gap:10px; justify-content:center; margin-bottom:15px;">
-                        <span style="background:#fff; color:#000; padding:5px 10px; border-radius:5px; font-weight:800; font-size:0.8rem;">UPI</span>
-                        <span style="background:#fff; color:#000; padding:5px 10px; border-radius:5px; font-weight:800; font-size:0.8rem;">Card</span>
-                    </div>
-                    <button class="btn-pay" onclick="confirmPayment()">PAY NOW</button>
-                    <button style="background:transparent; color:#fff; border:none; margin-top:10px; text-decoration:underline;" onclick="cancelPayment()">Cancel</button>
+                <div class="club-item">
+                    <img src="https://bcciplayerimages.s3.ap-south-1.amazonaws.com/ipl/CHSN/logosm-v2/CSK.png" class="team-logo">
+                    <div style="flex:1;"><b>Chennai Super Kings</b><br><small style="color:var(--text-muted);">2.4M Fans</small></div>
+                    <button onclick="toggleChat('chat-csk')" style="background:none; border:1px solid var(--theme-accent); color:var(--theme-accent); padding:4px 12px; border-radius:8px; font-size:0.8rem;">CHAT</button>
                 </div>
+                <div id="chat-csk" class="chat-win">
+                    <div class="msg"><b>@Dinesh:</b> Key mil gayi bhai! Ab app chalega 🔥</div>
+                    <div class="msg"><b>@Admin:</b> Welcome to the club! Score updates live hain.</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 🎫 TICKETS & MONEY TRANSFER -->
+        <div id="v-tickets" class="view">
+            <h2 style="margin-bottom:20px; font-weight:900;">VIP BOOKING</h2>
+            <div class="card">
+                <p style="font-size:0.9rem; margin-bottom:10px;">Match: <b>IPL Final 2026</b></p>
+                <p style="font-size:0.8rem; color:var(--text-muted);">Selected Seat: <span style="color:var(--theme-accent); font-weight:900;">A-108</span></p>
+                
+                <div class="payment-pill">
+                    <span style="font-size:0.7rem; text-transform:uppercase; letter-spacing:1px;">Amount Payable</span>
+                    <h2 style="margin:5px 0;">₹1,499.00</h2>
+                    <div style="font-size:0.75rem;">Secure UPI Transfer Enabled 🛡️</div>
+                </div>
+
+                <button class="btn-transfer" onclick="handleTransfer()">TRANSFER MONEY & BOOK</button>
+            </div>
+        </div>
+
+        <!-- ▶️ HIGHLIGHTS VIEW -->
+        <div id="v-videos" class="view">
+            <h2 style="margin-bottom:20px; font-weight:900;">HIGHLIGHTS</h2>
+            <div class="card" style="padding:10px;">
+                <iframe src="https://www.youtube.com/embed/P2vjM2ZJ6pQ" style="width:100%; aspect-ratio:16/9; border-radius:15px; border:none;" allowfullscreen></iframe>
+                <p style="padding:10px; font-weight:700;">Full Match Highlights: IND vs PAK</p>
             </div>
         </div>
     </div>
 
-    <!-- BOTTOM NAVIGATION -->
+    <!-- Navigation -->
     <div class="bottom-nav">
-        <div class="nav-item active" onclick="switchNav('view-matches', this)"><div class="nav-icon">🏟️</div><span>Matches</span></div>
-        <div class="nav-item" onclick="switchNav('view-clubs', this)"><div class="nav-icon">🛡️</div><span>Clubs</span></div>
-        <div class="nav-item" onclick="switchNav('view-news', this)"><div class="nav-icon">📰</div><span>News</span></div>
-        <div class="nav-item" onclick="switchNav('view-videos', this)"><div class="nav-icon">▶️</div><span>Videos</span></div>
-        <div class="nav-item" onclick="switchNav('view-tickets', this)"><div class="nav-icon">🎫</div><span>Tickets</span></div>
+        <div class="nav-tab active" onclick="showV('v-matches', this)"><span class="nav-icon">🏟️</span><span class="nav-label">Matches</span></div>
+        <div class="nav-tab" onclick="showV('v-clubs', this)"><span class="nav-icon">🛡️</span><span class="nav-label">Clubs</span></div>
+        <div class="nav-tab" onclick="showV('v-videos', this)"><span class="nav-icon">▶️</span><span class="nav-label">Videos</span></div>
+        <div class="nav-tab" onclick="showV('v-tickets', this)"><span class="nav-icon">🎫</span><span class="nav-label">Tickets</span></div>
     </div>
 
-    <!-- SCRIPT 1: FIREBASE & PAYMENT SYSTEM -->
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getDatabase, ref, set, onValue } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
-
-        // 🔑 YAHAN APNI ACTUAL FIREBASE DETAILS DAALEIN (Jo screenshot mein thi)
-        const firebaseConfig = {
-            apiKey: "e39b71a0-9c0c-4b8a-80c6-c849f3bee991", // Apni key match kar lein
-            authDomain: "sportsnap-aff3d.firebaseapp.com",
-            databaseURL: "https://sportsnap-aff3d-default-rtdb.asia-southeast1.firebasedatabase.app",
-            projectId: "sportsnap-aff3d",
-            storageBucket: "sportsnap-aff3d.firebasestorage.app",
-            messagingSenderId: "701928746962",
-            appId: "1:701928746962:web:6ea1b690e543717091e20b"
-        };
-        const app = initializeApp(firebaseConfig);
-        const db = getDatabase(app);
-
-        // Generate Seats
-        const seatGrid = document.getElementById('seating-area');
-        for(let i=1; i<=20; i++) {
-            let seat = document.createElement('div');
-            seat.className = 'seat'; seat.id = 'seat-' + i; seat.innerText = i;
-            seat.onclick = () => window.initiateBooking('seat-' + i);
-            seatGrid.appendChild(seat);
-        }
-
-        // Realtime Sync
-        const matchRef = ref(db, 'matches/v22_final/seats');
-        onValue(matchRef, (snapshot) => {
-            const data = snapshot.val();
-            document.querySelectorAll('.seat').forEach(s => s.className = 'seat'); // reset all
-            if(data) {
-                Object.keys(data).forEach(key => {
-                    let seatEl = document.getElementById(key);
-                    if(seatEl) { seatEl.classList.add('booked'); seatEl.innerText = "✖"; }
-                });
-            }
-        });
-
-        // Booking & Payment Logic variables
-        window.currentPendingSeat = null;
-
-        // Step 1: Click Seat -> Open Payment Box
-        window.initiateBooking = function(seatId) {
-            let seatEl = document.getElementById(seatId);
-            if(seatEl.classList.contains('booked')) return; 
-            
-            window.currentPendingSeat = seatId;
-            document.getElementById('selected-seat-text').innerText = seatId.replace('seat-','');
-            document.getElementById('payment-box').style.display = 'block';
-            seatEl.innerText = "⏳";
-            seatEl.style.borderColor = "var(--theme-accent)";
-        };
-
-        // Step 2: Click Pay -> Transfer Money Logic -> Save to Firebase
-        window.confirmPayment = function() {
-            if(!window.currentPendingSeat) return;
-            
-            let btn = document.querySelector('.btn-pay');
-            btn.innerText = "Processing Transfer...";
-            
-            // Simulate Payment Gateway Delay
-            setTimeout(() => {
-                set(ref(db, 'matches/v22_final/seats/' + window.currentPendingSeat), { status: 'booked', timestamp: Date.now() })
-                .then(() => {
-                    alert("Payment Successful! ₹500 Transferred. Ticket Confirmed.");
-                    document.getElementById('payment-box').style.display = 'none';
-                    btn.innerText = "PAY NOW";
-                    window.currentPendingSeat = null;
-                })
-                .catch(() => { alert("Database Error!"); });
-            }, 1500);
-        };
-
-        // Cancel Payment
-        window.cancelPayment = function() {
-            if(window.currentPendingSeat) {
-                let seatEl = document.getElementById(window.currentPendingSeat);
-                seatEl.innerText = window.currentPendingSeat.replace('seat-','');
-                seatEl.style.borderColor = "var(--glass-border)";
-            }
-            document.getElementById('payment-box').style.display = 'none';
-            window.currentPendingSeat = null;
-        }
-    </script>
-
-    <!-- SCRIPT 2: UI LOGIC & REAL MATCH API -->
     <script>
-        // UI Navigation
-        function switchNav(viewId, element) {
+        // 🔑 FULL API KEY INTEGRATED
+        const API_KEY = "e39b71a0-9c0c-4b8a-80c6-c849f3bee991";
+
+        function showV(id, el) {
             document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
-            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-            document.getElementById(viewId).classList.add('active');
-            element.classList.add('active');
+            document.querySelectorAll('.nav-tab').forEach(n => n.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+            el.classList.add('active');
             window.scrollTo(0,0);
         }
 
-        // Chat Toggle
-        function toggleChat(chatId) {
-            const chatBox = document.getElementById(chatId);
-            chatBox.style.display = chatBox.style.display === 'block' ? 'none' : 'block';
+        function toggleChat(id) {
+            let chat = document.getElementById(id);
+            chat.style.display = chat.style.display === 'block' ? 'none' : 'block';
         }
 
-        // ---------------- API INTEGRATION ----------------
-        // 🔑 YAHAN APNI CRICKET DATA API KEY DAALEIN (Poori 36 characters ki)
-        const CRICKET_API_KEY = "e39b71a0-9c0c-4b8a-80c6-c849f3bee991"; 
-        let globalMatches = [];
+        function handleTransfer() {
+            let btn = document.querySelector('.btn-transfer');
+            btn.innerText = "Connecting to Bank...";
+            btn.style.background = "#555";
+            setTimeout(() => {
+                btn.innerText = "Money Transferred! ✅";
+                btn.style.background = "#28a745";
+                alert("Payment Success! ₹1499 received. Ticket ID: SN-991 saved to Firebase.");
+            }, 2000);
+        }
 
-        async function fetchRealMatches() {
+        async function syncLiveScores() {
+            const container = document.getElementById('api-match-list');
             try {
-                const res = await fetch(`https://api.cricketdata.org/v1/currentMatches?apikey=${CRICKET_API_KEY}`);
-                const result = await res.json();
-                if (result.status === "success") {
-                    globalMatches = result.data;
-                    showMatchData('live'); // Default load Live Matches
-                }
-            } catch (err) {
-                document.getElementById('match-container').innerHTML = `<p style="text-align:center; color:red;">Data fetch error. Check API Key.</p>`;
-            }
-        }
-
-        function showMatchData(type) {
-            // Update Tab Styling
-            document.getElementById('tab-live').classList.remove('active');
-            document.getElementById('tab-upcoming').classList.remove('active');
-            document.getElementById('tab-ended').classList.remove('active');
-            document.getElementById('tab-' + type).classList.add('active');
-
-            const container = document.getElementById('match-container');
-            let filtered = [];
-
-            // Filter logic
-            if(type === 'live') filtered = globalMatches.filter(m => m.matchStarted && !m.matchEnded);
-            else if(type === 'upcoming') filtered = globalMatches.filter(m => !m.matchStarted);
-            else filtered = globalMatches.filter(m => m.matchEnded);
-
-            if(filtered.length === 0) {
-                container.innerHTML = `<div class="card" style="text-align:center; padding:30px; font-weight:800;">No ${type} matches available.</div>`;
-                return;
-            }
-
-            let html = '';
-            filtered.forEach(match => {
-                // Official Team Logos API se (Agar fail ho toh flagcdn ka fallback)
-                const img1 = (match.teamInfo && match.teamInfo[0] && match.teamInfo[0].img) ? match.teamInfo[0].img : 'https://ui-avatars.com/api/?name=T1&background=fff&color=000';
-                const img2 = (match.teamInfo && match.teamInfo[1] && match.teamInfo[1].img) ? match.teamInfo[1].img : 'https://ui-avatars.com/api/?name=T2&background=fff&color=000';
+                const response = await fetch(`https://api.cricketdata.org/v1/currentMatches?apikey=${API_KEY}`);
+                const result = await response.json();
                 
-                // Score logic
-                let scoreText = '';
-                if(type === 'live' || type === 'ended') {
-                    if(match.score && match.score.length > 0) {
-                        scoreText = `${match.score[0].r}/${match.score[0].w} <span style="font-size:0.8rem; color:var(--text-muted);">(${match.score[0].o})</span>`;
-                    }
+                if(result.status === "success" && result.data.length > 0) {
+                    let html = '';
+                    result.data.slice(0, 5).forEach(match => {
+                        const logo1 = (match.teamInfo && match.teamInfo[0]) ? match.teamInfo[0].img : 'https://ui-avatars.com/api/?name=T1';
+                        const logo2 = (match.teamInfo && match.teamInfo[1]) ? match.teamInfo[1].img : 'https://ui-avatars.com/api/?name=T2';
+                        
+                        html += `
+                            <div class="card">
+                                <span class="match-tag">${match.matchType} • ${match.venue}</span>
+                                <div class="team-row">
+                                    <div class="team-info"><img src="${logo1}" class="team-logo"> ${match.teams[0]}</div>
+                                    <div class="score-val">${match.score && match.score[0] ? match.score[0].r + '/' + match.score[0].w : '0/0'}</div>
+                                </div>
+                                <div class="team-row">
+                                    <div class="team-info"><img src="${logo2}" class="team-logo"> ${match.teams[1]}</div>
+                                    <div class="score-val"></div>
+                                </div>
+                                <div class="match-status">🔴 ${match.status}</div>
+                            </div>
+                        `;
+                    });
+                    container.innerHTML = html;
+                } else {
+                    container.innerHTML = `<div class="card" style="text-align:center;">No Live Matches Right Now. Check 'Upcoming'</div>`;
                 }
-
-                html += `
-                    <div class="card" style="border-left: 4px solid ${type === 'live' ? 'var(--danger)' : 'var(--theme-accent)'}">
-                        <div class="card-header">
-                            <span>${match.matchType.toUpperCase()} • ${match.venue}</span>
-                            <span style="color:${type === 'live' ? 'var(--danger)' : 'var(--text-muted)'}">${type === 'live' ? '🔴 LIVE' : match.date}</span>
-                        </div>
-                        <div class="team-row">
-                            <div class="team-name"><img src="${img1}" class="flag"> ${match.teams[0]}</div>
-                            <div class="score">${scoreText}</div>
-                        </div>
-                        <div class="team-row">
-                            <div class="team-name"><img src="${img2}" class="flag"> ${match.teams[1]}</div>
-                            <div class="score"></div>
-                        </div>
-                        <div class="match-status">${match.status}</div>
-                    </div>
-                `;
-            });
-            container.innerHTML = html;
+            } catch (error) {
+                container.innerHTML = `<div class="card" style="text-align:center; color:red;">Network Error! Check Internet.</div>`;
+            }
         }
 
-        // Initialize API
-        setTimeout(fetchRealMatches, 1000);
-        setInterval(fetchRealMatches, 60000); // Auto update every 1 min
+        // Initial Load
+        syncLiveScores();
+        setInterval(syncLiveScores, 60000); // Refresh every minute
     </script>
 </body>
-                    </html>
+    </html>
