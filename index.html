@@ -129,22 +129,38 @@
     </header>
 
     <!-- 5 SPORTS SELECTOR -->
+    <div id="view-matches" class="view active">
+    <!-- Sub-Tabs for Match Status -->
+    <div style="display: flex; gap: 10px; margin-bottom: 20px; padding: 0 5px;">
+        <button class="sport-badge active" id="btn-live" onclick="filterMatch('live')">🔴 Live</button>
+        <button class="sport-badge" id="btn-up" onclick="filterMatch('upcoming')">📅 Upcoming</button>
+        <button class="sport-badge" id="btn-end" onclick="filterMatch('ended')">🏁 Results</button>
+    </div>
+        <!--view 1 matches -->
+        <div id="view-matches" class="view active">
+    <!-- Sub-Tabs for Match Status -->
+    <div style="display: flex; gap: 10px; margin-bottom: 20px; padding: 0 5px;">
+        <button class="sport-badge active" id="btn-live" onclick="filterMatch('live')">🔴 Live</button>
+        <button class="sport-badge" id="btn-up" onclick="filterMatch('upcoming')">📅 Upcoming</button>
+        <button class="sport-badge" id="btn-end" onclick="filterMatch('ended')">🏁 Results</button>
+    </div>
+
+    <!-- Container jahan matches load honge -->
+    <div id="match-list-container">
+        <div class="card" style="text-align:center; padding:40px;">
+            <div style="color:var(--theme-accent); font-size:2rem; margin-bottom:10px;">⏳</div>
+            <p style="color:var(--text-muted)">Connecting to Satellite... Fetching Real Scores</p>
+        </div>
+    </div>
+        </div>
+
+    <!-- Container jahan matches load honge -->
+    
     <div class="sport-selector">
         <div class="sport-badge active" data-target="cricket" data-color="#00ffcc" onclick="changeSport(this)">🏏 Cricket</div>
         <div class="sport-badge" data-target="football" data-color="#0088ff" onclick="changeSport(this)">⚽ Football</div>
         <div class="sport-badge" data-target="tennis" data-color="#ffcc00" onclick="changeSport(this)">🎾 Tennis</div>
-        <div class="sport-badge" data-target="basketball" data-color="#ff5500" onclick="changeSport(this)">🏀 Basketball</div>
-        <div class="sport-badge" data-target="kabaddi" data-color="#b829ff" onclick="changeSport(this)">🤼 Kabaddi</div>
-    </div>
-
-    <div class="container">
-        
-        <!-- 📱 VIEW 1: MATCHES (LIVE WITH API, SCOREBOARD & COMMENTARY) -->
-        <div id="view-matches" class="view active">
-            
-            <div class="sport-content" data-sport="cricket">
-                <div class="card" style="border-top: 3px solid var(--theme-accent);">
-                    <div class="card-header"><span>🔴 LIVE • FINAL</span><span id="api-status">Fetching Real Data...</span></div>
+        <div
                     
                     <!-- Teams & Real Logos -->
                     <div class="team-row">
@@ -152,8 +168,7 @@
                         <div class="score" id="live-score-ind">0/0 <span style="font-size:0.8rem; color:var(--text-muted);">(0.0)</span></div>
                     </div>
                     <div class="team-row">
-                        <div class="team-name"><img src="https://flagcdn.com/w40/au.png" class="flag" id="team2-logo"> AUS</div>
-                        <div class="score" id="live-score-aus" style="color:var(--text-muted)">Yet to bat</div>
+                        <div class="team-name"><img src="https://flagcdn.com/w40/au.png" class="flag" id="team2-logo"> Astyle="color:var(--text-muted)">Yet to bat</div>
                     </div>
 
                     <!-- Neural Flow Predictor -->
@@ -354,40 +369,89 @@
         });
 
         // 4. REAL LIVE API INTEGRATION
-        // Yahan maine aapki di hui key ka prefix daal diya hai. Iske aage apni full key lagaiye agar ye adhi thi.
-        const CRICKET_API_KEY = "e39b71a0-9c0c-4b8a-XXXX-XXXXXXXXXXXX"; 
+        // 🔑 Apni FULL API Key yahan dalein
+const CRICKET_API_KEY = "e39b71a0-9c0c-4b8a-XXXX-XXXXXXXXXXXX"; 
 
-        async function fetchRealMatchData() {
-            try {
-                // Testing API endpoint
-                document.getElementById('api-status').innerText = "Live Synced 🟢";
-                
-                const res = await fetch(`https://api.cricketdata.org/v1/currentMatches?apikey=${CRICKET_API_KEY}`);
-                const result = await res.json();
+let allMatches = []; // Global store
 
-                if (result.status === "success" && result.data.length > 0) {
-                    const match = result.data[0]; 
-                    
-                    // Update Logos
-                    if(match.teamInfo && match.teamInfo.length >= 2) {
-                        document.getElementById('team1-logo').src = match.teamInfo[0].img || 'https://flagcdn.com/w40/in.png';
-                        document.getElementById('team2-logo').src = match.teamInfo[1].img || 'https://flagcdn.com/w40/au.png';
-                    }
-                    
-                    // Update Scores
-                    if(match.score && match.score.length > 0) {
-                        document.getElementById('live-score-ind').innerHTML = `${match.score[0].r}/${match.score[0].w} <span style="font-size:0.8rem; color:var(--text-muted);">(${match.score[0].o})</span>`;
-                    }
-                }
-            } catch (err) {
-                console.log("API Waiting/Error: Using Neural Dummy Data fallback.");
-                // If API fails or key is incomplete, fallback text remains so app doesn't break
-            }
+async function fetchRealMatchData() {
+    try {
+        const res = await fetch(`https://api.cricketdata.org/v1/currentMatches?apikey=${CRICKET_API_KEY}`);
+        const result = await res.json();
+
+        if (result.status === "success") {
+            allMatches = result.data;
+            renderMatches('live'); // Default: Live matches dikhao
+            console.log("Data Synced Successfully");
+        }
+    } catch (err) {
+        document.getElementById('match-list-container').innerHTML = `<p style="text-align:center; padding:20px; color:red;">Network Error: Check API Key</p>`;
+    }
+}
+
+function renderMatches(type) {
+    const container = document.getElementById('match-list-container');
+    let filtered = [];
+
+    // Filter Logic
+    if(type === 'live') filtered = allMatches.filter(m => m.matchStarted && !m.matchEnded);
+    else if(type === 'upcoming') filtered = allMatches.filter(m => !m.matchStarted);
+    else filtered = allMatches.filter(m => m.matchEnded);
+
+    if(filtered.length === 0) {
+        container.innerHTML = `<div class="card" style="text-align:center; padding:30px;">No ${type} matches at the moment.</div>`;
+        return;
+    }
+
+    let html = '';
+    filtered.forEach(match => {
+        // Logo logic: Agar API mein logo nahi hai toh dummy lagao
+        const logo1 = (match.teamInfo && match.teamInfo[0]) ? match.teamInfo[0].img : 'https://ui-avatars.com/api/?name=T1';
+        const logo2 = (match.teamInfo && match.teamInfo[1]) ? match.teamInfo[1].img : 'https://ui-avatars.com/api/?name=T2';
+        
+        // Score extraction
+        let scoreText = match.status || "Match Details TBD";
+        if(match.score && match.score.length > 0) {
+            scoreText = `${match.score[0].r || 0}/${match.score[0].w || 0} (${match.score[0].o || 0} ov)`;
         }
 
-        // Fetch data every 60 seconds
-        setInterval(fetchRealMatchData, 60000);
-        setTimeout(fetchRealMatchData, 2000); // Initial fetch delay for smooth UI load
+        html += `
+            <div class="card" style="border-left: 4px solid ${type === 'live' ? '#00ffcc' : '#555'}">
+                <div class="card-header">
+                    <span>${match.matchType.toUpperCase()} • ${match.venue}</span>
+                    <span style="color:${type === 'live' ? 'var(--danger)' : 'var(--text-muted)'}">${type === 'live' ? '● LIVE' : match.date}</span>
+                </div>
+                <div class="team-row">
+                    <div class="team-name"><img src="${logo1}" class="flag"> ${match.teams[0]}</div>
+                    <div class="score">${type === 'live' ? scoreText : ''}</div>
+                </div>
+                <div class="team-row">
+                    <div class="team-name"><img src="${logo2}" class="flag"> ${match.teams[1]}</div>
+                    <div class="score"></div>
+                </div>
+                <div class="match-status">${match.status}</div>
+                
+                ${type === 'live' ? `
+                <div class="neural-box">
+                    <div class="ai-title">🧠 Momentum Analyzer</div>
+                    <div class="ai-bar"><div class="ai-fill" style="width: 50%;"></div></div>
+                </div>` : ''}
+            </div>
+        `;
+    });
+    container.innerHTML = html;
+}
+
+// Tab Switching logic
+window.filterMatch = function(type) {
+    document.querySelectorAll('.sport-badge').forEach(b => b.classList.remove('active'));
+    document.getElementById('btn-' + (type === 'live' ? 'live' : type === 'upcoming' ? 'up' : 'end')).classList.add('active');
+    renderMatches(type);
+}
+
+// Initial Kickstart
+setInterval(fetchRealMatchData, 30000); 
+fetchRealMatchData();
     </script>
 </body>
     </html>
