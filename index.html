@@ -1,210 +1,171 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="hi">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Sportsnap V23 | Full Feature Edition</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700;900&display=swap" rel="stylesheet">
+    <title>Sportsnap V25 | No-Error Edition</title>
     <style>
-        /* V19 GLASS NEURAL DESIGN */
-        :root {
-            --accent: #00ffcc; 
-            --glass: rgba(20, 25, 40, 0.6);
-            --border: rgba(255, 255, 255, 0.1);
-            --bg: #05070a;
-        }
-
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
-        body { background: var(--bg); color: #fff; padding-bottom: 90px; }
-
-        header { 
-            padding: 20px; 
-            background: rgba(5,7,10,0.8); 
-            backdrop-filter: blur(15px); 
-            position: sticky; top: 0; z-index: 100;
-            display: flex; justify-content: space-between; align-items: center;
-            border-bottom: 1px solid var(--border);
-        }
-        .logo { font-size: 1.8rem; font-weight: 900; color: var(--accent); letter-spacing: -1px; }
-
+        :root { --accent: #00ffcc; --glass: rgba(25, 30, 45, 0.8); --bg: #05080a; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: sans-serif; }
+        body { background: var(--bg); color: #fff; padding-bottom: 80px; }
+        
+        /* Glass UI Styles */
+        header { padding: 20px; background: rgba(5,8,10,0.9); border-bottom: 1px solid rgba(255,255,255,0.1); position: sticky; top: 0; z-index: 100; display: flex; justify-content: space-between; }
+        .logo { font-size: 1.5rem; font-weight: bold; color: var(--accent); letter-spacing: 1px; }
+        
         .container { padding: 15px; }
-        .view { display: none; animation: fadeIn 0.3s ease; }
+        .card { background: var(--glass); border-radius: 15px; padding: 15px; margin-bottom: 15px; border: 1px solid rgba(255,255,255,0.05); }
+        
+        /* Match UI */
+        .team-row { display: flex; justify-content: space-between; margin: 10px 0; align-items: center; }
+        .team-meta { display: flex; align-items: center; gap: 10px; }
+        .t-logo { width: 30px; height: 30px; border-radius: 50%; background: #222; }
+        .score { font-size: 1.2rem; font-weight: bold; color: var(--accent); }
+        .status-tag { font-size: 0.7rem; color: #aaa; text-align: center; border-top: 1px solid #333; padding-top: 8px; margin-top: 5px; }
+
+        /* Nav System */
+        .view { display: none; }
         .view.active { display: block; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-
-        /* V19 STYLE CARDS */
-        .card { 
-            background: var(--glass); 
-            border-radius: 20px; 
-            padding: 18px; 
-            margin-bottom: 15px; 
-            border: 1px solid var(--border);
-            backdrop-filter: blur(10px);
-        }
-
-        /* SPORTS FILTER */
-        .filter-scroll { display: flex; gap: 10px; overflow-x: auto; margin-bottom: 20px; padding-bottom: 5px; }
-        .f-btn { background: var(--glass); border: 1px solid var(--border); color: #fff; padding: 8px 18px; border-radius: 50px; font-size: 0.8rem; white-space: nowrap; }
-        .f-btn.active { background: var(--accent); color: #000; border: none; font-weight: 700; }
-
-        /* LIVE MATCH UI */
-        .match-header { font-size: 0.65rem; color: var(--accent); text-transform: uppercase; margin-bottom: 10px; font-weight: 700; }
-        .team { display: flex; justify-content: space-between; align-items: center; margin: 8px 0; }
-        .team-info { display: flex; align-items: center; gap: 12px; font-weight: 600; }
-        .team-logo { width: 35px; height: 35px; border-radius: 50%; background: #fff; padding: 2px; }
-        .score { font-weight: 800; font-size: 1.2rem; }
-        .status { border-top: 1px solid var(--border); margin-top: 10px; padding-top: 10px; font-size: 0.8rem; color: var(--accent); text-align: center; }
-
-        /* CLUBS & CHAT */
-        .club-row { display: flex; align-items: center; gap: 15px; }
-        .chat-area { background: rgba(0,0,0,0.3); padding: 12px; border-radius: 12px; margin-top: 10px; display: none; font-size: 0.85rem; }
-        .msg { margin-bottom: 5px; }
-        .msg b { color: var(--accent); }
-
-        /* MONEY TRANSFER */
-        .transfer-box { text-align: center; border: 1px dashed var(--accent); padding: 20px; border-radius: 15px; margin: 15px 0; background: rgba(0,255,204,0.05); }
-        .btn-pay { background: var(--accent); color: #000; width: 100%; padding: 15px; border: none; border-radius: 12px; font-weight: 900; cursor: pointer; }
-
-        /* BOTTOM NAV */
-        .nav { position: fixed; bottom: 0; width: 100%; background: rgba(5,7,10,0.95); display: flex; justify-content: space-around; padding: 15px 0 30px; border-top: 1px solid var(--border); backdrop-filter: blur(20px); }
-        .nav-item { color: #666; text-align: center; font-size: 0.7rem; font-weight: 700; cursor: pointer; }
+        .nav { position: fixed; bottom: 0; width: 100%; background: #0a0e14; display: flex; justify-content: space-around; padding: 15px; border-top: 1px solid #222; }
+        .nav-item { color: #555; font-size: 0.7rem; text-align: center; cursor: pointer; text-transform: uppercase; font-weight: bold; }
         .nav-item.active { color: var(--accent); }
-        .nav-icon { font-size: 1.4rem; margin-bottom: 4px; }
+
+        /* News & Community */
+        .news-img { width: 100%; height: 150px; background: #222; border-radius: 10px; margin-bottom: 10px; object-fit: cover; }
     </style>
 </head>
 <body>
 
     <header>
         <div class="logo">SPORTSNAP</div>
-        <div style="font-size: 1.4rem;">🔔</div>
+        <div id="net-status" style="font-size: 0.7rem; color: #00ffcc;">● LIVE</div>
     </header>
 
     <div class="container">
         <!-- MATCHES VIEW -->
         <div id="v-matches" class="view active">
-            <div class="filter-scroll">
-                <button class="f-btn active">🏏 Cricket</button>
-                <button class="f-btn">⚽ Football</button>
-                <button class="f-btn">🎾 Tennis</button>
-                <button class="f-btn">🎮 Esports</button>
-            </div>
             <div id="match-list">
-                <div class="card" style="text-align:center;">Fetching Live Data...</div>
+                <div class="card">Loading real-time data...</div>
             </div>
         </div>
 
         <!-- CLUBS VIEW -->
         <div id="v-clubs" class="view">
-            <h3 style="margin-bottom:15px;">Community Clubs</h3>
+            <h3>Community Clubs</h3>
             <div class="card">
-                <div class="club-row">
-                    <img src="https://bcciplayerimages.s3.ap-south-1.amazonaws.com/ipl/CHSN/logosm-v2/CSK.png" width="45">
-                    <div style="flex:1;"><b>CSK Superfans</b><br><small style="color:#888;">Active: 15k online</small></div>
-                    <button onclick="toggleChat('csk')" style="background:var(--accent); color:#000; border:none; padding:5px 12px; border-radius:8px; font-weight:700;">CHAT</button>
+                <div class="team-row">
+                    <b>IPL Fans Chat</b>
+                    <button style="background:var(--accent); border:none; padding:5px 10px; border-radius:5px;">JOIN</button>
                 </div>
-                <div id="chat-csk" class="chat-area">
-                    <div class="msg"><b>Dinesh:</b> IPL 2026 is going to be epic!</div>
-                    <div class="msg"><b>Admin:</b> Live streaming updates coming soon.</div>
-                </div>
+                <p style="font-size:0.8rem; color:#888;">1,200 members talking about today's match.</p>
             </div>
         </div>
 
-        <!-- NEWS/VIDEOS VIEW -->
-        <div id="v-news" class="view">
-            <h3 style="margin-bottom:15px;">Sports Highlights</h3>
-            <div class="card" style="padding:0; overflow:hidden;">
-                <iframe width="100%" height="200" src="https://www.youtube.com/embed/P2vjM2ZJ6pQ" frameborder="0" allowfullscreen></iframe>
-                <div style="padding:15px;"><b>Ind vs Pak: Final Over Drama!</b></div>
-            </div>
-        </div>
-
-        <!-- TICKETS & TRANSFER VIEW -->
+        <!-- TICKETS VIEW -->
         <div id="v-tickets" class="view">
-            <h3 style="margin-bottom:15px;">Ticket Booking</h3>
+            <h3>Book Tickets</h3>
             <div class="card">
-                <p>Selected Event: <b>IPL Final 2026</b></p>
-                <div class="transfer-box">
-                    <p style="font-size:0.7rem; color:#888;">PAYABLE AMOUNT</p>
-                    <h2 style="color:var(--accent);">₹1,499.00</h2>
-                    <p style="font-size:0.8rem;">To: Sportsnap Ticketing</p>
-                </div>
-                <button class="btn-pay" onclick="doTransfer()">TRANSFER MONEY NOW</button>
+                <p>IPL 2026: MI vs CSK</p>
+                <h2 style="margin:10px 0;">₹1,499</h2>
+                <button onclick="alert('Payment Gateway Opening...')" style="width:100%; padding:12px; background:var(--accent); border:none; border-radius:8px; font-weight:bold;">TRANSFER NOW</button>
+            </div>
+        </div>
+
+        <!-- NEWS VIEW -->
+        <div id="v-news" class="view">
+            <h3>Latest News</h3>
+            <div class="card">
+                <img src="https://via.placeholder.com/400x200/111/00ffcc?text=Cricket+News" class="news-img">
+                <b>Hardik Pandya back in form?</b>
+                <p style="font-size:0.8rem; color:#888;">Exclusive interview after the big win...</p>
             </div>
         </div>
     </div>
 
-    <!-- V19 NAV SYSTEM -->
-    <div class="nav">
-        <div class="nav-item active" onclick="nav('v-matches', this)"><div class="nav-icon">🏟️</div>MATCHES</div>
-        <div class="nav-item" onclick="nav('v-clubs', this)"><div class="nav-icon">🛡️</div>CLUBS</div>
-        <div class="nav-item" onclick="nav('v-news', this)"><div class="nav-icon">📰</div>NEWS</div>
-        <div class="nav-item" onclick="nav('v-tickets', this)"><div class="nav-icon">🎫</div>TICKETS</div>
-    </div>
+    <nav class="nav">
+        <div class="nav-item active" onclick="show('v-matches', this)">🏟️<br>Matches</div>
+        <div class="nav-item" onclick="show('v-clubs', this)">🛡️<br>Clubs</div>
+        <div class="nav-item" onclick="show('v-news', this)">📰<br>News</div>
+        <div class="nav-item" onclick="show('v-tickets', this)">🎫<br>Tickets</div>
+    </nav>
 
     <script>
-        // YOUR API KEY INTEGRATED
         const API_KEY = "e39b71a0-9c0c-4b8a-80c6-c849f3bee991";
 
-        function nav(id, el) {
+        function show(id, el) {
             document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
             document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
             document.getElementById(id).classList.add('active');
             el.classList.add('active');
         }
 
-        function toggleChat(id) {
-            let area = document.getElementById('chat-'+id);
-            area.style.display = area.style.display === 'block' ? 'none' : 'block';
-        }
-
-        function doTransfer() {
-            let btn = document.querySelector('.btn-pay');
-            btn.innerText = "Processing UPI...";
-            setTimeout(() => {
-                btn.style.background = "#28a745";
-                btn.innerText = "Money Transferred! ✅";
-                alert("Payment Successful! ₹1499 Sent to Sportsnap Wallet.");
-            }, 2500);
-        }
-
-        async function getScores() {
+        // Error Handling & API Fetch
+        async function fetchScores() {
             const list = document.getElementById('match-list');
-            try {
-                const res = await fetch(`https://api.cricketdata.org/v1/currentMatches?apikey=${API_KEY}`);
-                const data = await res.json();
+            const status = document.getElementById('net-status');
 
-                if(data.status === "success") {
-                    let html = '';
-                    data.data.slice(0, 4).forEach(m => {
-                        const img1 = (m.teamInfo && m.teamInfo[0]) ? m.teamInfo[0].img : 'https://ui-avatars.com/api/?name=T1';
-                        const img2 = (m.teamInfo && m.teamInfo[1]) ? m.teamInfo[1].img : 'https://ui-avatars.com/api/?name=T2';
-                        const score = (m.score && m.score[0]) ? m.score[0].r + '/' + m.score[0].w : '0/0';
-                        
-                        html += `
-                        <div class="card">
-                            <div class="match-header">${m.matchType} • ${m.venue}</div>
-                            <div class="team">
-                                <div class="team-info"><img src="${img1}" class="team-logo"> ${m.teams[0]}</div>
-                                <div class="score">${score}</div>
-                            </div>
-                            <div class="team">
-                                <div class="team-info"><img src="${img2}" class="team-logo"> ${m.teams[1]}</div>
-                                <div class="score"></div>
-                            </div>
-                            <div class="status">● ${m.status}</div>
-                        </div>`;
-                    });
-                    list.innerHTML = html;
+            try {
+                // Proxy use kar rahe hain takki Network Error na aaye
+                const response = await fetch(`https://api.allorigins.win/get?url=${encodeURIComponent('https://api.cricketdata.org/v1/currentMatches?apikey=' + API_KEY)}`);
+                
+                if (!response.ok) throw new Error('Network fail');
+                
+                const rawData = await response.json();
+                const data = JSON.parse(rawData.contents);
+
+                if (data.status === "success" && data.data.length > 0) {
+                    renderMatches(data.data);
+                    status.innerHTML = "● LIVE DATA";
                 } else {
-                    list.innerHTML = '<div class="card" style="text-align:center; color:red;">Check API Dashboard Limits.</div>';
+                    throw new Error('API Limit');
                 }
-            } catch (err) {
-                list.innerHTML = '<div class="card" style="text-align:center; color:orange;">Network Error. Retrying...</div>';
+            } catch (error) {
+                console.log("Using Backup Data due to network error");
+                status.innerHTML = "● OFFLINE MODE (Backup)";
+                status.style.color = "orange";
+                useBackupData();
             }
         }
 
-        getScores();
-        setInterval(getScores, 30000); // 30 sec auto-refresh
+        function renderMatches(matches) {
+            let html = '';
+            matches.slice(0, 5).forEach(m => {
+                html += `
+                <div class="card">
+                    <div style="font-size:0.7rem; color:var(--accent)">${m.matchType.toUpperCase()}</div>
+                    <div class="team-row">
+                        <div class="team-meta"><span>🏏</span> ${m.teams[0]}</div>
+                        <div class="score">${m.score[0] ? m.score[0].r + '/' + m.score[0].w : 'Yet to Bat'}</div>
+                    </div>
+                    <div class="team-row">
+                        <div class="team-meta"><span>🏏</span> ${m.teams[1]}</div>
+                        <div class="score"></div>
+                    </div>
+                    <div class="status-tag">${m.status}</div>
+                </div>`;
+            });
+            document.getElementById('match-list').innerHTML = html;
+        }
+
+        function useBackupData() {
+            const demo = [
+                { teams: ["India", "Australia"], score: ["284/4"], status: "India won by 6 wickets", type: "ODI" },
+                { teams: ["CSK", "MI"], score: ["192/3"], status: "CSK need 12 runs in 6 balls", type: "IPL" }
+            ];
+            let html = '';
+            demo.forEach(m => {
+                html += `<div class="card">
+                    <div style="font-size:0.7rem; color:var(--accent)">${m.type} (DEMO)</div>
+                    <div class="team-row"><b>${m.teams[0]}</b> <span class="score">${m.score[0]}</span></div>
+                    <div class="team-row"><b>${m.teams[1]}</b></div>
+                    <div class="status-tag">${m.status}</div>
+                </div>`;
+            });
+            document.getElementById('match-list').innerHTML = html;
+        }
+
+        fetchScores();
+        setInterval(fetchScores, 60000); // Har 1 min me refresh
     </script>
 </body>
-    </html>
+</html>
