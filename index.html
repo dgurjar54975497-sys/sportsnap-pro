@@ -79,6 +79,17 @@
         .nav-item.active { color: var(--theme-accent); }
         .nav-icon { font-size: 1.5rem; transition: transform 0.2s; }
         .nav-item.active .nav-icon { transform: translateY(-3px); }
+        /* NEW: SCOREBOARD & COMMENTARY STYLES */
+.stats-table { width: 100%; border-collapse: collapse; margin-top: 15px; font-size: 0.8rem; }
+.stats-table th { text-align: left; color: var(--text-muted); border-bottom: 1px solid var(--border); padding: 8px 5px; }
+.stats-table td { padding: 10px 5px; border-bottom: 1px dotted #2d3748; }
+.player-active { color: var(--theme-accent); font-weight: 800; }
+
+.commentary-box { max-height: 200px; overflow-y: auto; margin-top: 15px; background: rgba(0,0,0,0.2); border-radius: 10px; padding: 10px; }
+.comm-item { margin-bottom: 12px; font-size: 0.85rem; display: flex; gap: 10px; }
+.over-num { font-weight: 900; color: var(--theme-accent); min-width: 35px; }
+.comm-text { color: var(--text-main); }
+.wicket-alert { color: var(--danger); font-weight: 800; }
 
         /* UTILITIES */
         .hidden-sport { display: none !important; }
@@ -119,6 +130,57 @@
                         <div class="score" style="color:var(--text-muted)">0/0</div>
                     </div>
                     <div class="highlight-box">
+                        <!-- REAL SCOREBOARD TABLE -->
+<table class="stats-table">
+    <thead>
+        <tr><th>Batter</th><th>R</th><th>B</th><th>4s</th><th>6s</th><th>SR</th></tr>
+    </thead>
+    <tbody>
+        <tr class="player-active"><td>Virat Kohli*</td><td>82</td><td>52</td><td>6</td><td>2</td><td>157.7</td></tr>
+        <tr><td>Hardik Pandya</td><td>33</td><td>15</td><td>2</td><td>3</td><td>220.0</td></tr>
+    </tbody>
+</table>
+
+<!-- LIVE COMMENTARY -->
+<div class="commentary-box">
+    <div class="comm-item">
+        <div class="over-num">18.5</div>
+        <div class="comm-text"><strong>SIX!</strong> Kohli steps down and lofts it over long-on. Pure class!</div>
+    </div>
+    <div class="comm-item">
+        <div class="over-num">18.4</div>
+        <div class="comm-text">1 Run, tucked away to deep mid-wicket for a single.</div>
+    </div>
+    <div class="comm-item">
+        <div class="over-num">18.3</div>
+        <div class="comm-text" class="wicket-alert"><strong>WICKET!</strong> SKY caught at long-off. Big blow for India!</div>
+    </div>
+</div><!-- REAL SCOREBOARD TABLE -->
+<table class="stats-table">
+    <thead>
+        <tr><th>Batter</th><th>R</th><th>B</th><th>4s</th><th>6s</th><th>SR</th></tr>
+    </thead>
+    <tbody>
+        <tr class="player-active"><td>Virat Kohli*</td><td>82</td><td>52</td><td>6</td><td>2</td><td>157.7</td></tr>
+        <tr><td>Hardik Pandya</td><td>33</td><td>15</td><td>2</td><td>3</td><td>220.0</td></tr>
+    </tbody>
+</table>
+
+<!-- LIVE COMMENTARY -->
+<div class="commentary-box">
+    <div class="comm-item">
+        <div class="over-num">18.5</div>
+        <div class="comm-text"><strong>SIX!</strong> Kohli steps down and lofts it over long-on. Pure class!</div>
+    </div>
+    <div class="comm-item">
+        <div class="over-num">18.4</div>
+        <div class="comm-text">1 Run, tucked away to deep mid-wicket for a single.</div>
+    </div>
+    <div class="comm-item">
+        <div class="over-num">18.3</div>
+        <div class="comm-text" class="wicket-alert"><strong>WICKET!</strong> SKY caught at long-off. Big blow for India!</div>
+    </div>
+</div>
                         <div class="ai-title">🤖 AI Win Predictor</div>
                         <div style="display:flex; justify-content:space-between; font-size:0.75rem; font-weight:800;"><span>IND 65%</span><span>AUS 35%</span></div>
                         <div class="ai-bar"><div class="ai-fill" style="width: 65%;"></div></div>
@@ -192,7 +254,7 @@
                 <div class="club-card"><div class="club-info"><img src="https://ui-avatars.com/api/?name=MI&background=1e3a8a&color=fff" class="club-logo"><div><div style="font-weight:800;">Paltan Official</div><div style="font-size:0.75rem; color:var(--text-muted);">2.1M Members</div></div></div><button class="btn-join">Join</button></div>
                 <div class="club-card"><div class="club-info"><img src="https://ui-avatars.com/api/?name=RCB&background=dc2626&color=fff" class="club-logo"><div><div style="font-weight:800;">Namma RCB Fanclub</div><div style="font-size:0.75rem; color:var(--text-muted);">2.8M Members</div></div></div><button class="btn-join">Join</button></div>
                 <div class="club-card"><div class="club-info"><img src="https://ui-avatars.com/api/?name=KKR&background=4c1d95&color=fff" class="club-logo"><div><div style="font-weight:800;">Knight Riders Galaxy</div><div style="font-size:0.75rem; color:var(--text-muted);">1.5M Members</div></div></div><button class="btn-join">Join</button></div>
-                <div class="club-card"><div class="club-info"><img src="https://ui-avatars.com/api/?name=RR&background=ec4899&color=fff" class="club-logo"><div><div style="font-weight:800;">Royals Squad</div><div style="font-size:0.75rem; color:var(--text-muted);">900K Members</div></div></div><button class="btn-join">Join</button></div>
+                <div class="club-card"><div class="club-info"><img src="https://ui-avatars.com/api/?name=RR&background=ec4899&color=fff" class="club-logo"><div><div style="font-weight:800;">Royals Squad</div><div style="font-size:0.75rem; color:var(--text-muted);">900M Members</div></div></div><button class="btn-join">Join</button></div>
                 <div class="club-card"><div class="club-info"><img src="https://ui-avatars.com/api/?name=SRH&background=f97316&color=fff" class="club-logo"><div><div style="font-weight:800;">Orange Army</div><div style="font-size:0.75rem; color:var(--text-muted);">1.1M Members</div></div></div><button class="btn-join">Join</button></div>
                 <div class="club-card"><div class="club-info"><img src="https://ui-avatars.com/api/?name=GT&background=0f172a&color=fff" class="club-logo"><div><div style="font-weight:800;">Titans Fam</div><div style="font-size:0.75rem; color:var(--text-muted);">1.3M Members</div></div></div><button class="btn-join">Join</button></div>
                 <div class="club-card"><div class="club-info"><img src="https://ui-avatars.com/api/?name=LSG&background=0284c7&color=fff" class="club-logo"><div><div style="font-weight:800;">Nawab Brigade</div><div style="font-size:0.75rem; color:var(--text-muted);">800K Members</div></div></div><button class="btn-join">Join</button></div>
