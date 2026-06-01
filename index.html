@@ -1,188 +1,1216 @@
-    <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Sportsnap | The Ultimate Sports Universe</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700;900&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --accent: #00ffcc;
-            --bg: #05070a;
-            --glass: rgba(20, 25, 40, 0.7);
-            --border: rgba(255, 255, 255, 0.1);
-            --text-muted: #8b9bb4;
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sportsnap PRO</title>
+  <style>
+    :root{
+      --bg:#050b16;
+      --panel:rgba(12,20,37,.72);
+      --panel-2:rgba(15,28,52,.9);
+      --line:rgba(255,255,255,.08);
+      --text:#eaf1ff;
+      --muted:#97a6c0;
+      --accent:#7c3aed;
+      --accent-2:#22c55e;
+      --accent-3:#f59e0b;
+      --danger:#ff5d7a;
+      --shadow:0 24px 80px rgba(0,0,0,.35);
+      --radius:24px;
+    }
+    *{box-sizing:border-box}
+    html,body{margin:0;padding:0}
+    body{
+      font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      color:var(--text);
+      background:
+        radial-gradient(circle at top left, rgba(124,58,237,.22), transparent 25%),
+        radial-gradient(circle at top right, rgba(34,197,94,.16), transparent 22%),
+        radial-gradient(circle at bottom left, rgba(245,158,11,.12), transparent 18%),
+        linear-gradient(180deg, #040816 0%, #07101f 48%, #050b16 100%);
+      min-height:100vh;
+    }
+    .app{
+      width:min(1280px, calc(100% - 24px));
+      margin:0 auto;
+      padding:12px 0 24px;
+    }
+    .glass{
+      background:linear-gradient(180deg, rgba(14,22,39,.84), rgba(10,16,29,.74));
+      backdrop-filter: blur(18px);
+      border:1px solid var(--line);
+      box-shadow:var(--shadow);
+      border-radius:28px;
+    }
+    .topbar{
+      position:sticky;
+      top:10px;
+      z-index:20;
+      padding:16px 16px 14px;
+      display:flex;
+      align-items:center;
+      gap:14px;
+      justify-content:space-between;
+      margin-bottom:14px;
+    }
+    .brand{
+      display:flex;
+      flex-direction:column;
+      gap:4px;
+      min-width:0;
+    }
+    .brand h1{
+      margin:0;
+      font-size:clamp(22px, 3vw, 34px);
+      line-height:1;
+      letter-spacing:-.03em;
+    }
+    .brand p{
+      margin:0;
+      color:var(--muted);
+      font-size:13px;
+    }
+    .pill-row{
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap;
+      align-items:center;
+      justify-content:flex-end;
+    }
+    .pill{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:9px 13px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.1);
+      background:rgba(255,255,255,.04);
+      color:var(--text);
+      font-size:12px;
+      font-weight:700;
+      letter-spacing:.01em;
+      white-space:nowrap;
+    }
+    .dot{
+      width:8px;height:8px;border-radius:50%;
+      background:var(--accent-2);
+      box-shadow:0 0 0 6px rgba(34,197,94,.12);
+    }
+    .btn{
+      appearance:none;
+      border:0;
+      cursor:pointer;
+      color:white;
+      font-weight:800;
+      padding:11px 15px;
+      border-radius:16px;
+      background:linear-gradient(135deg, rgba(124,58,237,1), rgba(59,130,246,1));
+      box-shadow:0 18px 30px rgba(59,130,246,.18);
+      transition:transform .18s ease, filter .18s ease;
+    }
+    .btn:hover{transform:translateY(-1px);filter:brightness(1.06)}
+    .btn.secondary{
+      background:rgba(255,255,255,.06);
+      box-shadow:none;
+      border:1px solid rgba(255,255,255,.08);
+    }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
-        body { background: var(--bg); color: #fff; padding-bottom: 80px; overflow-x: hidden; }
+    .hero{
+      display:grid;
+      grid-template-columns:1.6fr .9fr;
+      gap:14px;
+      margin-bottom:14px;
+    }
+    .hero-card{
+      position:relative;
+      overflow:hidden;
+      padding:18px;
+      min-height:220px;
+      border-radius:28px;
+      background:
+        linear-gradient(135deg, rgba(124,58,237,.95), rgba(37,99,235,.88) 55%, rgba(15,23,42,.92));
+      border:1px solid rgba(255,255,255,.12);
+      box-shadow:var(--shadow);
+    }
+    .hero-card::after{
+      content:"";
+      position:absolute;
+      inset:auto -8% -35% auto;
+      width:250px;height:250px;border-radius:50%;
+      background:radial-gradient(circle, rgba(255,255,255,.22), transparent 62%);
+      filter:blur(2px);
+      pointer-events:none;
+    }
+    .hero-top{
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap:12px;
+    }
+    .hero-copy h2{
+      margin:0 0 8px;
+      font-size:clamp(24px, 4vw, 38px);
+      letter-spacing:-.04em;
+      line-height:1.02;
+    }
+    .hero-copy p{
+      margin:0;
+      color:rgba(255,255,255,.84);
+      max-width:62ch;
+      font-size:14px;
+      line-height:1.55;
+    }
+    .hero-meta{
+      margin-top:16px;
+      display:grid;
+      grid-template-columns:repeat(3,minmax(0,1fr));
+      gap:10px;
+    }
+    .metric{
+      padding:13px 14px;
+      border-radius:18px;
+      background:rgba(0,0,0,.18);
+      border:1px solid rgba(255,255,255,.12);
+    }
+    .metric b{
+      display:block;
+      font-size:18px;
+      margin-bottom:4px;
+    }
+    .metric span{
+      color:rgba(255,255,255,.78);
+      font-size:12px;
+    }
 
-        /* HEADER AS REQUESTED */
-        header {
-            padding: 15px 20px; background: rgba(5,7,10,0.85); backdrop-filter: blur(20px);
-            position: sticky; top: 0; z-index: 1000;
-            display: flex; justify-content: space-between; align-items: center;
-            border-bottom: 1px solid var(--border);
-        }
-        
-        .header-left { display: flex; align-items: center; gap: 10px; }
-        .logo-ads { 
-            font-size: 1.5rem; font-weight: 900; 
-            background: linear-gradient(45deg, #ff0055, #ffcc00, #00ffcc); 
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-            display: flex; align-items: center; gap: 5px;
-        }
-        .app-name { font-size: 1.2rem; font-weight: 700; color: #fff; letter-spacing: 1px; }
-        .profile-pic { width: 40px; height: 40px; border-radius: 50%; border: 2px solid var(--accent); object-fit: cover; cursor: pointer; }
+    .hero-side{
+      padding:14px;
+      border-radius:28px;
+      background:linear-gradient(180deg, rgba(12,20,37,.9), rgba(8,13,26,.9));
+      border:1px solid rgba(255,255,255,.08);
+      box-shadow:var(--shadow);
+      display:flex;
+      flex-direction:column;
+      gap:12px;
+    }
+    .hero-side .card-mini{
+      flex:1;
+      border-radius:22px;
+      background:linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
+      border:1px solid rgba(255,255,255,.08);
+      padding:14px;
+      display:flex;
+      flex-direction:column;
+      justify-content:space-between;
+      gap:10px;
+    }
+    .mini-title{
+      font-size:12px;
+      color:var(--muted);
+      text-transform:uppercase;
+      letter-spacing:.12em;
+      font-weight:800;
+    }
+    .mini-value{
+      font-size:22px;
+      font-weight:900;
+      line-height:1.1;
+    }
+    .mini-sub{
+      color:var(--muted);
+      font-size:13px;
+      line-height:1.45;
+    }
 
-        .container { padding: 15px; }
-        .view { display: none; animation: fadeIn 0.3s ease; }
-        .view.active { display: block; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    .controls{
+      display:grid;
+      grid-template-columns:1fr auto;
+      gap:10px;
+      align-items:center;
+      margin:12px 0 10px;
+    }
+    .search-wrap{
+      position:relative;
+    }
+    .search{
+      width:100%;
+      padding:14px 16px 14px 46px;
+      border-radius:18px;
+      border:1px solid rgba(255,255,255,.09);
+      background:rgba(255,255,255,.05);
+      color:var(--text);
+      outline:none;
+      font-size:14px;
+    }
+    .search::placeholder{color:#87a0c2}
+    .search-ico{
+      position:absolute;
+      left:16px;
+      top:50%;
+      transform:translateY(-50%);
+      color:#a8b8d8;
+      font-size:15px;
+    }
 
-        /* CARDS & UI ELEMENTS */
-        .card { 
-            background: var(--glass); border-radius: 20px; padding: 18px; 
-            margin-bottom: 15px; border: 1px solid var(--border);
-            backdrop-filter: blur(10px);
-        }
-        .section-title { font-size: 1.2rem; font-weight: 800; margin-bottom: 15px; text-transform: uppercase; color: var(--accent); }
+    .tabs{
+      display:flex;
+      gap:10px;
+      overflow:auto;
+      padding:2px 2px 8px;
+      scrollbar-width:none;
+      margin:4px 0 10px;
+    }
+    .tabs::-webkit-scrollbar{display:none}
+    .tab{
+      cursor:pointer;
+      user-select:none;
+      border:1px solid rgba(255,255,255,.08);
+      background:rgba(255,255,255,.05);
+      color:#cdd7ea;
+      padding:11px 14px;
+      border-radius:999px;
+      font-size:13px;
+      font-weight:800;
+      white-space:nowrap;
+      transition:transform .18s ease, background .18s ease, border-color .18s ease;
+    }
+    .tab:hover{transform:translateY(-1px)}
+    .tab.active{
+      background:linear-gradient(135deg, rgba(245,158,11,.95), rgba(239,68,68,.88));
+      color:#111827;
+      border-color:transparent;
+      box-shadow:0 12px 30px rgba(245,158,11,.18);
+    }
 
-        /* FILTER TABS */
-        .scroll-row { display: flex; gap: 10px; overflow-x: auto; margin-bottom: 20px; padding-bottom: 5px; }
-        .scroll-row::-webkit-scrollbar { display: none; }
-        .pill-btn { background: rgba(255,255,255,0.05); border: 1px solid var(--border); color: #fff; padding: 8px 20px; border-radius: 50px; font-size: 0.85rem; white-space: nowrap; font-weight: 600; cursor: pointer; }
-        .pill-btn.active { background: var(--accent); color: #000; border: none; }
+    .section-head{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:10px;
+      margin:14px 2px 10px;
+    }
+    .section-head h3{
+      margin:0;
+      font-size:18px;
+      letter-spacing:-.02em;
+    }
+    .section-head .small{
+      color:var(--muted);
+      font-size:12px;
+    }
 
-        /* LIVE SCORES */
-        .match-card { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); padding-bottom: 15px; margin-bottom: 15px; }
-        .team-row { display: flex; align-items: center; gap: 10px; margin: 5px 0; font-weight: 700; }
-        .score-text { font-size: 1.2rem; font-weight: 900; }
+    .grid{
+      display:grid;
+      grid-template-columns:repeat(auto-fit, minmax(285px, 1fr));
+      gap:14px;
+    }
 
-        /* REELS & POSTS */
-        .reel-placeholder { height: 400px; background: #111; border-radius: 15px; position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center; border: 1px solid var(--border); }
-        .reel-actions { position: absolute; right: 15px; bottom: 20px; display: flex; flex-direction: column; gap: 15px; font-size: 1.5rem; }
+    .card{
+      position:relative;
+      overflow:hidden;
+      border-radius:26px;
+      background:linear-gradient(180deg, rgba(18,29,50,.92), rgba(8,14,25,.96));
+      border:1px solid rgba(255,255,255,.08);
+      box-shadow:0 18px 46px rgba(0,0,0,.22);
+      padding:14px;
+      transition:transform .18s ease, border-color .18s ease;
+    }
+    .card:hover{
+      transform:translateY(-2px);
+      border-color:rgba(255,255,255,.16);
+    }
+    .card-top{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:10px;
+      margin-bottom:10px;
+    }
+    .badge{
+      display:inline-flex;
+      align-items:center;
+      gap:6px;
+      padding:7px 10px;
+      border-radius:999px;
+      font-size:11px;
+      font-weight:900;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+      background:rgba(255,255,255,.06);
+      color:#d9e7ff;
+      border:1px solid rgba(255,255,255,.08);
+    }
+    .badge.live{
+      background:rgba(255,93,122,.13);
+      color:#ff93a7;
+      border-color:rgba(255,93,122,.18);
+    }
+    .badge.upcoming{
+      background:rgba(245,158,11,.13);
+      color:#ffd98a;
+      border-color:rgba(245,158,11,.18);
+    }
+    .badge.done{
+      background:rgba(34,197,94,.12);
+      color:#8bf0b0;
+      border-color:rgba(34,197,94,.18);
+    }
+    .league{
+      color:var(--muted);
+      font-size:12px;
+      text-align:right;
+      line-height:1.2;
+    }
 
-        /* CLUBS & THREADS */
-        .thread-post { display: flex; gap: 15px; margin-bottom: 20px; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 15px; }
-        .club-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
-        .club-box { background: rgba(0,0,0,0.4); padding: 15px; border-radius: 12px; text-align: center; border: 1px solid var(--border); }
+    .scoreboard{
+      display:grid;
+      grid-template-columns:1fr auto 1fr;
+      gap:10px;
+      align-items:center;
+      margin-top:10px;
+    }
+    .team{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      min-width:0;
+    }
+    .team.right{
+      justify-content:flex-end;
+      text-align:right;
+      flex-direction:row-reverse;
+    }
+    .logo{
+      width:44px;
+      height:44px;
+      border-radius:16px;
+      object-fit:cover;
+      background:linear-gradient(135deg, #0f172a, #1f2937);
+      border:1px solid rgba(255,255,255,.09);
+      flex:0 0 auto;
+    }
+    .team-name{
+      font-size:14px;
+      font-weight:800;
+      line-height:1.15;
+      overflow:hidden;
+      text-overflow:ellipsis;
+      white-space:nowrap;
+    }
+    .team-sub{
+      color:var(--muted);
+      font-size:12px;
+      margin-top:3px;
+      overflow:hidden;
+      text-overflow:ellipsis;
+      white-space:nowrap;
+    }
+    .score{
+      min-width:84px;
+      text-align:center;
+      font-size:26px;
+      font-weight:950;
+      letter-spacing:-.04em;
+      line-height:1;
+    }
+    .vs{
+      text-align:center;
+      color:var(--muted);
+      font-size:11px;
+      font-weight:900;
+      text-transform:uppercase;
+      letter-spacing:.15em;
+      margin-top:6px;
+    }
+    .meta-row{
+      display:flex;
+      justify-content:space-between;
+      gap:10px;
+      flex-wrap:wrap;
+      margin-top:12px;
+      color:#b8c6dc;
+      font-size:12px;
+    }
+    .meta-row b{color:#fff}
+    .thumb{
+      width:100%;
+      aspect-ratio:16/9;
+      object-fit:cover;
+      border-radius:18px;
+      margin-top:12px;
+      border:1px solid rgba(255,255,255,.09);
+      background:#0b1220;
+    }
+    .note{
+      margin-top:12px;
+      color:var(--muted);
+      font-size:12px;
+      line-height:1.55;
+    }
+    .cta-row{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      margin-top:12px;
+    }
+    .link-btn{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:8px;
+      text-decoration:none;
+      color:white;
+      font-weight:800;
+      padding:11px 13px;
+      border-radius:14px;
+      background:rgba(255,255,255,.06);
+      border:1px solid rgba(255,255,255,.09);
+      transition:transform .18s ease, background .18s ease;
+    }
+    .link-btn:hover{transform:translateY(-1px);background:rgba(255,255,255,.1)}
+    .link-btn.primary{
+      background:linear-gradient(135deg, rgba(34,197,94,.94), rgba(20,184,166,.94));
+      color:#03220f;
+      border:0;
+    }
+    .embed-wrap{
+      margin-top:12px;
+      border-radius:18px;
+      overflow:hidden;
+      border:1px solid rgba(255,255,255,.09);
+      background:#000;
+    }
+    .embed-wrap iframe{
+      width:100%;
+      display:block;
+      aspect-ratio:16/9;
+      border:0;
+    }
+    .loading, .empty{
+      min-height:220px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      text-align:center;
+      color:var(--muted);
+      border-radius:26px;
+      border:1px dashed rgba(255,255,255,.12);
+      background:rgba(255,255,255,.04);
+      padding:22px;
+      line-height:1.55;
+    }
+    .skeleton-grid{
+      display:grid;
+      grid-template-columns:repeat(auto-fit, minmax(285px, 1fr));
+      gap:14px;
+    }
+    .skeleton{
+      height:240px;
+      border-radius:26px;
+      background:linear-gradient(90deg, rgba(255,255,255,.05) 25%, rgba(255,255,255,.11) 37%, rgba(255,255,255,.05) 63%);
+      background-size:400% 100%;
+      animation:shimmer 1.2s linear infinite;
+      border:1px solid rgba(255,255,255,.06);
+    }
+    @keyframes shimmer{
+      0%{background-position:100% 0}
+      100%{background-position:-100% 0}
+    }
 
-        /* BOTTOM NAV */
-        .nav { position: fixed; bottom: 0; width: 100%; background: rgba(5,7,10,0.95); display: flex; justify-content: space-around; padding: 15px 0 25px; border-top: 1px solid var(--border); backdrop-filter: blur(20px); }
-        .nav-item { color: var(--text-muted); text-align: center; font-size: 0.7rem; font-weight: 700; cursor: pointer; transition: 0.3s; }
-        .nav-item.active { color: var(--accent); transform: translateY(-3px); }
-        .nav-icon { font-size: 1.5rem; margin-bottom: 4px; display: block; }
-    </style>
+    .footer-note{
+      text-align:center;
+      color:var(--muted);
+      font-size:12px;
+      margin:18px 0 4px;
+      line-height:1.6;
+    }
+
+    @media (max-width: 920px){
+      .hero{grid-template-columns:1fr}
+      .topbar{position:static}
+    }
+    @media (max-width: 640px){
+      .controls{grid-template-columns:1fr}
+      .pill-row{justify-content:flex-start}
+      .hero-meta{grid-template-columns:1fr}
+      .scoreboard{grid-template-columns:1fr}
+      .team.right{justify-content:flex-start; text-align:left; flex-direction:row}
+      .score{text-align:left}
+      .vs{text-align:left}
+    }
+  </style>
 </head>
 <body>
-
-    <!-- REQUESTED HEADER DESIGN -->
-    <header>
-        <div class="header-left">
-            <div class="logo-ads">ADS ⚽🏏</div>
-            <div class="app-name">Sportsnap</div>
-        </div>
-        <!-- Profile Picture on the Right -->
-        <img src="https://ui-avatars.com/api/?name=User&background=00ffcc&color=000" class="profile-pic" alt="Profile">
+  <div class="app">
+    <header class="topbar glass">
+      <div class="brand">
+        <h1>Sportsnap PRO</h1>
+        <p>Clean scoreboard • highlights • sports news • zero-cost front-end</p>
+      </div>
+      <div class="pill-row">
+        <span class="pill"><span class="dot"></span> Free mode</span>
+        <button class="btn secondary" id="refreshBtn">Refresh</button>
+      </div>
     </header>
 
-    <div class="container">
-        
-        <!-- 1 & 5. LIVE SCORES & NEWS VIEW -->
-        <div id="v-home" class="view active">
-            <div class="scroll-row">
-                <div class="pill-btn active">Live</div>
-                <div class="pill-btn">Cricket</div>
-                <div class="pill-btn">Football</div>
-                <div class="pill-btn">News</div>
-            </div>
-            
-            <h3 class="section-title">Live Matches</h3>
-            <div class="card">
-                <div style="font-size: 0.7rem; color: var(--accent); margin-bottom: 10px;">IPL 2026 • FINAL</div>
-                <div class="match-card">
-                    <div>
-                        <div class="team-row"><span>RCB</span></div>
-                        <div class="team-row"><span>GT</span></div>
-                    </div>
-                    <div style="text-align: right;">
-                        <div class="score-text">161/5 <span style="font-size:0.8rem; color:#888;">(18.0)</span></div>
-                        <div class="score-text">155/8 <span style="font-size:0.8rem; color:#888;">(20.0)</span></div>
-                    </div>
-                </div>
-                <div style="text-align: center; font-size: 0.8rem; color: #ffcc00;">RCB won by 5 wickets</div>
-            </div>
+    <section class="hero">
+      <div class="hero-card">
+        <div class="hero-top">
+          <div class="hero-copy">
+            <h2 id="heroTitle">Loading sports feed…</h2>
+            <p id="heroText">Fetching live-style cards and fallback data so the screen never goes blank.</p>
+          </div>
+          <span class="pill" id="heroBadge">INIT</span>
         </div>
 
-        <!-- 2 & 8. REELS / VIDEO VIEW -->
-        <div id="v-reels" class="view">
-            <h3 class="section-title">Sports Reels</h3>
-            <div class="reel-placeholder">
-                <div style="color: #666; text-align: center;">
-                    ▶️<br>Embed YouTube Shorts/<br>Instagram Reels Here
-                </div>
-                <div class="reel-actions">
-                    <span>❤️</span><span>💬</span><span>↪️</span>
-                </div>
-            </div>
+        <div class="hero-meta">
+          <div class="metric">
+            <b id="metricOne">—</b>
+            <span>Top card</span>
+          </div>
+          <div class="metric">
+            <b id="metricTwo">—</b>
+            <span>Current tab</span>
+          </div>
+          <div class="metric">
+            <b id="metricThree">—</b>
+            <span>Last refresh</span>
+          </div>
         </div>
+      </div>
 
-        <!-- 4 & 7. SOCIAL THREADS & CLUBS -->
-        <div id="v-social" class="view">
-            <div class="scroll-row">
-                <div class="pill-btn active">Threads</div>
-                <div class="pill-btn">Team Clubs</div>
-            </div>
-            
-            <div class="card">
-                <div class="thread-post">
-                    <img src="https://ui-avatars.com/api/?name=DH&background=random" style="width:40px; height:40px; border-radius:50%;">
-                    <div>
-                        <div style="font-weight: 700; font-size: 0.9rem;">dinesh_gurjar <span style="color:#888; font-weight:400; font-size:0.8rem;">@rcbfan • 2h</span></div>
-                        <p style="font-size: 0.85rem; margin-top: 5px;">2026 belongs to Bengaluru! What a match! 🔥 #IPL2026 #ViratKohli</p>
-                    </div>
-                </div>
-            </div>
-
-            <h3 class="section-title" style="margin-top: 20px;">Popular Clubs</h3>
-            <div class="club-grid">
-                <div class="club-box">🏏 Chennai Super Kings</div>
-                <div class="club-box">⚽ Indian Football Team</div>
-                <div class="club-box">🏏 Mumbai Indians</div>
-                <div class="club-box">+ Create Club</div>
-            </div>
+      <aside class="hero-side glass">
+        <div class="card-mini">
+          <div class="mini-title">Pro tip</div>
+          <div class="mini-value">Paste your own keys once</div>
+          <div class="mini-sub">
+            The app already works with the free public key and graceful fallbacks. Add your own NewsAPI or ScoreBat token in the CONFIG block to unlock those sections.
+          </div>
         </div>
-
-        <!-- 3. TICKETS -->
-        <div id="v-tickets" class="view">
-            <h3 class="section-title">Book Tickets</h3>
-            <div class="card">
-                <img src="https://images.unsplash.com/photo-1540747913346-19e32dc3e97e?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" style="width: 100%; border-radius: 10px; margin-bottom: 15px;">
-                <h4>Aamchi Mumbai Marathon</h4>
-                <p style="font-size: 0.8rem; color: #888; margin: 5px 0 15px;">Sun, 7 Jun • Bandra Fort Garden</p>
-                <button style="width: 100%; background: var(--accent); border: none; padding: 12px; border-radius: 8px; font-weight: 800; cursor: pointer;">BOOK NOW</button>
-            </div>
+        <div class="card-mini">
+          <div class="mini-title">Current focus</div>
+          <div class="mini-value" id="focusSport">Football</div>
+          <div class="mini-sub">Tap tabs to switch between live-style cards and highlights.</div>
         </div>
+      </aside>
+    </section>
 
+    <div class="controls">
+      <div class="search-wrap">
+        <span class="search-ico">⌕</span>
+        <input id="searchInput" class="search" placeholder="Search teams, leagues, headlines..." />
+      </div>
+      <button class="btn" id="clearBtn">Clear</button>
     </div>
 
-    <!-- BOTTOM NAVIGATION -->
-    <div class="nav">
-        <div class="nav-item active" onclick="nav('v-home', this)"><span class="nav-icon">🏠</span>Home</div>
-        <div class="nav-item" onclick="nav('v-reels', this)"><span class="nav-icon">📱</span>Reels</div>
-        <div class="nav-item" onclick="nav('v-social', this)"><span class="nav-icon">🌐</span>Social</div>
-        <div class="nav-item" onclick="nav('v-tickets', this)"><span class="nav-icon">🎟️</span>Tickets</div>
+    <div class="tabs" id="tabs"></div>
+
+    <div class="section-head">
+      <div>
+        <h3 id="sectionTitle">Football</h3>
+        <div class="small" id="sectionSub">Live-style scoreboard cards</div>
+      </div>
+      <div class="small" id="countText">0 cards</div>
     </div>
 
-    <script>
-        function nav(id, el) {
-            document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
-            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-            document.getElementById(id).classList.add('active');
-            el.classList.add('active');
-            window.scrollTo({top: 0, behavior: 'smooth'});
+    <main id="content"></main>
+
+    <div class="footer-note">
+      Free mode uses public and optional APIs with fallbacks. If you add your own tokens, the app will automatically show richer highlights and news.
+    </div>
+  </div>
+
+  <script>
+    const CONFIG = {
+      THESPORTSDB_KEY: "123",
+      SCOREBAT_TOKEN: "",
+      NEWSAPI_KEY: ""
+    };
+
+    const SPORTS = [
+      { id: "football", label: "Football", hint: "Fixtures + logos + highlights" },
+      { id: "cricket", label: "Cricket", hint: "IPL-style scoreboard cards" },
+      { id: "basketball", label: "Basketball", hint: "NBA-style cards" },
+      { id: "tennis", label: "Tennis", hint: "Singles scoreboard cards" },
+      { id: "hockey", label: "Hockey", hint: "Fast-score board" },
+      { id: "handball", label: "Handball", hint: "Quick cards" },
+      { id: "highlights", label: "Highlights", hint: "Video feed" },
+      { id: "news", label: "News", hint: "Sports news" }
+    ];
+
+    const FALLBACK = {
+      football: [
+        {
+          type: "match",
+          title: "Arsenal vs Chelsea",
+          subtitle: "Premier League",
+          left: { name: "Arsenal", logo: logoAvatar("Arsenal") },
+          right: { name: "Chelsea", logo: logoAvatar("Chelsea") },
+          scoreLeft: "1",
+          scoreRight: "1",
+          status: "LIVE",
+          time: "65'",
+          source: "Demo data",
+          thumb: "https://images.unsplash.com/photo-1508098682722-e99c43a406b2?auto=format&fit=crop&w=1200&q=80",
+          searchText: "Arsenal Chelsea Premier League live"
+        },
+        {
+          type: "match",
+          title: "Real Madrid vs Barcelona",
+          subtitle: "La Liga",
+          left: { name: "Real Madrid", logo: logoAvatar("Real Madrid") },
+          right: { name: "Barcelona", logo: logoAvatar("Barcelona") },
+          scoreLeft: "2",
+          scoreRight: "2",
+          status: "FT",
+          time: "Finished",
+          source: "Demo data",
+          thumb: "https://images.unsplash.com/photo-1518091043644-c1d4457512c6?auto=format&fit=crop&w=1200&q=80",
+          searchText: "Real Madrid Barcelona La Liga finished"
         }
-    </script>
+      ],
+      cricket: [
+        {
+          type: "match",
+          title: "CSK vs MI",
+          subtitle: "IPL Demo",
+          left: { name: "CSK", logo: logoAvatar("CSK") },
+          right: { name: "MI", logo: logoAvatar("MI") },
+          scoreLeft: "167/8",
+          scoreRight: "142/4",
+          status: "LIVE",
+          time: "17.4 ov",
+          source: "Demo scoreboard",
+          thumb: "https://images.unsplash.com/photo-1540747913346-19e32dc3e97e?auto=format&fit=crop&w=1200&q=80",
+          searchText: "CSK MI IPL live cricket"
+        }
+      ],
+      basketball: [
+        {
+          type: "match",
+          title: "Lakers vs Warriors",
+          subtitle: "NBA Demo",
+          left: { name: "Lakers", logo: logoAvatar("Lakers") },
+          right: { name: "Warriors", logo: logoAvatar("Warriors") },
+          scoreLeft: "102",
+          scoreRight: "99",
+          status: "Q4",
+          time: "02:14 left",
+          source: "Demo scoreboard",
+          thumb: "https://images.unsplash.com/photo-1547347298-4074fc3086f0?auto=format&fit=crop&w=1200&q=80",
+          searchText: "Lakers Warriors NBA live"
+        }
+      ],
+      tennis: [
+        {
+          type: "match",
+          title: "Djokovic vs Nadal",
+          subtitle: "Grand Slam Demo",
+          left: { name: "Djokovic", logo: logoAvatar("Djokovic") },
+          right: { name: "Nadal", logo: logoAvatar("Nadal") },
+          scoreLeft: "2",
+          scoreRight: "1",
+          status: "SET 4",
+          time: "40:20",
+          source: "Demo scoreboard",
+          thumb: "https://images.unsplash.com/photo-1542144582-1ba00456b5d3?auto=format&fit=crop&w=1200&q=80",
+          searchText: "Djokovic Nadal tennis live"
+        }
+      ],
+      hockey: [
+        {
+          type: "match",
+          title: "Rangers vs Bruins",
+          subtitle: "NHL Demo",
+          left: { name: "Rangers", logo: logoAvatar("Rangers") },
+          right: { name: "Bruins", logo: logoAvatar("Bruins") },
+          scoreLeft: "3",
+          scoreRight: "2",
+          status: "LIVE",
+          time: "3rd",
+          source: "Demo scoreboard",
+          thumb: "https://images.unsplash.com/photo-1517927033932-b3d18e61fb3a?auto=format&fit=crop&w=1200&q=80",
+          searchText: "Rangers Bruins hockey live"
+        }
+      ],
+      handball: [
+        {
+          type: "match",
+          title: "Team A vs Team B",
+          subtitle: "Handball Demo",
+          left: { name: "Team A", logo: logoAvatar("Team A") },
+          right: { name: "Team B", logo: logoAvatar("Team B") },
+          scoreLeft: "28",
+          scoreRight: "26",
+          status: "LIVE",
+          time: "2nd half",
+          source: "Demo scoreboard",
+          thumb: "https://images.unsplash.com/photo-1515542622106-78bda8ba0c5c?auto=format&fit=crop&w=1200&q=80",
+          searchText: "handball live demo"
+        }
+      ],
+      highlights: [
+        {
+          type: "highlight",
+          title: "Football highlights preview",
+          subtitle: "Add your ScoreBat token for official video embeds",
+          status: "VIDEO",
+          time: "Highlights",
+          source: "Fallback",
+          thumb: "https://images.unsplash.com/photo-1518091043644-c1d4457512c6?auto=format&fit=crop&w=1200&q=80",
+          watchUrl: "https://www.youtube.com/results?search_query=football+highlights",
+          searchText: "football highlights video"
+        }
+      ],
+      news: [
+        {
+          type: "news",
+          title: "Sports news preview",
+          subtitle: "Add your NewsAPI key to pull live headlines",
+          source: "Fallback",
+          time: "Now",
+          thumb: "https://images.unsplash.com/photo-1486299267070-83823f5448dd?auto=format&fit=crop&w=1200&q=80",
+          watchUrl: "https://news.google.com/search?q=sports%20news",
+          searchText: "sports news preview"
+        }
+      ]
+    };
+
+    const state = {
+      sport: "football",
+      query: "",
+      items: [],
+      lastUpdated: null
+    };
+
+    const teamLogoCache = new Map();
+
+    function logoAvatar(name) {
+      return `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=111827&color=ffffff&size=128&bold=true&font-size=0.34`;
+    }
+
+    function esc(str) {
+      return String(str ?? "")
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
+
+    function cacheKey(id) {
+      return `sportsnap_${id}`;
+    }
+
+    function readCache(id) {
+      try {
+        const raw = localStorage.getItem(cacheKey(id));
+        return raw ? JSON.parse(raw) : null;
+      } catch {
+        return null;
+      }
+    }
+
+    function writeCache(id, items) {
+      try {
+        localStorage.setItem(cacheKey(id), JSON.stringify({
+          at: Date.now(),
+          items
+        }));
+      } catch {}
+    }
+
+    async function fetchJSON(url) {
+      const res = await fetch(url, { cache: "no-store" });
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      return res.json();
+    }
+
+    function setTabs() {
+      const wrap = document.getElementById("tabs");
+      wrap.innerHTML = SPORTS.map(s => `
+        <button class="tab ${s.id === state.sport ? "active" : ""}" data-tab="${s.id}">
+          ${esc(s.label)}
+        </button>
+      `).join("");
+
+      wrap.querySelectorAll(".tab").forEach(btn => {
+        btn.addEventListener("click", () => loadSport(btn.dataset.tab));
+      });
+    }
+
+    function setHeroFromItems() {
+      const item = state.items[0];
+      const sportName = SPORTS.find(s => s.id === state.sport)?.label || state.sport;
+
+      document.getElementById("focusSport").textContent = sportName;
+      document.getElementById("sectionTitle").textContent = sportName;
+      document.getElementById("sectionSub").textContent =
+        state.sport === "football" ? "Scoreboard-style fixtures and logos" :
+        state.sport === "highlights" ? "Video highlights feed" :
+        state.sport === "news" ? "Sports headlines" :
+        "Scoreboard cards";
+
+      document.getElementById("metricTwo").textContent = sportName;
+      document.getElementById("metricThree").textContent = state.lastUpdated
+        ? new Date(state.lastUpdated).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
+        : "—";
+
+      if (!item) {
+        document.getElementById("heroTitle").textContent = `${sportName} feed`;
+        document.getElementById("heroText").textContent = "No cards loaded yet.";
+        document.getElementById("heroBadge").textContent = "EMPTY";
+        document.getElementById("metricOne").textContent = "0";
+        return;
+      }
+
+      document.getElementById("heroTitle").textContent = item.title || `${sportName} feed`;
+      document.getElementById("heroText").textContent = item.subtitle || item.time || item.source || "Clean sports dashboard with rich cards.";
+      document.getElementById("heroBadge").textContent = item.status || "READY";
+      document.getElementById("metricOne").textContent = state.items.length.toString();
+    }
+
+    function isLive(item) {
+      const s = String(item.status || "").toLowerCase();
+      return s.includes("live") || s.includes("q4") || s.includes("q3") || s.includes("set") || s.includes("inning");
+    }
+
+    function badgeClass(item) {
+      const s = String(item.status || "").toLowerCase();
+      if (s.includes("live") || s.includes("q4") || s.includes("set") || s.includes("inning")) return "live";
+      if (s.includes("ft") || s.includes("finished")) return "done";
+      return "upcoming";
+    }
+
+    function matchesSearch(item) {
+      const q = state.query.trim().toLowerCase();
+      if (!q) return true;
+      const hay = [
+        item.title,
+        item.subtitle,
+        item.source,
+        item.time,
+        item.status,
+        item.left?.name,
+        item.right?.name,
+        item.searchText
+      ].filter(Boolean).join(" ").toLowerCase();
+      return hay.includes(q);
+    }
+
+    function renderLoading() {
+      document.getElementById("content").innerHTML = `
+        <div class="skeleton-grid">
+          <div class="skeleton"></div>
+          <div class="skeleton"></div>
+          <div class="skeleton"></div>
+        </div>
+      `;
+    }
+
+    function cardHTML(item) {
+      if (item.type === "news") {
+        return `
+          <article class="card">
+            <div class="card-top">
+              <span class="badge ${badgeClass(item)}">${esc(item.type)}</span>
+              <span class="league">${esc(item.source || "")}</span>
+            </div>
+            <div class="team-name" style="font-size:18px">${esc(item.title)}</div>
+            <div class="note" style="margin-top:8px">${esc(item.subtitle || "")}</div>
+            ${item.thumb ? `<img class="thumb" src="${esc(item.thumb)}" alt="${esc(item.title)}">` : ""}
+            <div class="meta-row">
+              <span><b>${esc(item.time || "Now")}</b></span>
+              <span>${esc(item.source || "News")}</span>
+            </div>
+            <div class="cta-row">
+              <a class="link-btn primary" href="${esc(item.watchUrl || "#")}" target="_blank" rel="noopener">Open story</a>
+            </div>
+          </article>
+        `;
+      }
+
+      if (item.type === "highlight") {
+        return `
+          <article class="card">
+            <div class="card-top">
+              <span class="badge ${badgeClass(item)}">${esc(item.type)}</span>
+              <span class="league">${esc(item.subtitle || item.source || "")}</span>
+            </div>
+            <div class="team-name" style="font-size:18px">${esc(item.title)}</div>
+            <div class="note" style="margin-top:8px">${esc(item.time || item.source || "")}</div>
+            ${item.embed ? `<div class="embed-wrap">${item.embed}</div>` : item.thumb ? `<img class="thumb" src="${esc(item.thumb)}" alt="${esc(item.title)}">` : ""}
+            <div class="meta-row">
+              <span><b>${esc(item.source || "Highlights")}</b></span>
+              <span>${esc(item.status || "VIDEO")}</span>
+            </div>
+            <div class="cta-row">
+              ${item.watchUrl ? `<a class="link-btn primary" href="${esc(item.watchUrl)}" target="_blank" rel="noopener">Watch highlights</a>` : ""}
+            </div>
+          </article>
+        `;
+      }
+
+      const badge = badgeClass(item);
+      return `
+        <article class="card">
+          <div class="card-top">
+            <span class="badge ${badge}">${esc(item.status || "UPCOMING")}</span>
+            <span class="league">${esc(item.subtitle || "")}</span>
+          </div>
+
+          <div class="scoreboard">
+            <div class="team">
+              <img class="logo" src="${esc(item.left?.logo || logoAvatar(item.left?.name || "Team 1"))}" alt="${esc(item.left?.name || "Team 1")}">
+              <div style="min-width:0">
+                <div class="team-name">${esc(item.left?.name || "Team 1")}</div>
+                <div class="team-sub">${esc(item.time || item.source || "")}</div>
+              </div>
+            </div>
+
+            <div>
+              <div class="score">${esc(item.scoreLeft ?? "—")}<span style="opacity:.55">-</span>${esc(item.scoreRight ?? "—")}</div>
+              <div class="vs">VS</div>
+            </div>
+
+            <div class="team right">
+              <img class="logo" src="${esc(item.right?.logo || logoAvatar(item.right?.name || "Team 2"))}" alt="${esc(item.right?.name || "Team 2")}">
+              <div style="min-width:0">
+                <div class="team-name">${esc(item.right?.name || "Team 2")}</div>
+                <div class="team-sub">${esc(item.time || item.source || "")}</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="meta-row">
+            <span><b>${esc(item.title || "")}</b></span>
+            <span>${esc(item.source || "")}</span>
+          </div>
+
+          ${item.thumb ? `<img class="thumb" src="${esc(item.thumb)}" alt="${esc(item.title || "")}">` : ""}
+
+          <div class="cta-row">
+            ${item.watchUrl ? `<a class="link-btn primary" href="${esc(item.watchUrl)}" target="_blank" rel="noopener">Highlights</a>` : ""}
+            ${item.infoUrl ? `<a class="link-btn" href="${esc(item.infoUrl)}" target="_blank" rel="noopener">Open</a>` : ""}
+          </div>
+
+          ${item.note ? `<div class="note">${esc(item.note)}</div>` : ""}
+        </article>
+      `;
+    }
+
+    function render() {
+      setTabs();
+      setHeroFromItems();
+
+      const filtered = state.items.filter(matchesSearch);
+      document.getElementById("countText").textContent = `${filtered.length} card${filtered.length === 1 ? "" : "s"}`;
+
+      const content = document.getElementById("content");
+      if (!filtered.length) {
+        content.innerHTML = `
+          <div class="empty">
+            No cards found right now.<br>
+            Try another tab, clear search, or press Refresh.
+          </div>
+        `;
+        return;
+      }
+
+      content.innerHTML = `<div class="grid">${filtered.map(cardHTML).join("")}</div>`;
+    }
+
+    async function lookupTeamLogo(name) {
+      if (!name) return "";
+      if (teamLogoCache.has(name)) return teamLogoCache.get(name);
+
+      try {
+        const url = `https://www.thesportsdb.com/api/v1/json/${CONFIG.THESPORTSDB_KEY}/searchteams.php?t=${encodeURIComponent(name)}`;
+        const json = await fetchJSON(url);
+        const team = json.teams?.[0];
+        const logo = team?.strTeamBadge || team?.strBadge || team?.strLogo || "";
+        teamLogoCache.set(name, logo);
+        return logo;
+      } catch {
+        teamLogoCache.set(name, "");
+        return "";
+      }
+    }
+
+    async function loadFootball() {
+      const cached = readCache("football");
+      if (cached?.items?.length) {
+        state.items = cached.items;
+        state.lastUpdated = cached.at || Date.now();
+        render();
+      }
+
+      try {
+        const url = `https://www.thesportsdb.com/api/v1/json/${CONFIG.THESPORTSDB_KEY}/eventsnextleague.php?id=4328`;
+        const json = await fetchJSON(url);
+        const events = Array.isArray(json.events) ? json.events.slice(0, 8) : [];
+
+        const items = await Promise.all(events.map(async e => {
+          const leftLogo = e.strHomeTeamBadge || await lookupTeamLogo(e.strHomeTeam);
+          const rightLogo = e.strAwayTeamBadge || await lookupTeamLogo(e.strAwayTeam);
+
+          return {
+            type: "match",
+            title: e.strEvent || `${e.strHomeTeam} vs ${e.strAwayTeam}`,
+            subtitle: e.strLeague || "Football",
+            left: { name: e.strHomeTeam || "Home", logo: leftLogo || logoAvatar(e.strHomeTeam || "Home") },
+            right: { name: e.strAwayTeam || "Away", logo: rightLogo || logoAvatar(e.strAwayTeam || "Away") },
+            scoreLeft: e.intHomeScore ?? "—",
+            scoreRight: e.intAwayScore ?? "—",
+            status: e.strStatus || "UPCOMING",
+            time: e.strTime ? `${e.dateEvent || ""} • ${e.strTime}`.trim() : (e.dateEvent || "Scheduled"),
+            source: "TheSportsDB",
+            thumb: e.strThumb || e.strBanner || "",
+            infoUrl: e.strWebsite || "",
+            watchUrl: e.strYoutube ? `https://www.youtube.com/watch?v=${e.strYoutube}` : "",
+            searchText: `${e.strEvent} ${e.strLeague} ${e.strHomeTeam} ${e.strAwayTeam} football`
+          };
+        }));
+
+        const finalItems = items.length ? items : FALLBACK.football;
+        state.items = finalItems;
+        state.lastUpdated = Date.now();
+        writeCache("football", finalItems);
+        render();
+      } catch (err) {
+        const fallback = cached?.items?.length ? cached.items : FALLBACK.football;
+        state.items = fallback;
+        state.lastUpdated = cached?.at || Date.now();
+        render();
+      }
+    }
+
+    async function loadHighlights() {
+      const cached = readCache("highlights");
+      if (cached?.items?.length) {
+        state.items = cached.items;
+        state.lastUpdated = cached.at || Date.now();
+        render();
+      }
+
+      if (!CONFIG.SCOREBAT_TOKEN) {
+        state.items = FALLBACK.highlights;
+        state.lastUpdated = Date.now();
+        writeCache("highlights", state.items);
+        render();
+        return;
+      }
+
+      try {
+        const url = `https://www.scorebat.com/video-api/v3/free-feed/?token=${encodeURIComponent(CONFIG.SCOREBAT_TOKEN)}`;
+        const json = await fetchJSON(url);
+        const items = (json.response || []).slice(0, 8).map(m => ({
+          type: "highlight",
+          title: m.title || "Highlights",
+          subtitle: m.competition || "Football",
+          status: "VIDEO",
+          time: new Date(m.date || Date.now()).toLocaleString(),
+          source: "ScoreBat",
+          thumb: m.thumbnail || "",
+          embed: m.videos?.[0]?.embed || "",
+          watchUrl: m.matchviewUrl || "",
+          searchText: `${m.title || ""} ${m.competition || ""} highlights`
+        }));
+
+        state.items = items.length ? items : FALLBACK.highlights;
+        state.lastUpdated = Date.now();
+        writeCache("highlights", state.items);
+        render();
+      } catch {
+        state.items = cached?.items?.length ? cached.items : FALLBACK.highlights;
+        state.lastUpdated = cached?.at || Date.now();
+        render();
+      }
+    }
+
+    async function loadNews() {
+      const cached = readCache("news");
+      if (cached?.items?.length) {
+        state.items = cached.items;
+        state.lastUpdated = cached.at || Date.now();
+        render();
+      }
+
+      if (!CONFIG.NEWSAPI_KEY) {
+        state.items = FALLBACK.news;
+        state.lastUpdated = Date.now();
+        writeCache("news", state.items);
+        render();
+        return;
+      }
+
+      try {
+        const url = `https://newsapi.org/v2/top-headlines?country=in&category=sports&apiKey=${encodeURIComponent(CONFIG.NEWSAPI_KEY)}`;
+        const json = await fetchJSON(url);
+        const items = (json.articles || []).slice(0, 10).map(a => ({
+          type: "news",
+          title: a.title || "Sports news",
+          subtitle: a.description || a.source?.name || "",
+          source: a.source?.name || "NewsAPI",
+          time: a.publishedAt ? new Date(a.publishedAt).toLocaleString() : "Now",
+          thumb: a.urlToImage || "",
+          watchUrl: a.url || "",
+          searchText: `${a.title || ""} ${a.description || ""} ${a.source?.name || ""} sports news`
+        }));
+
+        state.items = items.length ? items : FALLBACK.news;
+        state.lastUpdated = Date.now();
+        writeCache("news", state.items);
+        render();
+      } catch {
+        state.items = cached?.items?.length ? cached.items : FALLBACK.news;
+        state.lastUpdated = cached?.at || Date.now();
+        render();
+      }
+    }
+
+    async function loadFallbackSport(id) {
+      const items = FALLBACK[id] || [];
+      state.items = items;
+      state.lastUpdated = Date.now();
+      writeCache(id, items);
+      render();
+    }
+
+    async function loadSport(id) {
+      state.sport = id;
+      document.getElementById("heroBadge").textContent = "LOADING";
+      renderLoading();
+      setTabs();
+
+      if (id === "football") return loadFootball();
+      if (id === "highlights") return loadHighlights();
+      if (id === "news") return loadNews();
+      return loadFallbackSport(id);
+    }
+
+    document.getElementById("searchInput").addEventListener("input", (e) => {
+      state.query = e.target.value || "";
+      render();
+    });
+
+    document.getElementById("clearBtn").addEventListener("click", () => {
+      document.getElementById("searchInput").value = "";
+      state.query = "";
+      render();
+    });
+
+    document.getElementById("refreshBtn").addEventListener("click", () => loadSport(state.sport));
+
+    // initial load
+    loadSport("football");
+
+    // light auto-refresh only for football
+    setInterval(() => {
+      if (state.sport === "football") {
+        loadFootball();
+      }
+    }, 60000);
+  </script>
 </body>
-</html>
+    </html>
