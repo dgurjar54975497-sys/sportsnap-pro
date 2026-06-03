@@ -1,1216 +1,555 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Sportsnap PRO</title>
-  <style>
-    :root{
-      --bg:#050b16;
-      --panel:rgba(12,20,37,.72);
-      --panel-2:rgba(15,28,52,.9);
-      --line:rgba(255,255,255,.08);
-      --text:#eaf1ff;
-      --muted:#97a6c0;
-      --accent:#7c3aed;
-      --accent-2:#22c55e;
-      --accent-3:#f59e0b;
-      --danger:#ff5d7a;
-      --shadow:0 24px 80px rgba(0,0,0,.35);
-      --radius:24px;
-    }
-    *{box-sizing:border-box}
-    html,body{margin:0;padding:0}
-    body{
-      font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-      color:var(--text);
-      background:
-        radial-gradient(circle at top left, rgba(124,58,237,.22), transparent 25%),
-        radial-gradient(circle at top right, rgba(34,197,94,.16), transparent 22%),
-        radial-gradient(circle at bottom left, rgba(245,158,11,.12), transparent 18%),
-        linear-gradient(180deg, #040816 0%, #07101f 48%, #050b16 100%);
-      min-height:100vh;
-    }
-    .app{
-      width:min(1280px, calc(100% - 24px));
-      margin:0 auto;
-      padding:12px 0 24px;
-    }
-    .glass{
-      background:linear-gradient(180deg, rgba(14,22,39,.84), rgba(10,16,29,.74));
-      backdrop-filter: blur(18px);
-      border:1px solid var(--line);
-      box-shadow:var(--shadow);
-      border-radius:28px;
-    }
-    .topbar{
-      position:sticky;
-      top:10px;
-      z-index:20;
-      padding:16px 16px 14px;
-      display:flex;
-      align-items:center;
-      gap:14px;
-      justify-content:space-between;
-      margin-bottom:14px;
-    }
-    .brand{
-      display:flex;
-      flex-direction:column;
-      gap:4px;
-      min-width:0;
-    }
-    .brand h1{
-      margin:0;
-      font-size:clamp(22px, 3vw, 34px);
-      line-height:1;
-      letter-spacing:-.03em;
-    }
-    .brand p{
-      margin:0;
-      color:var(--muted);
-      font-size:13px;
-    }
-    .pill-row{
-      display:flex;
-      gap:8px;
-      flex-wrap:wrap;
-      align-items:center;
-      justify-content:flex-end;
-    }
-    .pill{
-      display:inline-flex;
-      align-items:center;
-      gap:8px;
-      padding:9px 13px;
-      border-radius:999px;
-      border:1px solid rgba(255,255,255,.1);
-      background:rgba(255,255,255,.04);
-      color:var(--text);
-      font-size:12px;
-      font-weight:700;
-      letter-spacing:.01em;
-      white-space:nowrap;
-    }
-    .dot{
-      width:8px;height:8px;border-radius:50%;
-      background:var(--accent-2);
-      box-shadow:0 0 0 6px rgba(34,197,94,.12);
-    }
-    .btn{
-      appearance:none;
-      border:0;
-      cursor:pointer;
-      color:white;
-      font-weight:800;
-      padding:11px 15px;
-      border-radius:16px;
-      background:linear-gradient(135deg, rgba(124,58,237,1), rgba(59,130,246,1));
-      box-shadow:0 18px 30px rgba(59,130,246,.18);
-      transition:transform .18s ease, filter .18s ease;
-    }
-    .btn:hover{transform:translateY(-1px);filter:brightness(1.06)}
-    .btn.secondary{
-      background:rgba(255,255,255,.06);
-      box-shadow:none;
-      border:1px solid rgba(255,255,255,.08);
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Sportsnap | World's Best Sports App</title>
+    
+    <!-- Google Fonts: Inter for premium readability, Poppins for bold headings -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Poppins:wght@600;700;800;900&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome for standard icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Tailwind CSS for rapid layout (Custom CSS used for glassmorphism) -->
+    <script src="https://cdn.tailwindcss.com"></script>
 
-    .hero{
-      display:grid;
-      grid-template-columns:1.6fr .9fr;
-      gap:14px;
-      margin-bottom:14px;
-    }
-    .hero-card{
-      position:relative;
-      overflow:hidden;
-      padding:18px;
-      min-height:220px;
-      border-radius:28px;
-      background:
-        linear-gradient(135deg, rgba(124,58,237,.95), rgba(37,99,235,.88) 55%, rgba(15,23,42,.92));
-      border:1px solid rgba(255,255,255,.12);
-      box-shadow:var(--shadow);
-    }
-    .hero-card::after{
-      content:"";
-      position:absolute;
-      inset:auto -8% -35% auto;
-      width:250px;height:250px;border-radius:50%;
-      background:radial-gradient(circle, rgba(255,255,255,.22), transparent 62%);
-      filter:blur(2px);
-      pointer-events:none;
-    }
-    .hero-top{
-      display:flex;
-      align-items:flex-start;
-      justify-content:space-between;
-      gap:12px;
-    }
-    .hero-copy h2{
-      margin:0 0 8px;
-      font-size:clamp(24px, 4vw, 38px);
-      letter-spacing:-.04em;
-      line-height:1.02;
-    }
-    .hero-copy p{
-      margin:0;
-      color:rgba(255,255,255,.84);
-      max-width:62ch;
-      font-size:14px;
-      line-height:1.55;
-    }
-    .hero-meta{
-      margin-top:16px;
-      display:grid;
-      grid-template-columns:repeat(3,minmax(0,1fr));
-      gap:10px;
-    }
-    .metric{
-      padding:13px 14px;
-      border-radius:18px;
-      background:rgba(0,0,0,.18);
-      border:1px solid rgba(255,255,255,.12);
-    }
-    .metric b{
-      display:block;
-      font-size:18px;
-      margin-bottom:4px;
-    }
-    .metric span{
-      color:rgba(255,255,255,.78);
-      font-size:12px;
-    }
+    <style>
+        :root {
+            --bg-color: #07090e;
+            --glass-bg: rgba(20, 25, 35, 0.65);
+            --glass-border: rgba(255, 255, 255, 0.08);
+            --accent-primary: #00ffcc;
+            --accent-secondary: #ff0055;
+            --text-main: #ffffff;
+            --text-muted: #8b9bb4;
+            --navbar-height: 70px;
+        }
 
-    .hero-side{
-      padding:14px;
-      border-radius:28px;
-      background:linear-gradient(180deg, rgba(12,20,37,.9), rgba(8,13,26,.9));
-      border:1px solid rgba(255,255,255,.08);
-      box-shadow:var(--shadow);
-      display:flex;
-      flex-direction:column;
-      gap:12px;
-    }
-    .hero-side .card-mini{
-      flex:1;
-      border-radius:22px;
-      background:linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
-      border:1px solid rgba(255,255,255,.08);
-      padding:14px;
-      display:flex;
-      flex-direction:column;
-      justify-content:space-between;
-      gap:10px;
-    }
-    .mini-title{
-      font-size:12px;
-      color:var(--muted);
-      text-transform:uppercase;
-      letter-spacing:.12em;
-      font-weight:800;
-    }
-    .mini-value{
-      font-size:22px;
-      font-weight:900;
-      line-height:1.1;
-    }
-    .mini-sub{
-      color:var(--muted);
-      font-size:13px;
-      line-height:1.45;
-    }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
 
-    .controls{
-      display:grid;
-      grid-template-columns:1fr auto;
-      gap:10px;
-      align-items:center;
-      margin:12px 0 10px;
-    }
-    .search-wrap{
-      position:relative;
-    }
-    .search{
-      width:100%;
-      padding:14px 16px 14px 46px;
-      border-radius:18px;
-      border:1px solid rgba(255,255,255,.09);
-      background:rgba(255,255,255,.05);
-      color:var(--text);
-      outline:none;
-      font-size:14px;
-    }
-    .search::placeholder{color:#87a0c2}
-    .search-ico{
-      position:absolute;
-      left:16px;
-      top:50%;
-      transform:translateY(-50%);
-      color:#a8b8d8;
-      font-size:15px;
-    }
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+            padding-bottom: var(--navbar-height);
+        }
 
-    .tabs{
-      display:flex;
-      gap:10px;
-      overflow:auto;
-      padding:2px 2px 8px;
-      scrollbar-width:none;
-      margin:4px 0 10px;
-    }
-    .tabs::-webkit-scrollbar{display:none}
-    .tab{
-      cursor:pointer;
-      user-select:none;
-      border:1px solid rgba(255,255,255,.08);
-      background:rgba(255,255,255,.05);
-      color:#cdd7ea;
-      padding:11px 14px;
-      border-radius:999px;
-      font-size:13px;
-      font-weight:800;
-      white-space:nowrap;
-      transition:transform .18s ease, background .18s ease, border-color .18s ease;
-    }
-    .tab:hover{transform:translateY(-1px)}
-    .tab.active{
-      background:linear-gradient(135deg, rgba(245,158,11,.95), rgba(239,68,68,.88));
-      color:#111827;
-      border-color:transparent;
-      box-shadow:0 12px 30px rgba(245,158,11,.18);
-    }
+        /* Hide scrollbars for clean UI */
+        ::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 
-    .section-head{
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      gap:10px;
-      margin:14px 2px 10px;
-    }
-    .section-head h3{
-      margin:0;
-      font-size:18px;
-      letter-spacing:-.02em;
-    }
-    .section-head .small{
-      color:var(--muted);
-      font-size:12px;
-    }
+        /* Typography */
+        h1, h2, h3, h4, .font-poppins { font-family: 'Poppins', sans-serif; }
 
-    .grid{
-      display:grid;
-      grid-template-columns:repeat(auto-fit, minmax(285px, 1fr));
-      gap:14px;
-    }
+        header {
+            position: fixed;
+            top: 0; width: 100%; z-index: 50;
+            background: rgba(7, 9, 14, 0.8);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-bottom: 1px solid var(--glass-border);
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 12px 20px;
+        }
 
-    .card{
-      position:relative;
-      overflow:hidden;
-      border-radius:26px;
-      background:linear-gradient(180deg, rgba(18,29,50,.92), rgba(8,14,25,.96));
-      border:1px solid rgba(255,255,255,.08);
-      box-shadow:0 18px 46px rgba(0,0,0,.22);
-      padding:14px;
-      transition:transform .18s ease, border-color .18s ease;
-    }
-    .card:hover{
-      transform:translateY(-2px);
-      border-color:rgba(255,255,255,.16);
-    }
-    .card-top{
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      gap:10px;
-      margin-bottom:10px;
-    }
-    .badge{
-      display:inline-flex;
-      align-items:center;
-      gap:6px;
-      padding:7px 10px;
-      border-radius:999px;
-      font-size:11px;
-      font-weight:900;
-      letter-spacing:.08em;
-      text-transform:uppercase;
-      background:rgba(255,255,255,.06);
-      color:#d9e7ff;
-      border:1px solid rgba(255,255,255,.08);
-    }
-    .badge.live{
-      background:rgba(255,93,122,.13);
-      color:#ff93a7;
-      border-color:rgba(255,93,122,.18);
-    }
-    .badge.upcoming{
-      background:rgba(245,158,11,.13);
-      color:#ffd98a;
-      border-color:rgba(245,158,11,.18);
-    }
-    .badge.done{
-      background:rgba(34,197,94,.12);
-      color:#8bf0b0;
-      border-color:rgba(34,197,94,.18);
-    }
-    .league{
-      color:var(--muted);
-      font-size:12px;
-      text-align:right;
-      line-height:1.2;
-    }
+        .brand-container { display: flex; align-items: center; gap: 8px; }
+        
+        .logo-ads {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.4rem; font-weight: 900;
+            background: linear-gradient(135deg, #ff0055, #ffaa00, #00ffcc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 20px rgba(0, 255, 204, 0.2);
+        }
 
-    .scoreboard{
-      display:grid;
-      grid-template-columns:1fr auto 1fr;
-      gap:10px;
-      align-items:center;
-      margin-top:10px;
-    }
-    .team{
-      display:flex;
-      align-items:center;
-      gap:10px;
-      min-width:0;
-    }
-    .team.right{
-      justify-content:flex-end;
-      text-align:right;
-      flex-direction:row-reverse;
-    }
-    .logo{
-      width:44px;
-      height:44px;
-      border-radius:16px;
-      object-fit:cover;
-      background:linear-gradient(135deg, #0f172a, #1f2937);
-      border:1px solid rgba(255,255,255,.09);
-      flex:0 0 auto;
-    }
-    .team-name{
-      font-size:14px;
-      font-weight:800;
-      line-height:1.15;
-      overflow:hidden;
-      text-overflow:ellipsis;
-      white-space:nowrap;
-    }
-    .team-sub{
-      color:var(--muted);
-      font-size:12px;
-      margin-top:3px;
-      overflow:hidden;
-      text-overflow:ellipsis;
-      white-space:nowrap;
-    }
-    .score{
-      min-width:84px;
-      text-align:center;
-      font-size:26px;
-      font-weight:950;
-      letter-spacing:-.04em;
-      line-height:1;
-    }
-    .vs{
-      text-align:center;
-      color:var(--muted);
-      font-size:11px;
-      font-weight:900;
-      text-transform:uppercase;
-      letter-spacing:.15em;
-      margin-top:6px;
-    }
-    .meta-row{
-      display:flex;
-      justify-content:space-between;
-      gap:10px;
-      flex-wrap:wrap;
-      margin-top:12px;
-      color:#b8c6dc;
-      font-size:12px;
-    }
-    .meta-row b{color:#fff}
-    .thumb{
-      width:100%;
-      aspect-ratio:16/9;
-      object-fit:cover;
-      border-radius:18px;
-      margin-top:12px;
-      border:1px solid rgba(255,255,255,.09);
-      background:#0b1220;
-    }
-    .note{
-      margin-top:12px;
-      color:var(--muted);
-      font-size:12px;
-      line-height:1.55;
-    }
-    .cta-row{
-      display:flex;
-      gap:10px;
-      flex-wrap:wrap;
-      margin-top:12px;
-    }
-    .link-btn{
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      gap:8px;
-      text-decoration:none;
-      color:white;
-      font-weight:800;
-      padding:11px 13px;
-      border-radius:14px;
-      background:rgba(255,255,255,.06);
-      border:1px solid rgba(255,255,255,.09);
-      transition:transform .18s ease, background .18s ease;
-    }
-    .link-btn:hover{transform:translateY(-1px);background:rgba(255,255,255,.1)}
-    .link-btn.primary{
-      background:linear-gradient(135deg, rgba(34,197,94,.94), rgba(20,184,166,.94));
-      color:#03220f;
-      border:0;
-    }
-    .embed-wrap{
-      margin-top:12px;
-      border-radius:18px;
-      overflow:hidden;
-      border:1px solid rgba(255,255,255,.09);
-      background:#000;
-    }
-    .embed-wrap iframe{
-      width:100%;
-      display:block;
-      aspect-ratio:16/9;
-      border:0;
-    }
-    .loading, .empty{
-      min-height:220px;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      text-align:center;
-      color:var(--muted);
-      border-radius:26px;
-      border:1px dashed rgba(255,255,255,.12);
-      background:rgba(255,255,255,.04);
-      padding:22px;
-      line-height:1.55;
-    }
-    .skeleton-grid{
-      display:grid;
-      grid-template-columns:repeat(auto-fit, minmax(285px, 1fr));
-      gap:14px;
-    }
-    .skeleton{
-      height:240px;
-      border-radius:26px;
-      background:linear-gradient(90deg, rgba(255,255,255,.05) 25%, rgba(255,255,255,.11) 37%, rgba(255,255,255,.05) 63%);
-      background-size:400% 100%;
-      animation:shimmer 1.2s linear infinite;
-      border:1px solid rgba(255,255,255,.06);
-    }
-    @keyframes shimmer{
-      0%{background-position:100% 0}
-      100%{background-position:-100% 0}
-    }
+        .app-name {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.2rem; font-weight: 700;
+            color: white; letter-spacing: 0.5px;
+        }
 
-    .footer-note{
-      text-align:center;
-      color:var(--muted);
-      font-size:12px;
-      margin:18px 0 4px;
-      line-height:1.6;
-    }
+        .profile-btn {
+            width: 38px; height: 38px; border-radius: 50%;
+            padding: 2px;
+            background: linear-gradient(45deg, var(--accent-primary), var(--accent-secondary));
+        }
+        .profile-btn img {
+            width: 100%; height: 100%; border-radius: 50%; object-fit: cover;
+            border: 2px solid var(--bg-color);
+        }
 
-    @media (max-width: 920px){
-      .hero{grid-template-columns:1fr}
-      .topbar{position:static}
-    }
-    @media (max-width: 640px){
-      .controls{grid-template-columns:1fr}
-      .pill-row{justify-content:flex-start}
-      .hero-meta{grid-template-columns:1fr}
-      .scoreboard{grid-template-columns:1fr}
-      .team.right{justify-content:flex-start; text-align:left; flex-direction:row}
-      .score{text-align:left}
-      .vs{text-align:left}
-    }
-  </style>
+        .glass-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 16px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+        }
+
+        .horizontal-scroll {
+            display: flex; gap: 12px; overflow-x: auto;
+            padding: 5px 0 15px 0; margin: 0 20px;
+        }
+
+        .filter-pill {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--glass-border);
+            padding: 8px 20px; border-radius: 30px;
+            font-weight: 600; font-size: 0.85rem;
+            white-space: nowrap; cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .filter-pill.active {
+            background: var(--text-main); color: var(--bg-color);
+            box-shadow: 0 4px 15px rgba(255,255,255,0.2);
+        }
+
+        .section-title {
+            font-size: 1.1rem; font-weight: 800; text-transform: uppercase;
+            letter-spacing: 1px; color: var(--accent-primary);
+            margin: 20px 20px 15px; display: flex; justify-content: space-between;
+        }
+
+        .app-view {
+            display: none;
+            padding-top: 75px; /* Account for header */
+            animation: fadeSlideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            min-height: 100vh;
+        }
+        .app-view.active { display: block; }
+
+        @keyframes fadeSlideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Home: Live Score */
+        .live-badge {
+            background: rgba(255, 0, 85, 0.2); color: #ff0055;
+            padding: 2px 8px; border-radius: 4px; font-size: 0.7rem; font-weight: 800;
+            border: 1px solid rgba(255, 0, 85, 0.5);
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.5; } 100% { opacity: 1; } }
+
+        /* Home: Stories (Insta style) */
+        .story-ring {
+            min-width: 65px; height: 65px; border-radius: 50%;
+            background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+            padding: 2px; display: flex; flex-direction: column; align-items: center; gap: 5px;
+        }
+        .story-ring img { width: 100%; height: 100%; border-radius: 50%; border: 3px solid var(--bg-color); object-fit: cover; }
+        .story-text { font-size: 0.7rem; text-align: center; color: var(--text-muted); width: 65px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; margin-top: 5px;}
+
+        /* Reels Section */
+        .reels-container { height: calc(100vh - var(--navbar-height)); scroll-snap-type: y mandatory; overflow-y: scroll; padding-top: 0; }
+        .reel-video { height: 100%; width: 100%; scroll-snap-align: start; position: relative; background: #000; }
+        .reel-overlay { position: absolute; bottom: 0; left: 0; width: 100%; padding: 20px; background: linear-gradient(transparent, rgba(0,0,0,0.8)); display: flex; justify-content: space-between; align-items: flex-end;}
+        .reel-actions { display: flex; flex-direction: column; gap: 20px; align-items: center; font-size: 1.5rem; }
+        .action-icon { filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5)); transition: transform 0.2s; cursor: pointer; }
+        .action-icon:active { transform: scale(0.8); color: var(--accent-secondary); }
+
+        /* Clubs Section */
+        .club-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; padding: 0 20px; }
+        .club-card {
+            background: linear-gradient(145deg, rgba(20,25,35,0.8), rgba(10,12,18,0.9));
+            border: 1px solid var(--glass-border); border-radius: 15px;
+            padding: 20px 10px; display: flex; flex-direction: column; align-items: center;
+            text-align: center; transition: 0.3s; cursor: pointer;
+        }
+        .club-card:active { transform: scale(0.95); border-color: var(--accent-primary); }
+        .club-logo { width: 60px; height: 60px; object-fit: contain; margin-bottom: 10px; }
+
+        .bottom-nav {
+            position: fixed; bottom: 0; width: 100%; height: var(--navbar-height);
+            background: rgba(7, 9, 14, 0.9);
+            backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+            border-top: 1px solid var(--glass-border);
+            display: flex; justify-content: space-around; align-items: center;
+            z-index: 100; padding-bottom: env(safe-area-inset-bottom);
+        }
+
+        .nav-item {
+            display: flex; flex-direction: column; align-items: center; gap: 4px;
+            color: var(--text-muted); font-size: 0.65rem; font-weight: 600;
+            cursor: pointer; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            width: 60px;
+        }
+        .nav-item i { font-size: 1.3rem; transition: 0.3s; }
+        
+        .nav-item.active { color: var(--text-main); }
+        .nav-item.active i {
+            color: var(--accent-primary);
+            transform: translateY(-4px) scale(1.1);
+            filter: drop-shadow(0 0 10px rgba(0, 255, 204, 0.4));
+        }
+    </style>
 </head>
 <body>
-  <div class="app">
-    <header class="topbar glass">
-      <div class="brand">
-        <h1>Sportsnap PRO</h1>
-        <p>Clean scoreboard • highlights • sports news • zero-cost front-end</p>
-      </div>
-      <div class="pill-row">
-        <span class="pill"><span class="dot"></span> Free mode</span>
-        <button class="btn secondary" id="refreshBtn">Refresh</button>
-      </div>
+
+    <header>
+        <div class="brand-container">
+            <div class="logo-ads">ADS <i class="fa-solid fa-bolt text-sm"></i></div>
+            <div class="app-name">Sportsnap</div>
+        </div>
+        <div class="profile-btn">
+            <!-- Simulated User Photo -->
+            <img src="https://ui-avatars.com/api/?name=User&background=111&color=00ffcc" alt="User Profile">
+        </div>
     </header>
 
-    <section class="hero">
-      <div class="hero-card">
-        <div class="hero-top">
-          <div class="hero-copy">
-            <h2 id="heroTitle">Loading sports feed…</h2>
-            <p id="heroText">Fetching live-style cards and fallback data so the screen never goes blank.</p>
-          </div>
-          <span class="pill" id="heroBadge">INIT</span>
+    <main id="view-home" class="app-view active">
+        <!-- Sports Filter -->
+        <div class="horizontal-scroll no-scrollbar mt-2">
+            <div class="filter-pill active">For You</div>
+            <div class="filter-pill">Cricket</div>
+            <div class="filter-pill">Football</div>
+            <div class="filter-pill">Tennis</div>
+            <div class="filter-pill">Basketball</div>
         </div>
 
-        <div class="hero-meta">
-          <div class="metric">
-            <b id="metricOne">—</b>
-            <span>Top card</span>
-          </div>
-          <div class="metric">
-            <b id="metricTwo">—</b>
-            <span>Current tab</span>
-          </div>
-          <div class="metric">
-            <b id="metricThree">—</b>
-            <span>Last refresh</span>
-          </div>
+        <!-- Stories (Insta Style) -->
+        <div class="horizontal-scroll no-scrollbar mt-2">
+            <div style="display:flex; flex-direction:column; align-items:center;">
+                <div class="story-ring" style="background: var(--glass-border);">
+                    <img src="https://ui-avatars.com/api/?name=+&background=333&color=fff" style="border:none;">
+                </div>
+                <div class="story-text">Your Story</div>
+            </div>
+            <div style="display:flex; flex-direction:column; align-items:center;">
+                <div class="story-ring"><img src="https://images.unsplash.com/photo-1593341646782-e0b495cff86d?w=100&h=100&fit=crop"></div>
+                <div class="story-text">mahi.ipl</div>
+            </div>
+            <div style="display:flex; flex-direction:column; align-items:center;">
+                <div class="story-ring"><img src="https://images.unsplash.com/photo-1540569014015-19a7be504e3a?w=100&h=100&fit=crop"></div>
+                <div class="story-text">rcb_fans</div>
+            </div>
+            <div style="display:flex; flex-direction:column; align-items:center;">
+                <div class="story-ring"><img src="https://images.unsplash.com/photo-1518063319808-1c58d04dc907?w=100&h=100&fit=crop"></div>
+                <div class="story-text">messi_hub</div>
+            </div>
         </div>
-      </div>
 
-      <aside class="hero-side glass">
-        <div class="card-mini">
-          <div class="mini-title">Pro tip</div>
-          <div class="mini-value">Paste your own keys once</div>
-          <div class="mini-sub">
-            The app already works with the free public key and graceful fallbacks. Add your own NewsAPI or ScoreBat token in the CONFIG block to unlock those sections.
-          </div>
+        <!-- Live Score Section (Based on Cricbuzz screenshot) -->
+        <div class="section-title">
+            <span>Live Matches</span>
+            <span class="text-xs font-normal text-[var(--accent-primary)] cursor-pointer">View All <i class="fa-solid fa-chevron-right"></i></span>
         </div>
-        <div class="card-mini">
-          <div class="mini-title">Current focus</div>
-          <div class="mini-value" id="focusSport">Football</div>
-          <div class="mini-sub">Tap tabs to switch between live-style cards and highlights.</div>
+        <div class="px-5 mb-6">
+            <div class="glass-card relative overflow-hidden">
+                <!-- Decorative background glow -->
+                <div class="absolute -top-10 -right-10 w-32 h-32 bg-[var(--accent-primary)] opacity-10 rounded-full blur-2xl"></div>
+                
+                <div class="flex justify-between items-center mb-4">
+                    <span class="text-xs font-bold text-gray-400">INDIAN PREMIER LEAGUE 2026 • FINAL</span>
+                    <span class="live-badge">LIVE</span>
+                </div>
+
+                <div class="flex justify-between items-center mb-2">
+                    <div class="flex items-center gap-3">
+                        <img src="https://upload.wikimedia.org/wikipedia/en/thumb/2/2b/Royal_Challengers_Bangalore_Logo.svg/150px-Royal_Challengers_Bangalore_Logo.svg.png" class="w-8 h-8 object-contain bg-white rounded-full p-1" alt="RCB">
+                        <span class="font-poppins font-bold text-lg">RCB</span>
+                    </div>
+                    <div class="text-right">
+                        <span class="font-poppins font-black text-xl">161-5</span>
+                        <span class="text-xs text-gray-400 ml-1">(18)</span>
+                    </div>
+                </div>
+
+                <div class="flex justify-between items-center mb-4">
+                    <div class="flex items-center gap-3">
+                        <img src="https://upload.wikimedia.org/wikipedia/en/thumb/0/09/Gujarat_Titans_Logo.svg/150px-Gujarat_Titans_Logo.svg.png" class="w-8 h-8 object-contain bg-white rounded-full p-1" alt="GT">
+                        <span class="font-poppins font-bold text-lg text-gray-400">GT</span>
+                    </div>
+                    <div class="text-right">
+                        <span class="font-poppins font-bold text-lg text-gray-400">155-8</span>
+                        <span class="text-xs text-gray-500 ml-1">(20)</span>
+                    </div>
+                </div>
+
+                <div class="border-t border-[var(--glass-border)] pt-3 text-center">
+                    <span class="text-sm font-semibold text-[var(--accent-primary)]">Royal Challengers Bengaluru won by 5 wickets</span>
+                </div>
+                
+                <!-- Live Stream Button Integration -->
+                <button onclick="playLiveStream()" class="w-full mt-4 bg-gradient-to-r from-red-600 to-red-800 text-white font-bold py-2 rounded-lg flex justify-center items-center gap-2">
+                    <i class="fa-solid fa-play"></i> Watch Free Highlights
+                </button>
+            </div>
         </div>
-      </aside>
-    </section>
 
-    <div class="controls">
-      <div class="search-wrap">
-        <span class="search-ico">⌕</span>
-        <input id="searchInput" class="search" placeholder="Search teams, leagues, headlines..." />
-      </div>
-      <button class="btn" id="clearBtn">Clear</button>
-    </div>
-
-    <div class="tabs" id="tabs"></div>
-
-    <div class="section-head">
-      <div>
-        <h3 id="sectionTitle">Football</h3>
-        <div class="small" id="sectionSub">Live-style scoreboard cards</div>
-      </div>
-      <div class="small" id="countText">0 cards</div>
-    </div>
-
-    <main id="content"></main>
-
-    <div class="footer-note">
-      Free mode uses public and optional APIs with fallbacks. If you add your own tokens, the app will automatically show richer highlights and news.
-    </div>
-  </div>
-
-  <script>
-    const CONFIG = {
-      THESPORTSDB_KEY: "123",
-      SCOREBAT_TOKEN: "",
-      NEWSAPI_KEY: ""
-    };
-
-    const SPORTS = [
-      { id: "football", label: "Football", hint: "Fixtures + logos + highlights" },
-      { id: "cricket", label: "Cricket", hint: "IPL-style scoreboard cards" },
-      { id: "basketball", label: "Basketball", hint: "NBA-style cards" },
-      { id: "tennis", label: "Tennis", hint: "Singles scoreboard cards" },
-      { id: "hockey", label: "Hockey", hint: "Fast-score board" },
-      { id: "handball", label: "Handball", hint: "Quick cards" },
-      { id: "highlights", label: "Highlights", hint: "Video feed" },
-      { id: "news", label: "News", hint: "Sports news" }
-    ];
-
-    const FALLBACK = {
-      football: [
-        {
-          type: "match",
-          title: "Arsenal vs Chelsea",
-          subtitle: "Premier League",
-          left: { name: "Arsenal", logo: logoAvatar("Arsenal") },
-          right: { name: "Chelsea", logo: logoAvatar("Chelsea") },
-          scoreLeft: "1",
-          scoreRight: "1",
-          status: "LIVE",
-          time: "65'",
-          source: "Demo data",
-          thumb: "https://images.unsplash.com/photo-1508098682722-e99c43a406b2?auto=format&fit=crop&w=1200&q=80",
-          searchText: "Arsenal Chelsea Premier League live"
-        },
-        {
-          type: "match",
-          title: "Real Madrid vs Barcelona",
-          subtitle: "La Liga",
-          left: { name: "Real Madrid", logo: logoAvatar("Real Madrid") },
-          right: { name: "Barcelona", logo: logoAvatar("Barcelona") },
-          scoreLeft: "2",
-          scoreRight: "2",
-          status: "FT",
-          time: "Finished",
-          source: "Demo data",
-          thumb: "https://images.unsplash.com/photo-1518091043644-c1d4457512c6?auto=format&fit=crop&w=1200&q=80",
-          searchText: "Real Madrid Barcelona La Liga finished"
-        }
-      ],
-      cricket: [
-        {
-          type: "match",
-          title: "CSK vs MI",
-          subtitle: "IPL Demo",
-          left: { name: "CSK", logo: logoAvatar("CSK") },
-          right: { name: "MI", logo: logoAvatar("MI") },
-          scoreLeft: "167/8",
-          scoreRight: "142/4",
-          status: "LIVE",
-          time: "17.4 ov",
-          source: "Demo scoreboard",
-          thumb: "https://images.unsplash.com/photo-1540747913346-19e32dc3e97e?auto=format&fit=crop&w=1200&q=80",
-          searchText: "CSK MI IPL live cricket"
-        }
-      ],
-      basketball: [
-        {
-          type: "match",
-          title: "Lakers vs Warriors",
-          subtitle: "NBA Demo",
-          left: { name: "Lakers", logo: logoAvatar("Lakers") },
-          right: { name: "Warriors", logo: logoAvatar("Warriors") },
-          scoreLeft: "102",
-          scoreRight: "99",
-          status: "Q4",
-          time: "02:14 left",
-          source: "Demo scoreboard",
-          thumb: "https://images.unsplash.com/photo-1547347298-4074fc3086f0?auto=format&fit=crop&w=1200&q=80",
-          searchText: "Lakers Warriors NBA live"
-        }
-      ],
-      tennis: [
-        {
-          type: "match",
-          title: "Djokovic vs Nadal",
-          subtitle: "Grand Slam Demo",
-          left: { name: "Djokovic", logo: logoAvatar("Djokovic") },
-          right: { name: "Nadal", logo: logoAvatar("Nadal") },
-          scoreLeft: "2",
-          scoreRight: "1",
-          status: "SET 4",
-          time: "40:20",
-          source: "Demo scoreboard",
-          thumb: "https://images.unsplash.com/photo-1542144582-1ba00456b5d3?auto=format&fit=crop&w=1200&q=80",
-          searchText: "Djokovic Nadal tennis live"
-        }
-      ],
-      hockey: [
-        {
-          type: "match",
-          title: "Rangers vs Bruins",
-          subtitle: "NHL Demo",
-          left: { name: "Rangers", logo: logoAvatar("Rangers") },
-          right: { name: "Bruins", logo: logoAvatar("Bruins") },
-          scoreLeft: "3",
-          scoreRight: "2",
-          status: "LIVE",
-          time: "3rd",
-          source: "Demo scoreboard",
-          thumb: "https://images.unsplash.com/photo-1517927033932-b3d18e61fb3a?auto=format&fit=crop&w=1200&q=80",
-          searchText: "Rangers Bruins hockey live"
-        }
-      ],
-      handball: [
-        {
-          type: "match",
-          title: "Team A vs Team B",
-          subtitle: "Handball Demo",
-          left: { name: "Team A", logo: logoAvatar("Team A") },
-          right: { name: "Team B", logo: logoAvatar("Team B") },
-          scoreLeft: "28",
-          scoreRight: "26",
-          status: "LIVE",
-          time: "2nd half",
-          source: "Demo scoreboard",
-          thumb: "https://images.unsplash.com/photo-1515542622106-78bda8ba0c5c?auto=format&fit=crop&w=1200&q=80",
-          searchText: "handball live demo"
-        }
-      ],
-      highlights: [
-        {
-          type: "highlight",
-          title: "Football highlights preview",
-          subtitle: "Add your ScoreBat token for official video embeds",
-          status: "VIDEO",
-          time: "Highlights",
-          source: "Fallback",
-          thumb: "https://images.unsplash.com/photo-1518091043644-c1d4457512c6?auto=format&fit=crop&w=1200&q=80",
-          watchUrl: "https://www.youtube.com/results?search_query=football+highlights",
-          searchText: "football highlights video"
-        }
-      ],
-      news: [
-        {
-          type: "news",
-          title: "Sports news preview",
-          subtitle: "Add your NewsAPI key to pull live headlines",
-          source: "Fallback",
-          time: "Now",
-          thumb: "https://images.unsplash.com/photo-1486299267070-83823f5448dd?auto=format&fit=crop&w=1200&q=80",
-          watchUrl: "https://news.google.com/search?q=sports%20news",
-          searchText: "sports news preview"
-        }
-      ]
-    };
-
-    const state = {
-      sport: "football",
-      query: "",
-      items: [],
-      lastUpdated: null
-    };
-
-    const teamLogoCache = new Map();
-
-    function logoAvatar(name) {
-      return `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=111827&color=ffffff&size=128&bold=true&font-size=0.34`;
-    }
-
-    function esc(str) {
-      return String(str ?? "")
-        .replaceAll("&", "&amp;")
-        .replaceAll("<", "&lt;")
-        .replaceAll(">", "&gt;")
-        .replaceAll('"', "&quot;")
-        .replaceAll("'", "&#039;");
-    }
-
-    function cacheKey(id) {
-      return `sportsnap_${id}`;
-    }
-
-    function readCache(id) {
-      try {
-        const raw = localStorage.getItem(cacheKey(id));
-        return raw ? JSON.parse(raw) : null;
-      } catch {
-        return null;
-      }
-    }
-
-    function writeCache(id, items) {
-      try {
-        localStorage.setItem(cacheKey(id), JSON.stringify({
-          at: Date.now(),
-          items
-        }));
-      } catch {}
-    }
-
-    async function fetchJSON(url) {
-      const res = await fetch(url, { cache: "no-store" });
-      if (!res.ok) throw new Error(`HTTP ${res.status}`);
-      return res.json();
-    }
-
-    function setTabs() {
-      const wrap = document.getElementById("tabs");
-      wrap.innerHTML = SPORTS.map(s => `
-        <button class="tab ${s.id === state.sport ? "active" : ""}" data-tab="${s.id}">
-          ${esc(s.label)}
-        </button>
-      `).join("");
-
-      wrap.querySelectorAll(".tab").forEach(btn => {
-        btn.addEventListener("click", () => loadSport(btn.dataset.tab));
-      });
-    }
-
-    function setHeroFromItems() {
-      const item = state.items[0];
-      const sportName = SPORTS.find(s => s.id === state.sport)?.label || state.sport;
-
-      document.getElementById("focusSport").textContent = sportName;
-      document.getElementById("sectionTitle").textContent = sportName;
-      document.getElementById("sectionSub").textContent =
-        state.sport === "football" ? "Scoreboard-style fixtures and logos" :
-        state.sport === "highlights" ? "Video highlights feed" :
-        state.sport === "news" ? "Sports headlines" :
-        "Scoreboard cards";
-
-      document.getElementById("metricTwo").textContent = sportName;
-      document.getElementById("metricThree").textContent = state.lastUpdated
-        ? new Date(state.lastUpdated).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
-        : "—";
-
-      if (!item) {
-        document.getElementById("heroTitle").textContent = `${sportName} feed`;
-        document.getElementById("heroText").textContent = "No cards loaded yet.";
-        document.getElementById("heroBadge").textContent = "EMPTY";
-        document.getElementById("metricOne").textContent = "0";
-        return;
-      }
-
-      document.getElementById("heroTitle").textContent = item.title || `${sportName} feed`;
-      document.getElementById("heroText").textContent = item.subtitle || item.time || item.source || "Clean sports dashboard with rich cards.";
-      document.getElementById("heroBadge").textContent = item.status || "READY";
-      document.getElementById("metricOne").textContent = state.items.length.toString();
-    }
-
-    function isLive(item) {
-      const s = String(item.status || "").toLowerCase();
-      return s.includes("live") || s.includes("q4") || s.includes("q3") || s.includes("set") || s.includes("inning");
-    }
-
-    function badgeClass(item) {
-      const s = String(item.status || "").toLowerCase();
-      if (s.includes("live") || s.includes("q4") || s.includes("set") || s.includes("inning")) return "live";
-      if (s.includes("ft") || s.includes("finished")) return "done";
-      return "upcoming";
-    }
-
-    function matchesSearch(item) {
-      const q = state.query.trim().toLowerCase();
-      if (!q) return true;
-      const hay = [
-        item.title,
-        item.subtitle,
-        item.source,
-        item.time,
-        item.status,
-        item.left?.name,
-        item.right?.name,
-        item.searchText
-      ].filter(Boolean).join(" ").toLowerCase();
-      return hay.includes(q);
-    }
-
-    function renderLoading() {
-      document.getElementById("content").innerHTML = `
-        <div class="skeleton-grid">
-          <div class="skeleton"></div>
-          <div class="skeleton"></div>
-          <div class="skeleton"></div>
+        <!-- Social Posts / Threads (Based on Twitter/Threads screenshot) -->
+        <div class="section-title"><span>Trending Threads</span></div>
+        <div class="px-5 mb-6">
+            <div class="glass-card mb-4">
+                <div class="flex gap-3">
+                    <img src="https://images.unsplash.com/photo-1599566150163-29194dcaad36?w=100&h=100&fit=crop" class="w-10 h-10 rounded-full object-cover">
+                    <div class="flex-1">
+                        <div class="flex justify-between">
+                            <span class="font-bold text-sm">dinesh_gurjar_4747 <i class="fa-solid fa-circle-check text-blue-400 text-xs"></i></span>
+                            <span class="text-xs text-gray-500">11h</span>
+                        </div>
+                        <span class="text-xs text-[var(--accent-primary)]">@rcbfans</span>
+                        <p class="text-sm mt-2 font-light">2026 belongs to Bengaluru. What a match! Kohli seals it! 🏆🔥</p>
+                        <p class="text-xs text-blue-400 mt-1">#ipl #cricketlovers #viratkohli #winner</p>
+                        <div class="flex gap-6 mt-4 text-gray-400 text-sm">
+                            <span class="cursor-pointer hover:text-red-500"><i class="fa-regular fa-heart"></i> 18k</span>
+                            <span class="cursor-pointer hover:text-blue-500"><i class="fa-regular fa-comment"></i> 450</span>
+                            <span class="cursor-pointer hover:text-green-500"><i class="fa-solid fa-retweet"></i> 2k</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-      `;
-    }
+    </main>
 
-    function cardHTML(item) {
-      if (item.type === "news") {
-        return `
-          <article class="card">
-            <div class="card-top">
-              <span class="badge ${badgeClass(item)}">${esc(item.type)}</span>
-              <span class="league">${esc(item.source || "")}</span>
-            </div>
-            <div class="team-name" style="font-size:18px">${esc(item.title)}</div>
-            <div class="note" style="margin-top:8px">${esc(item.subtitle || "")}</div>
-            ${item.thumb ? `<img class="thumb" src="${esc(item.thumb)}" alt="${esc(item.title)}">` : ""}
-            <div class="meta-row">
-              <span><b>${esc(item.time || "Now")}</b></span>
-              <span>${esc(item.source || "News")}</span>
-            </div>
-            <div class="cta-row">
-              <a class="link-btn primary" href="${esc(item.watchUrl || "#")}" target="_blank" rel="noopener">Open story</a>
-            </div>
-          </article>
-        `;
-      }
+    <main id="view-clubs" class="app-view">
+        <div class="px-5 py-4">
+            <h2 class="font-poppins font-black text-2xl mb-2">Sports Clubs</h2>
+            <p class="text-sm text-gray-400 mb-6">Join official team clubs or create your own community.</p>
+            
+            <button class="w-full bg-[var(--text-main)] text-[var(--bg-color)] font-bold py-3 rounded-xl mb-6 shadow-[0_0_15px_rgba(255,255,255,0.2)]">
+                <i class="fa-solid fa-plus mr-2"></i> Create Your Own Club
+            </button>
 
-      if (item.type === "highlight") {
-        return `
-          <article class="card">
-            <div class="card-top">
-              <span class="badge ${badgeClass(item)}">${esc(item.type)}</span>
-              <span class="league">${esc(item.subtitle || item.source || "")}</span>
+            <h3 class="font-bold text-lg mb-4 text-[var(--accent-primary)]">Official IPL Fan Clubs</h3>
+            <div class="club-grid" id="clubGrid">
+                <!-- Dynamically populated via JS -->
             </div>
-            <div class="team-name" style="font-size:18px">${esc(item.title)}</div>
-            <div class="note" style="margin-top:8px">${esc(item.time || item.source || "")}</div>
-            ${item.embed ? `<div class="embed-wrap">${item.embed}</div>` : item.thumb ? `<img class="thumb" src="${esc(item.thumb)}" alt="${esc(item.title)}">` : ""}
-            <div class="meta-row">
-              <span><b>${esc(item.source || "Highlights")}</b></span>
-              <span>${esc(item.status || "VIDEO")}</span>
-            </div>
-            <div class="cta-row">
-              ${item.watchUrl ? `<a class="link-btn primary" href="${esc(item.watchUrl)}" target="_blank" rel="noopener">Watch highlights</a>` : ""}
-            </div>
-          </article>
-        `;
-      }
+        </div>
+    </main>
 
-      const badge = badgeClass(item);
-      return `
-        <article class="card">
-          <div class="card-top">
-            <span class="badge ${badge}">${esc(item.status || "UPCOMING")}</span>
-            <span class="league">${esc(item.subtitle || "")}</span>
-          </div>
+    <main id="view-reels" class="app-view reels-container" style="padding-top: 0;">
+        <!-- Reel 1 (Simulated with a static image and CSS animation to represent video for zero-investment demo) -->
+        <div class="reel-video">
+            <img src="https://images.unsplash.com/photo-1540747913346-19e32dc3e97e?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" class="w-full h-full object-cover" alt="Reel Video">
+            <div class="reel-overlay">
+                <div class="flex-1 pr-4">
+                    <div class="flex items-center gap-2 mb-2">
+                        <img src="https://ui-avatars.com/api/?name=S+N&background=00ffcc" class="w-8 h-8 rounded-full">
+                        <span class="font-bold text-sm shadow-black">Sportsnap_Official</span>
+                        <button class="border border-white text-xs px-2 py-1 rounded-md ml-2">Follow</button>
+                    </div>
+                    <p class="text-sm font-light shadow-black">Insane crowd energy at the stadium tonight! 🏟️🔥 #sports #live</p>
+                    <div class="flex items-center gap-2 mt-2 text-xs font-bold">
+                        <i class="fa-solid fa-music"></i> <span>Original Audio - Sportsnap</span>
+                    </div>
+                </div>
+                <div class="reel-actions">
+                    <div class="action-icon text-center"><i class="fa-solid fa-heart"></i><div class="text-xs mt-1">1.2M</div></div>
+                    <div class="action-icon text-center"><i class="fa-solid fa-comment"></i><div class="text-xs mt-1">45k</div></div>
+                    <div class="action-icon text-center"><i class="fa-solid fa-paper-plane"></i><div class="text-xs mt-1">Share</div></div>
+                    <div class="action-icon text-center"><i class="fa-solid fa-ellipsis-vertical"></i></div>
+                </div>
+            </div>
+        </div>
+    </main>
 
-          <div class="scoreboard">
-            <div class="team">
-              <img class="logo" src="${esc(item.left?.logo || logoAvatar(item.left?.name || "Team 1"))}" alt="${esc(item.left?.name || "Team 1")}">
-              <div style="min-width:0">
-                <div class="team-name">${esc(item.left?.name || "Team 1")}</div>
-                <div class="team-sub">${esc(item.time || item.source || "")}</div>
-              </div>
+    <main id="view-tickets" class="app-view">
+        <div class="px-5 py-4">
+            <h2 class="font-poppins font-black text-2xl mb-4">Book Tickets</h2>
+            
+            <div class="horizontal-scroll no-scrollbar mx-0 mb-6">
+                <div class="filter-pill active">All Events</div>
+                <div class="filter-pill">Marathons</div>
+                <div class="filter-pill">Cricket</div>
+                <div class="filter-pill">MMA</div>
             </div>
 
-            <div>
-              <div class="score">${esc(item.scoreLeft ?? "—")}<span style="opacity:.55">-</span>${esc(item.scoreRight ?? "—")}</div>
-              <div class="vs">VS</div>
+            <!-- Ticket Card 1 -->
+            <div class="glass-card p-0 overflow-hidden mb-5">
+                <img src="https://images.unsplash.com/photo-1551698618-1dfe5d97d256?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" class="w-full h-40 object-cover" alt="Marathon">
+                <div class="p-4">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <h3 class="font-bold text-lg">Aamchi Mumbai Marathon</h3>
+                            <p class="text-sm text-gray-400 mt-1"><i class="fa-regular fa-calendar mr-1"></i> Sun, 7 Jun</p>
+                            <p class="text-sm text-gray-400 mt-1"><i class="fa-solid fa-location-dot mr-1"></i> Bandra Fort Garden, Mumbai</p>
+                            <div class="mt-2 bg-gray-800 text-xs inline-block px-2 py-1 rounded">5K | 10K | 21K</div>
+                        </div>
+                    </div>
+                    <button class="w-full mt-4 bg-[var(--accent-primary)] text-black font-bold py-2 rounded-lg" onclick="alert('Redirecting to Affiliate Booking Partner (₹0 Investment Monetization)')">
+                        Book Now (₹499)
+                    </button>
+                </div>
             </div>
 
-            <div class="team right">
-              <img class="logo" src="${esc(item.right?.logo || logoAvatar(item.right?.name || "Team 2"))}" alt="${esc(item.right?.name || "Team 2")}">
-              <div style="min-width:0">
-                <div class="team-name">${esc(item.right?.name || "Team 2")}</div>
-                <div class="team-sub">${esc(item.time || item.source || "")}</div>
-              </div>
+            <!-- Ticket Card 2 -->
+            <div class="glass-card p-0 overflow-hidden mb-5">
+                <img src="https://images.unsplash.com/photo-1549719386-74dfcbf7dbed?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" class="w-full h-40 object-cover" alt="MMA">
+                <div class="p-4">
+                    <h3 class="font-bold text-lg">WDS Fight Night 17</h3>
+                    <p class="text-sm text-gray-400 mt-1"><i class="fa-regular fa-calendar mr-1"></i> Sat, 13 Jun</p>
+                    <p class="text-sm text-gray-400 mt-1"><i class="fa-solid fa-location-dot mr-1"></i> NSCI Dome, Mumbai</p>
+                    <button class="w-full mt-4 bg-[var(--accent-primary)] text-black font-bold py-2 rounded-lg">Book Now (₹999)</button>
+                </div>
             </div>
-          </div>
+        </div>
+    </main>
 
-          <div class="meta-row">
-            <span><b>${esc(item.title || "")}</b></span>
-            <span>${esc(item.source || "")}</span>
-          </div>
+    <main id="view-news" class="app-view">
+        <div class="horizontal-scroll no-scrollbar mt-2">
+            <div class="filter-pill active">All Stories</div>
+            <div class="filter-pill">Premium Editorials</div>
+            <div class="filter-pill">Transfer News</div>
+        </div>
+        
+        <div class="px-5 mt-4 pb-10" id="newsContainer">
+            <!-- Populated by JS -->
+        </div>
+    </main>
 
-          ${item.thumb ? `<img class="thumb" src="${esc(item.thumb)}" alt="${esc(item.title || "")}">` : ""}
+    <nav class="bottom-nav">
+        <div class="nav-item active" onclick="switchTab('home', this)">
+            <i class="fa-solid fa-house"></i>
+            <span>Home</span>
+        </div>
+        <div class="nav-item" onclick="switchTab('clubs', this)">
+            <i class="fa-solid fa-shield-halved"></i>
+            <span>Clubs</span>
+        </div>
+        <div class="nav-item" onclick="switchTab('reels', this)">
+            <i class="fa-solid fa-clapperboard"></i>
+            <span>Reels</span>
+        </div>
+        <div class="nav-item" onclick="switchTab('tickets', this)">
+            <i class="fa-solid fa-ticket"></i>
+            <span>Tickets</span>
+        </div>
+        <div class="nav-item" onclick="switchTab('news', this)">
+            <i class="fa-regular fa-newspaper"></i>
+            <span>News</span>
+        </div>
+    </nav>
 
-          <div class="cta-row">
-            ${item.watchUrl ? `<a class="link-btn primary" href="${esc(item.watchUrl)}" target="_blank" rel="noopener">Highlights</a>` : ""}
-            ${item.infoUrl ? `<a class="link-btn" href="${esc(item.infoUrl)}" target="_blank" rel="noopener">Open</a>` : ""}
-          </div>
+    <script>
+        /**
+         * SPORTSNAP ARCHITECTURE (ZERO INVESTMENT)
+         * In production, replace these static arrays with fetch() calls to:
+         * 1. RapidAPI (API-Sports) for Live Scores & News
+         * 2. Firebase Realtime Database for Clubs & Threads
+         */
 
-          ${item.note ? `<div class="note">${esc(item.note)}</div>` : ""}
-        </article>
-      `;
-    }
+        // --- Mock Data ---
+        const clubsData = [
+            { name: "Chennai Super Kings", color: "from-yellow-400 to-yellow-600", logo: "https://upload.wikimedia.org/wikipedia/en/thumb/2/2b/Chennai_Super_Kings_Logo.svg/150px-Chennai_Super_Kings_Logo.svg.png" },
+            { name: "Delhi Capitals", color: "from-blue-500 to-red-500", logo: "https://upload.wikimedia.org/wikipedia/en/thumb/f/f5/Delhi_Capitals_Logo.svg/150px-Delhi_Capitals_Logo.svg.png" },
+            { name: "Gujarat Titans", color: "from-blue-900 to-blue-700", logo: "https://upload.wikimedia.org/wikipedia/en/thumb/0/09/Gujarat_Titans_Logo.svg/150px-Gujarat_Titans_Logo.svg.png" },
+            { name: "Mumbai Indians", color: "from-blue-600 to-blue-800", logo: "https://upload.wikimedia.org/wikipedia/en/thumb/c/cd/Mumbai_Indians_Logo.svg/150px-Mumbai_Indians_Logo.svg.png" },
+            { name: "Rajasthan Royals", color: "from-pink-500 to-blue-800", logo: "https://upload.wikimedia.org/wikipedia/en/thumb/6/60/Rajasthan_Royals_Logo.svg/150px-Rajasthan_Royals_Logo.svg.png" },
+            { name: "Indian Football", color: "from-blue-400 to-blue-600", logo: "https://upload.wikimedia.org/wikipedia/en/thumb/4/4b/All_India_Football_Federation_logo.svg/150px-All_India_Football_Federation_logo.svg.png" }
+        ];
 
-    function render() {
-      setTabs();
-      setHeroFromItems();
+        const newsData = [
+            {
+                img: "https://images.unsplash.com/photo-1540747913346-19e32dc3e97e?ixlib=rb-4.0.3&w=200&q=80",
+                title: "RCB and the luxury of another option",
+                time: "2h ago",
+                desc: "From replacing Yash Dayal to filling in for Phil Salt, the strategy worked perfectly for RCB's title defence."
+            },
+            {
+                img: "https://images.unsplash.com/photo-1531415074968-036ba1b575da?ixlib=rb-4.0.3&w=200&q=80",
+                title: "'Can't control the weather' - Solanki refuses to blame logistics",
+                time: "4h ago",
+                desc: "Delayed by rain and storms, GT reached Ahmedabad at 10pm the night before the final."
+            },
+            {
+                img: "https://images.unsplash.com/photo-1512719994953-eabf50895df7?ixlib=rb-4.0.3&w=200&q=80",
+                title: "How GT were bounced out in the powerplay",
+                time: "4h ago",
+                desc: "A barrage of short-pitched bowling, early wickets and a brilliant spell changed the game entirely."
+            }
+        ];
 
-      const filtered = state.items.filter(matchesSearch);
-      document.getElementById("countText").textContent = `${filtered.length} card${filtered.length === 1 ? "" : "s"}`;
+        // --- Initialization ---
+        document.addEventListener('DOMContentLoaded', () => {
+            renderClubs();
+            renderNews();
+        });
 
-      const content = document.getElementById("content");
-      if (!filtered.length) {
-        content.innerHTML = `
-          <div class="empty">
-            No cards found right now.<br>
-            Try another tab, clear search, or press Refresh.
-          </div>
-        `;
-        return;
-      }
+        // --- UI Rendering Functions ---
+        function renderClubs() {
+            const container = document.getElementById('clubGrid');
+            let html = '';
+            clubsData.forEach(club => {
+                html += `
+                    <div class="club-card bg-gradient-to-br ${club.color}">
+                        <div class="bg-white p-2 rounded-full mb-2 h-16 w-16 flex items-center justify-center shadow-lg">
+                            <img src="${club.logo}" class="max-h-12 max-w-12 object-contain" alt="${club.name}">
+                        </div>
+                        <span class="font-bold text-sm leading-tight">${club.name}</span>
+                        <span class="text-xs text-white/70 mt-1">1.2M Members</span>
+                    </div>
+                `;
+            });
+            container.innerHTML = html;
+        }
 
-      content.innerHTML = `<div class="grid">${filtered.map(cardHTML).join("")}</div>`;
-    }
+        function renderNews() {
+            const container = document.getElementById('newsContainer');
+            let html = '';
+            newsData.forEach(news => {
+                html += `
+                    <div class="flex gap-4 mb-5 border-b border-[var(--glass-border)] pb-5">
+                        <img src="${news.img}" class="w-24 h-24 object-cover rounded-xl" alt="News">
+                        <div class="flex-1">
+                            <h4 class="font-bold text-sm leading-snug mb-1">${news.title}</h4>
+                            <span class="text-xs text-gray-500 mb-2 block">${news.time}</span>
+                            <p class="text-xs text-gray-400 font-light line-clamp-2">${news.desc}</p>
+                        </div>
+                    </div>
+                `;
+            });
+            container.innerHTML = html;
+        }
 
-    async function lookupTeamLogo(name) {
-      if (!name) return "";
-      if (teamLogoCache.has(name)) return teamLogoCache.get(name);
+        // --- Navigation Logic ---
+        function switchTab(tabId, element) {
+            // Hide all views
+            document.querySelectorAll('.app-view').forEach(view => {
+                view.classList.remove('active');
+            });
+            
+            // Remove active class from all nav items
+            document.querySelectorAll('.nav-item').forEach(nav => {
+                nav.classList.remove('active');
+            });
 
-      try {
-        const url = `https://www.thesportsdb.com/api/v1/json/${CONFIG.THESPORTSDB_KEY}/searchteams.php?t=${encodeURIComponent(name)}`;
-        const json = await fetchJSON(url);
-        const team = json.teams?.[0];
-        const logo = team?.strTeamBadge || team?.strBadge || team?.strLogo || "";
-        teamLogoCache.set(name, logo);
-        return logo;
-      } catch {
-        teamLogoCache.set(name, "");
-        return "";
-      }
-    }
+            // Show selected view and activate nav item
+            document.getElementById(`view-${tabId}`).classList.add('active');
+            element.classList.add('active');
 
-    async function loadFootball() {
-      const cached = readCache("football");
-      if (cached?.items?.length) {
-        state.items = cached.items;
-        state.lastUpdated = cached.at || Date.now();
-        render();
-      }
+            // Scroll to top
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
 
-      try {
-        const url = `https://www.thesportsdb.com/api/v1/json/${CONFIG.THESPORTSDB_KEY}/eventsnextleague.php?id=4328`;
-        const json = await fetchJSON(url);
-        const events = Array.isArray(json.events) ? json.events.slice(0, 8) : [];
-
-        const items = await Promise.all(events.map(async e => {
-          const leftLogo = e.strHomeTeamBadge || await lookupTeamLogo(e.strHomeTeam);
-          const rightLogo = e.strAwayTeamBadge || await lookupTeamLogo(e.strAwayTeam);
-
-          return {
-            type: "match",
-            title: e.strEvent || `${e.strHomeTeam} vs ${e.strAwayTeam}`,
-            subtitle: e.strLeague || "Football",
-            left: { name: e.strHomeTeam || "Home", logo: leftLogo || logoAvatar(e.strHomeTeam || "Home") },
-            right: { name: e.strAwayTeam || "Away", logo: rightLogo || logoAvatar(e.strAwayTeam || "Away") },
-            scoreLeft: e.intHomeScore ?? "—",
-            scoreRight: e.intAwayScore ?? "—",
-            status: e.strStatus || "UPCOMING",
-            time: e.strTime ? `${e.dateEvent || ""} • ${e.strTime}`.trim() : (e.dateEvent || "Scheduled"),
-            source: "TheSportsDB",
-            thumb: e.strThumb || e.strBanner || "",
-            infoUrl: e.strWebsite || "",
-            watchUrl: e.strYoutube ? `https://www.youtube.com/watch?v=${e.strYoutube}` : "",
-            searchText: `${e.strEvent} ${e.strLeague} ${e.strHomeTeam} ${e.strAwayTeam} football`
-          };
-        }));
-
-        const finalItems = items.length ? items : FALLBACK.football;
-        state.items = finalItems;
-        state.lastUpdated = Date.now();
-        writeCache("football", finalItems);
-        render();
-      } catch (err) {
-        const fallback = cached?.items?.length ? cached.items : FALLBACK.football;
-        state.items = fallback;
-        state.lastUpdated = cached?.at || Date.now();
-        render();
-      }
-    }
-
-    async function loadHighlights() {
-      const cached = readCache("highlights");
-      if (cached?.items?.length) {
-        state.items = cached.items;
-        state.lastUpdated = cached.at || Date.now();
-        render();
-      }
-
-      if (!CONFIG.SCOREBAT_TOKEN) {
-        state.items = FALLBACK.highlights;
-        state.lastUpdated = Date.now();
-        writeCache("highlights", state.items);
-        render();
-        return;
-      }
-
-      try {
-        const url = `https://www.scorebat.com/video-api/v3/free-feed/?token=${encodeURIComponent(CONFIG.SCOREBAT_TOKEN)}`;
-        const json = await fetchJSON(url);
-        const items = (json.response || []).slice(0, 8).map(m => ({
-          type: "highlight",
-          title: m.title || "Highlights",
-          subtitle: m.competition || "Football",
-          status: "VIDEO",
-          time: new Date(m.date || Date.now()).toLocaleString(),
-          source: "ScoreBat",
-          thumb: m.thumbnail || "",
-          embed: m.videos?.[0]?.embed || "",
-          watchUrl: m.matchviewUrl || "",
-          searchText: `${m.title || ""} ${m.competition || ""} highlights`
-        }));
-
-        state.items = items.length ? items : FALLBACK.highlights;
-        state.lastUpdated = Date.now();
-        writeCache("highlights", state.items);
-        render();
-      } catch {
-        state.items = cached?.items?.length ? cached.items : FALLBACK.highlights;
-        state.lastUpdated = cached?.at || Date.now();
-        render();
-      }
-    }
-
-    async function loadNews() {
-      const cached = readCache("news");
-      if (cached?.items?.length) {
-        state.items = cached.items;
-        state.lastUpdated = cached.at || Date.now();
-        render();
-      }
-
-      if (!CONFIG.NEWSAPI_KEY) {
-        state.items = FALLBACK.news;
-        state.lastUpdated = Date.now();
-        writeCache("news", state.items);
-        render();
-        return;
-      }
-
-      try {
-        const url = `https://newsapi.org/v2/top-headlines?country=in&category=sports&apiKey=${encodeURIComponent(CONFIG.NEWSAPI_KEY)}`;
-        const json = await fetchJSON(url);
-        const items = (json.articles || []).slice(0, 10).map(a => ({
-          type: "news",
-          title: a.title || "Sports news",
-          subtitle: a.description || a.source?.name || "",
-          source: a.source?.name || "NewsAPI",
-          time: a.publishedAt ? new Date(a.publishedAt).toLocaleString() : "Now",
-          thumb: a.urlToImage || "",
-          watchUrl: a.url || "",
-          searchText: `${a.title || ""} ${a.description || ""} ${a.source?.name || ""} sports news`
-        }));
-
-        state.items = items.length ? items : FALLBACK.news;
-        state.lastUpdated = Date.now();
-        writeCache("news", state.items);
-        render();
-      } catch {
-        state.items = cached?.items?.length ? cached.items : FALLBACK.news;
-        state.lastUpdated = cached?.at || Date.now();
-        render();
-      }
-    }
-
-    async function loadFallbackSport(id) {
-      const items = FALLBACK[id] || [];
-      state.items = items;
-      state.lastUpdated = Date.now();
-      writeCache(id, items);
-      render();
-    }
-
-    async function loadSport(id) {
-      state.sport = id;
-      document.getElementById("heroBadge").textContent = "LOADING";
-      renderLoading();
-      setTabs();
-
-      if (id === "football") return loadFootball();
-      if (id === "highlights") return loadHighlights();
-      if (id === "news") return loadNews();
-      return loadFallbackSport(id);
-    }
-
-    document.getElementById("searchInput").addEventListener("input", (e) => {
-      state.query = e.target.value || "";
-      render();
-    });
-
-    document.getElementById("clearBtn").addEventListener("click", () => {
-      document.getElementById("searchInput").value = "";
-      state.query = "";
-      render();
-    });
-
-    document.getElementById("refreshBtn").addEventListener("click", () => loadSport(state.sport));
-
-    // initial load
-    loadSport("football");
-
-    // light auto-refresh only for football
-    setInterval(() => {
-      if (state.sport === "football") {
-        loadFootball();
-      }
-    }, 60000);
-  </script>
+        // --- Simulated Live Streaming (Zero Cost Youtube Embed trick) ---
+        function playLiveStream() {
+            // In a real app, open a modal with an embedded iframe from a free source
+            const confirmWatch = confirm("Opening Free JioHotstar/YouTube Embed Stream. Proceed?");
+            if(confirmWatch) {
+                // Replacing the card with a video player (Mock interaction)
+                const card = document.querySelector('.live-badge').closest('.glass-card');
+                card.innerHTML = `
+                    <div class="relative w-full pt-[56.25%] bg-black rounded-lg overflow-hidden">
+                        <div class="absolute inset-0 flex items-center justify-center text-white text-sm">
+                           ▶ Playing Stream (Simulated for Demo)
+                        </div>
+                    </div>
+                    <button onclick="window.location.reload()" class="mt-4 text-xs text-gray-400 underline w-full text-center">Close Player</button>
+                `;
+            }
+        }
+    </script>
 </body>
-    </html>
+                                          </html>
