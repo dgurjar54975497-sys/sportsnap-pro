@@ -1,65 +1,237 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>SportSnap PRO</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      background: #0A0E1A;
+      color: #F0F4FF;
+      font-family: 'Arial', sans-serif;
+      padding: 20px;
+    }
+    
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 30px;
+      padding-bottom: 20px;
+      border-bottom: 2px solid #1E2D45;
+    }
+    
+    h1 {
+      font-size: 28px;
+      background: linear-gradient(135deg, #00D4FF, #7C3AED);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    
+    .sport-selector {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    
+    button {
+      padding: 10px 20px;
+      border: 2px solid #1E2D45;
+      background: transparent;
+      color: #8A9BB5;
+      border-radius: 20px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 600;
+      transition: all 0.3s;
+    }
+    
+    button.active {
+      border-color: #00D4FF;
+      color: #00D4FF;
+      background: rgba(0, 212, 255, 0.1);
+    }
+    
+    button:hover {
+      border-color: #00D4FF;
+      color: #00D4FF;
+    }
+    
+    .matches-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 20px;
+    }
+    
+    .match-card {
+      background: #111827;
+      border: 1px solid #1E2D45;
+      border-radius: 16px;
+      padding: 20px;
+      transition: all 0.3s;
+    }
+    
+    .match-card:hover {
+      background: #151D2E;
+      border-color: #00D4FF;
+      box-shadow: 0 0 20px rgba(0, 212, 255, 0.2);
+    }
+    
+    .badge {
+      display: inline-block;
+      background: rgba(255, 61, 87, 0.2);
+      color: #FF3D57;
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 700;
+      margin-bottom: 10px;
+      text-transform: uppercase;
+    }
+    
+    .match-title {
+      font-size: 16px;
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+    
+    .score {
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      margin-bottom: 15px;
+      padding: 15px;
+      background: rgba(0, 212, 255, 0.05);
+      border-radius: 10px;
+    }
+    
+    .team {
+      text-align: center;
+    }
+    
+    .team-name {
+      font-size: 12px;
+      color: #8A9BB5;
+      margin-bottom: 5px;
+    }
+    
+    .team-score {
+      font-size: 24px;
+      font-weight: 900;
+      color: #00D4FF;
+    }
+    
+    .status {
+      font-size: 12px;
+      color: #4A5568;
+      text-align: center;
+      margin-top: 10px;
+    }
+    
+    .loading {
+      text-align: center;
+      padding: 40px;
+      color: #8A9BB5;
+    }
+    
+    .error {
+      background: rgba(255, 61, 87, 0.1);
+      border: 1px solid #FF3D57;
+      color: #FF3D57;
+      padding: 20px;
+      border-radius: 10px;
+      margin-bottom: 20px;
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1>SportSnap PRO ⚡</h1>
+    <div class="sport-selector">
+      <button class="sport-btn active" data-sport="cricket">🏏 Cricket</button>
+      <button class="sport-btn" data-sport="football">⚽ Football</button>
+      <button class="sport-btn" data-sport="basketball">🏀 Basketball</button>
+      <button class="sport-btn" data-sport="tennis">🎾 Tennis</button>
+    </div>
+  </div>
 
-// main.dart import 'package:flutter/material.dart'; import 'screens/home_screen.dart'; import 'screens/clubs_screen.dart'; import 'screens/reels_screen.dart'; import 'screens/ticket_screen.dart'; import 'screens/news_screen.dart';
+  <div id="error-container"></div>
+  <div id="matches-container" class="matches-container"></div>
 
-void main() { runApp(SportsnapApp()); }
+  <script>
+    let selectedSport = 'cricket';
 
-class SportsnapApp extends StatelessWidget { @override Widget build(BuildContext context) { return MaterialApp( title: 'Sportsnap', theme: ThemeData( primarySwatch: Colors.blue, visualDensity: VisualDensity.adaptivePlatformDensity, scaffoldBackgroundColor: Color(0xFFF5F5F5), ), home: MainNavigation(), ); } }
+    const sportButtons = document.querySelectorAll('.sport-btn');
+    sportButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        sportButtons.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        selectedSport = btn.dataset.sport;
+        fetchMatches();
+      });
+    });
 
-class MainNavigation extends StatefulWidget { @override _MainNavigationState createState() => _MainNavigationState(); }
+    async function fetchMatches() {
+      const container = document.getElementById('matches-container');
+      const errorContainer = document.getElementById('error-container');
+      
+      container.innerHTML = '<div class="loading">⏳ Loading matches...</div>';
+      errorContainer.innerHTML = '';
 
-class _MainNavigationState extends State { int _currentIndex = 0; final List _children = [ HomeScreen(), ClubsScreen(), ReelsScreen(), TicketScreen(), NewsScreen(), ];
+      try {
+        // अगर Vercel deployed है तो यह use करो:
+        const response = await fetch(`/api/scores?sport=${selectedSport}`);
+        
+        if (!response.ok) throw new Error('API Error');
+        const data = await response.json();
 
-void onTabTapped(int index) { setState(() { _currentIndex = index; }); }
+        if (!data || data.length === 0) {
+          container.innerHTML = `
+            <div class="loading">
+              No ${selectedSport} matches currently. Check back soon! 🏟️
+            </div>
+          `;
+          return;
+        }
 
-@override Widget build(BuildContext context) { return Scaffold( body: _children[_currentIndex], bottomNavigationBar: BottomNavigationBar( onTap: onTabTapped, currentIndex: _currentIndex, type: BottomNavigationBarType.fixed, selectedItemColor: Colors.blueAccent, unselectedItemColor: Colors.grey, items: [ BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'), BottomNavigationBarItem(icon: Icon(Icons.groups), label: 'Clubs'), BottomNavigationBarItem(icon: Icon(Icons.play_circle_fill), label: 'Reels'), BottomNavigationBarItem(icon: Icon(Icons.confirmation_number), label: 'Ticket'), BottomNavigationBarItem(icon: Icon(Icons.newspaper), label: 'News'), ], ), ); } }
+        container.innerHTML = data.map(match => `
+          <div class="match-card">
+            <div class="badge">🔴 LIVE</div>
+            <div class="match-title">${match.team1} vs ${match.team2}</div>
+            <div class="score">
+              <div class="team">
+                <div class="team-name">${match.team1}</div>
+                <div class="team-score">${match.score1 || '-'}</div>
+              </div>
+              <div style="font-size: 12px; color: #8A9BB5;">VS</div>
+              <div class="team">
+                <div class="team-name">${match.team2}</div>
+                <div class="team-score">${match.score2 || '-'}</div>
+              </div>
+            </div>
+            <div class="status">${match.status || 'Live'}</div>
+          </div>
+        `).join('');
+      } catch (error) {
+        errorContainer.innerHTML = `
+          <div class="error">
+            ⚠️ Error loading matches: ${error.message}. 
+            Please check your connection and try again.
+          </div>
+        `;
+        container.innerHTML = '';
+      }
+    }
 
+    // जब page load हो तो matches fetch करो
+    fetchMatches();
 
-// lib/screens/home_screen_updated.dart import 'package:flutter/material.dart'; import '../services/api_integration.dart'; import '../models/match_model.dart'; import '../widgets/live_score_card.dart';
-
-class HomeScreen extends StatefulWidget { @override _HomeScreenState createState() => _HomeScreenState(); }
-
-class _HomeScreenState extends State { final ApiService apiService = ApiService(); late Future<List> cricketMatches;
-
-@override void initState() { super.initState(); cricketMatches = apiService.fetchCricketScores(); }
-
-@override Widget build(BuildContext context) { return DefaultTabController( length: 7, child: Scaffold( appBar: AppBar( title: Text('ADS', style: TextStyle(color: Colors.blue, fontWeight: FontWeight.bold)), bottom: TabBar( isScrollable: true, tabs: [Tab(text: 'Cricket'), Tab(text: 'Football'), Tab(text: 'Basketball'), Tab(text: 'Volleyball'), Tab(text: 'Tennis'), Tab(text: 'Hockey'), Tab(text: 'Athletics')], ), ), body: FutureBuilder<List>( future: cricketMatches, builder: (context, snapshot) { if (snapshot.connectionState == ConnectionState.waiting) { return Center(child: CircularProgressIndicator()); } else if (snapshot.hasError) { return Center(child: Text('Error: ${snapshot.error} Please set your API Key in api_integration.dart')); } else { return ListView( children: [ // Stories... Container( height: 180, child: ListView.builder( scrollDirection: Axis.horizontal, itemCount: snapshot.data!.length, itemBuilder: (context, index) { var match = snapshot.data![index]; return LiveScoreCardDynamic(match: match); }, ), ), // News / Feed... ], ); } }, ), ), ); } }
-
-class LiveScoreCardDynamic extends StatelessWidget { final Match match; LiveScoreCardDynamic({required this.match});
-
-@override Widget build(BuildContext context) { return Container( width: 300, margin: EdgeInsets.all(10), padding: EdgeInsets.all(15), decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(15), boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 5)]), child: Column( crossAxisAlignment: CrossAxisAlignment.start, children: [ Text(match.series, style: TextStyle(color: Colors.grey, fontSize: 12), overflow: TextOverflow.ellipsis), SizedBox(height: 15), Row( mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [ Text(match.team1, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)), Text(match.score1, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)), ], ), SizedBox(height: 10), Row( mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [ Text(match.team2, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)), Text(match.score2, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)), ], ), Spacer(), Text(match.status, style: TextStyle(color: Colors.orange, fontSize: 12, fontWeight: FontWeight.w500)), ], ), ); } }
-    // lib/screens/ai_analyst_screen.dart import 'package:flutter/material.dart'; import 'package:google_generative_ai/google_generative_ai.dart';
-
-class AIAnalystScreen extends StatefulWidget { @override _AIAnalystScreenState createState() => _AIAnalystScreenState(); }
-
-class _AIAnalystScreenState extends State { final TextEditingController _controller = TextEditingController(); final List<Map<String, String>> _messages = []; bool _isLoading = false;
-
-// Gemini API Initialization static const String _apiKey = 'YOUR_GEMINI_API_KEY'; // उपयोगकर्ता अपनी कुंजी यहाँ डालेगा final model = GenerativeModel(model: 'gemini-pro', apiKey: _apiKey);
-
-Future _sendMessage() async { if (_controller.text.isEmpty) return;
-
-setState(() {
-  _messages.add({'role': 'user', 'text': _controller.text});
-  _isLoading = true;
-});
-
-final prompt = "You are an expert sports analyst for Sportsnap app. Analyze this query based on real-time trends and historical data: ${_controller.text}. Provide win probability, match explanation, and predictions.";
-
-try {
-  final content = [Content.text(prompt)];
-  final response = await model.generateContent(content);
-  
-  setState(() {
-    _messages.add({'role': 'ai', 'text': response.text ?? 'Sorry, I couldn\'t analyze that.'});
-    _isLoading = false;
-  });
-} catch (e) {
-  setState(() {
-    _messages.add({'role': 'ai', 'text': 'Error: Please check your Gemini API key.'});
-    _isLoading = false;
-  });
-}
-
-_controller.clear();
-}
-
-@override Widget build(BuildContext context) { return Scaffold( appBar: AppBar( title: Text('AI Analyst'), backgroundColor: Colors.blueAccent, ), body: Column( children: [ Expanded( child: ListView.builder( padding: EdgeInsets.all(10), itemCount: _messages.length, itemBuilder: (context, index) { bool isUser = _messages[index]['role'] == 'user'; return Align( alignment: isUser ? Alignment.centerRight : Alignment.centerLeft, child: Container( margin: EdgeInsets.symmetric(vertical: 5), padding: EdgeInsets.all(12), decoration: BoxDecoration( color: isUser ? Colors.blue : Colors.grey.shade200, borderRadius: BorderRadius.circular(15), ), child: Text( _messages[index]['text']!, style: TextStyle(color: isUser ? Colors.white : Colors.black), ), ), ); }, ), ), if (_isLoading) LinearProgressIndicator(), Padding( padding: const EdgeInsets.all(8.0), child: Row( children: [ Expanded( child: TextField( controller: _controller, decoration: InputDecoration(hintText: 'Ask about win probability, predictions...', border: OutlineInputBorder(borderRadius: BorderRadius.circular(25))), ), ), IconButton(icon: Icon(Icons.send, color: Colors.blue), onPressed: _sendMessage), ], ), ), ], ), ); } }
+    // हर 30 seconds में refresh करो (live scores के लिए)
+    setInterval(fetchMatches, 30000);
+  </script>
+</body>
+      </html>
