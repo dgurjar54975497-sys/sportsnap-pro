@@ -1,1046 +1,116 @@
-import { useState, useEffect, useRef } from "react";
-
-// ── Design tokens ────────────────────────────────────────────────
-const COLORS = {
-  bg: "#0A0E1A",
-  surface: "#111827",
-  card: "#151D2E",
-  cardHover: "#1C2640",
-  border: "#1E2D45",
-  accent: "#00D4FF",
-  accentGlow: "rgba(0,212,255,0.15)",
-  accentSoft: "rgba(0,212,255,0.08)",
-  gold: "#FFD700",
-  green: "#00E676",
-  red: "#FF3D57",
-  orange: "#FF6B35",
-  purple: "#7C3AED",
-  textPrimary: "#F0F4FF",
-  textSecondary: "#8A9BB5",
-  textMuted: "#4A5568",
-};
-
-const SPORTS = [
-  { id: "cricket", name: "Cricket", emoji: "🏏", color: "#00D4FF" },
-  { id: "football", name: "Football", emoji: "⚽", color: "#00E676" },
-  { id: "basketball", name: "Basketball", emoji: "🏀", color: "#FF6B35" },
-  { id: "tennis", name: "Tennis", emoji: "🎾", color: "#FFD700" },
-  { id: "hockey", name: "Hockey", emoji: "🏑", color: "#7C3AED" },
-  { id: "volleyball", name: "Volleyball", emoji: "🏐", color: "#FF3D57" },
-  { id: "badminton", name: "Badminton", emoji: "🏸", color: "#00BFA5" },
-  { id: "chess", name: "Chess", emoji: "♟️", color: "#9E9E9E" },
-  { id: "athletics", name: "Athletics", emoji: "🏃", color: "#FF9800" },
-  { id: "handball", name: "Handball", emoji: "🤾", color: "#E91E63" },
-];
-
-const TABS = ["Home", "Clubs", "Reels", "Tickets", "News"];
-const TAB_ICONS = ["🏠", "🏆", "🎬", "🎟️", "📰"];
-
-// ── Inline Styles ─────────────────────────────────────────────────
-const styles = {
-  root: {
-    background: COLORS.bg,
-    minHeight: "100vh",
-    fontFamily: "'Inter', system-ui, sans-serif",
-    color: COLORS.textPrimary,
-    maxWidth: 430,
-    margin: "0 auto",
-    position: "relative",
-    overflow: "hidden",
-  },
-  header: {
-    background: `linear-gradient(180deg, ${COLORS.surface} 0%, ${COLORS.bg}00 100%)`,
-    backdropFilter: "blur(20px)",
-    padding: "16px 20px 12px",
-    position: "sticky",
-    top: 0,
-    zIndex: 100,
-    borderBottom: `1px solid ${COLORS.border}`,
-  },
-  logo: {
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "space-between",
-  },
-  logoText: {
-    fontSize: 22,
-    fontWeight: 900,
-    letterSpacing: "-0.5px",
-    background: `linear-gradient(135deg, ${COLORS.accent} 0%, #7C3AED 100%)`,
-    WebkitBackgroundClip: "text",
-    WebkitTextFillColor: "transparent",
-  },
-  logoADS: {
-    fontSize: 18,
-    fontWeight: 900,
-    color: COLORS.accent,
-    fontStyle: "italic",
-    letterSpacing: 2,
-  },
-  avatar: {
-    width: 36,
-    height: 36,
-    borderRadius: "50%",
-    background: `linear-gradient(135deg, ${COLORS.accent}, #7C3AED)`,
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    fontSize: 16,
-    cursor: "pointer",
-    border: `2px solid ${COLORS.border}`,
-  },
-  section: {
-    padding: "0 0 8px",
-  },
-  sectionTitle: {
-    fontSize: 13,
-    fontWeight: 700,
-    color: COLORS.textSecondary,
-    textTransform: "uppercase",
-    letterSpacing: 1.5,
-    padding: "16px 20px 10px",
-  },
-  chip: (active, color) => ({
-    padding: "7px 16px",
-    borderRadius: 20,
-    border: `1px solid ${active ? color : COLORS.border}`,
-    background: active ? `${color}22` : "transparent",
-    color: active ? color : COLORS.textSecondary,
-    fontSize: 13,
-    fontWeight: 600,
-    cursor: "pointer",
-    whiteSpace: "nowrap",
-    transition: "all 0.2s",
-    display: "flex",
-    alignItems: "center",
-    gap: 6,
-  }),
-  scrollRow: {
-    display: "flex",
-    gap: 10,
-    overflowX: "auto",
-    padding: "0 20px 4px",
-    scrollbarWidth: "none",
-  },
-  liveCard: {
-    background: COLORS.card,
-    border: `1px solid ${COLORS.border}`,
-    borderRadius: 16,
-    padding: "14px 16px",
-    minWidth: 260,
-    position: "relative",
-    overflow: "hidden",
-  },
-  liveBadge: {
-    display: "inline-flex",
-    alignItems: "center",
-    gap: 5,
-    background: `${COLORS.red}22`,
-    color: COLORS.red,
-    border: `1px solid ${COLORS.red}44`,
-    borderRadius: 20,
-    padding: "2px 10px",
-    fontSize: 10,
-    fontWeight: 800,
-    letterSpacing: 1,
-    textTransform: "uppercase",
-    marginBottom: 10,
-  },
-  liveDot: {
-    width: 6,
-    height: 6,
-    borderRadius: "50%",
-    background: COLORS.red,
-    animation: "pulse 1s infinite",
-  },
-  matchTeams: {
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "space-between",
-    gap: 12,
-  },
-  teamBlock: {
-    textAlign: "center",
-    flex: 1,
-  },
-  teamEmoji: { fontSize: 28, lineHeight: 1 },
-  teamName: {
-    fontSize: 12,
-    fontWeight: 700,
-    color: COLORS.textSecondary,
-    marginTop: 4,
-  },
-  scoreBlock: {
-    textAlign: "center",
-  },
-  scoreText: {
-    fontSize: 22,
-    fontWeight: 900,
-    color: COLORS.textPrimary,
-    letterSpacing: -1,
-  },
-  vsText: {
-    fontSize: 11,
-    color: COLORS.textMuted,
-    fontWeight: 600,
-  },
-  cardGlow: (color) => ({
-    position: "absolute",
-    top: 0,
-    right: 0,
-    width: 80,
-    height: 80,
-    borderRadius: "50%",
-    background: `${color}18`,
-    filter: "blur(20px)",
-    pointerEvents: "none",
-  }),
-  storyRow: {
-    display: "flex",
-    gap: 14,
-    padding: "0 20px",
-    overflowX: "auto",
-    scrollbarWidth: "none",
-  },
-  storyItem: {
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
-    gap: 6,
-    cursor: "pointer",
-    minWidth: 58,
-  },
-  storyRing: (active) => ({
-    width: 58,
-    height: 58,
-    borderRadius: "50%",
-    padding: 2.5,
-    background: active
-      ? `linear-gradient(135deg, ${COLORS.accent}, #7C3AED)`
-      : COLORS.border,
-  }),
-  storyInner: {
-    width: "100%",
-    height: "100%",
-    borderRadius: "50%",
-    background: COLORS.card,
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    fontSize: 22,
-    border: `2px solid ${COLORS.bg}`,
-  },
-  storyLabel: {
-    fontSize: 10,
-    color: COLORS.textSecondary,
-    fontWeight: 600,
-    textAlign: "center",
-    maxWidth: 58,
-    overflow: "hidden",
-    textOverflow: "ellipsis",
-    whiteSpace: "nowrap",
-  },
-  reelCard: {
-    background: COLORS.card,
-    border: `1px solid ${COLORS.border}`,
-    borderRadius: 16,
-    overflow: "hidden",
-    margin: "0 20px 12px",
-  },
-  reelThumb: {
-    width: "100%",
-    height: 180,
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    fontSize: 56,
-    position: "relative",
-  },
-  reelPlay: {
-    position: "absolute",
-    width: 52,
-    height: 52,
-    borderRadius: "50%",
-    background: "rgba(0,0,0,0.6)",
-    border: `2px solid ${COLORS.accent}`,
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    fontSize: 20,
-    backdropFilter: "blur(4px)",
-  },
-  reelInfo: { padding: "12px 14px" },
-  newsCard: {
-    background: COLORS.card,
-    border: `1px solid ${COLORS.border}`,
-    borderRadius: 16,
-    padding: "14px 16px",
-    margin: "0 20px 12px",
-    display: "flex",
-    gap: 14,
-    alignItems: "flex-start",
-    cursor: "pointer",
-  },
-  newsEmoji: {
-    fontSize: 32,
-    lineHeight: 1,
-    minWidth: 40,
-    textAlign: "center",
-  },
-  newsTitle: {
-    fontSize: 14,
-    fontWeight: 700,
-    color: COLORS.textPrimary,
-    lineHeight: 1.4,
-    marginBottom: 6,
-  },
-  newsMeta: {
-    fontSize: 11,
-    color: COLORS.textMuted,
-    display: "flex",
-    gap: 8,
-    alignItems: "center",
-  },
-  newsDot: {
-    width: 3,
-    height: 3,
-    borderRadius: "50%",
-    background: COLORS.textMuted,
-  },
-  clubCard: {
-    background: COLORS.card,
-    border: `1px solid ${COLORS.border}`,
-    borderRadius: 16,
-    padding: "14px 16px",
-    margin: "0 20px 12px",
-    display: "flex",
-    alignItems: "center",
-    gap: 14,
-    cursor: "pointer",
-  },
-  clubBadge: (color) => ({
-    width: 48,
-    height: 48,
-    borderRadius: 12,
-    background: `${color}22`,
-    border: `1.5px solid ${color}44`,
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    fontSize: 22,
-  }),
-  clubName: { fontSize: 15, fontWeight: 700, color: COLORS.textPrimary },
-  clubMeta: { fontSize: 12, color: COLORS.textSecondary, marginTop: 2 },
-  joinBtn: (color) => ({
-    marginLeft: "auto",
-    padding: "6px 14px",
-    borderRadius: 20,
-    border: `1px solid ${color}`,
-    background: `${color}18`,
-    color: color,
-    fontSize: 12,
-    fontWeight: 700,
-    cursor: "pointer",
-  }),
-  ticketCard: {
-    background: `linear-gradient(135deg, ${COLORS.card} 0%, #1A1035 100%)`,
-    border: `1px solid ${COLORS.border}`,
-    borderRadius: 20,
-    overflow: "hidden",
-    margin: "0 20px 16px",
-    position: "relative",
-  },
-  ticketTop: { padding: "16px 18px 14px" },
-  ticketDivider: {
-    height: 1,
-    background: `repeating-linear-gradient(90deg, ${COLORS.border} 0, ${COLORS.border} 10px, transparent 10px, transparent 18px)`,
-    margin: "0 18px",
-  },
-  ticketBottom: {
-    padding: "12px 18px",
-    display: "flex",
-    justifyContent: "space-between",
-    alignItems: "center",
-  },
-  bookBtn: {
-    background: `linear-gradient(135deg, ${COLORS.accent}, #7C3AED)`,
-    color: "#000",
-    border: "none",
-    borderRadius: 12,
-    padding: "8px 18px",
-    fontSize: 12,
-    fontWeight: 800,
-    cursor: "pointer",
-    letterSpacing: 0.5,
-  },
-  navbar: {
-    position: "fixed",
-    bottom: 0,
-    left: "50%",
-    transform: "translateX(-50%)",
-    width: "100%",
-    maxWidth: 430,
-    background: `${COLORS.surface}EE`,
-    backdropFilter: "blur(20px)",
-    borderTop: `1px solid ${COLORS.border}`,
-    display: "flex",
-    padding: "8px 0 12px",
-    zIndex: 200,
-  },
-  navItem: (active) => ({
-    flex: 1,
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
-    gap: 3,
-    cursor: "pointer",
-    padding: "4px 0",
-  }),
-  navIcon: (active) => ({
-    fontSize: 22,
-    lineHeight: 1,
-    filter: active ? "none" : "grayscale(1) opacity(0.4)",
-    transition: "all 0.2s",
-  }),
-  navLabel: (active) => ({
-    fontSize: 10,
-    fontWeight: active ? 700 : 500,
-    color: active ? COLORS.accent : COLORS.textMuted,
-    transition: "all 0.2s",
-  }),
-  navIndicator: (active) => ({
-    width: 4,
-    height: 4,
-    borderRadius: "50%",
-    background: active ? COLORS.accent : "transparent",
-    marginBottom: -4,
-    transition: "all 0.2s",
-  }),
-  aiBox: {
-    background: `linear-gradient(135deg, rgba(0,212,255,0.08), rgba(124,58,237,0.08))`,
-    border: `1px solid rgba(0,212,255,0.2)`,
-    borderRadius: 16,
-    padding: "14px 16px",
-    margin: "0 20px 12px",
-  },
-  aiTitle: {
-    fontSize: 12,
-    fontWeight: 700,
-    color: COLORS.accent,
-    letterSpacing: 1,
-    textTransform: "uppercase",
-    marginBottom: 8,
-    display: "flex",
-    alignItems: "center",
-    gap: 6,
-  },
-  aiText: {
-    fontSize: 13,
-    color: COLORS.textSecondary,
-    lineHeight: 1.6,
-  },
-  matchDetail: {
-    background: COLORS.card,
-    border: `1px solid ${COLORS.border}`,
-    borderRadius: 16,
-    overflow: "hidden",
-    margin: "0 20px 12px",
-  },
-  statRow: {
-    display: "flex",
-    alignItems: "center",
-    padding: "8px 16px",
-    gap: 8,
-  },
-  statBar: (pct, color) => ({
-    height: 4,
-    borderRadius: 2,
-    background: `linear-gradient(90deg, ${color} ${pct}%, ${COLORS.border} ${pct}%)`,
-    flex: 1,
-  }),
-  tag: (color) => ({
-    display: "inline-flex",
-    alignItems: "center",
-    gap: 4,
-    padding: "2px 8px",
-    borderRadius: 10,
-    background: `${color}22`,
-    color: color,
-    fontSize: 10,
-    fontWeight: 700,
-    letterSpacing: 0.5,
-  }),
-  emptyState: {
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
-    justifyContent: "center",
-    padding: "48px 20px",
-    gap: 12,
-  },
-};
-
-// ── Mock data ─────────────────────────────────────────────────────
-const MOCK_MATCHES = [
-  { id: 1, sport: "cricket", color: "#00D4FF", team1: "🇮🇳", team2: "🏴󠁧󠁢󠁥󠁮󠁧󠁿", name1: "India", name2: "England", score1: "287/6", score2: "41/2", status: "live", over: "35.2 ov", competition: "ODI Series" },
-  { id: 2, sport: "football", color: "#00E676", team1: "🔴", team2: "🔵", name1: "Arsenal", name2: "Chelsea", score1: "2", score2: "1", status: "live", over: "67'", competition: "Premier League" },
-  { id: 3, sport: "basketball", color: "#FF6B35", team1: "🏀", team2: "⭐", name1: "Lakers", name2: "Warriors", score1: "98", score2: "95", status: "live", over: "Q3 8:22", competition: "NBA" },
-  { id: 4, sport: "cricket", color: "#00D4FF", team1: "🇵🇰", team2: "🇦🇺", name1: "Pakistan", name2: "Australia", score1: "Oct 10", score2: "Dubai", status: "upcoming", over: "Tomorrow", competition: "T20 World Cup" },
-  { id: 5, sport: "tennis", color: "#FFD700", team1: "🎾", team2: "🎾", name1: "Djokovic", name2: "Alcaraz", score1: "6-4, 3", score2: "2", status: "live", over: "Set 3", competition: "Wimbledon" },
-];
-
-const MOCK_NEWS = [
-  { id: 1, sport: "cricket", emoji: "🏏", title: "India clinch ODI series with stunning 89-run victory over England at Lord's", time: "2h ago", source: "CricBuzz", hot: true },
-  { id: 2, sport: "football", emoji: "⚽", title: "Mbappé signs record-breaking deal with Manchester City ahead of new season", time: "4h ago", source: "ESPN", hot: true },
-  { id: 3, sport: "basketball", emoji: "🏀", title: "LeBron James announces return for one final NBA season with new contract", time: "5h ago", source: "ESPN", hot: false },
-  { id: 4, sport: "tennis", emoji: "🎾", title: "Sinner edges past Djokovic in an epic French Open final spanning 5 sets", time: "7h ago", source: "ATP Tour", hot: false },
-  { id: 5, sport: "hockey", emoji: "🏑", title: "India men's hockey team qualifies for Olympics with thrilling win over Germany", time: "9h ago", source: "FIH", hot: false },
-  { id: 6, sport: "cricket", emoji: "🏏", title: "IPL 2026 auction: Three players cross ₹25 crore mark in record-breaking bidding", time: "12h ago", source: "CricBuzz", hot: false },
-];
-
-const MOCK_CLUBS = [
-  { id: 1, name: "RCB Fan Army", sport: "cricket", emoji: "🏏", color: "#FF3D57", members: 42800, description: "Royal Challengers Bengaluru — Ee Sala Cup Namde!", joined: false },
-  { id: 2, name: "Arsenal Gunners", sport: "football", emoji: "⚽", color: "#FF6B35", members: 31200, description: "Official Arsenal fan club — We are the Arsenal!", joined: true },
-  { id: 3, name: "Team India Fans", sport: "cricket", emoji: "🇮🇳", color: "#00D4FF", members: 128000, description: "Biggest Indian Cricket fan community worldwide", joined: false },
-  { id: 4, name: "NBA India Hub", sport: "basketball", emoji: "🏀", color: "#FFD700", members: 18500, description: "Connect with basketball fans across India", joined: false },
-  { id: 5, name: "Rajasthan Royals FC", sport: "cricket", emoji: "💗", color: "#7C3AED", members: 56700, description: "Halla Bol! RR fan club for the royal fans", joined: false },
-  { id: 6, name: "Indian Football United", sport: "football", emoji: "🐅", color: "#00E676", members: 9400, description: "Support for Indian Football team nationwide", joined: false },
-];
-
-const MOCK_REELS = [
-  { id: 1, creator: "mahi.ipl27", sport: "cricket", emoji: "🏏", bg: "linear-gradient(135deg, #001A2C, #003D66)", title: "MS Dhoni — The Last Dance 🦁", likes: 84200, views: "1.2M", verified: true },
-  { id: 2, creator: "kohli.fanpage", sport: "cricket", emoji: "👑", bg: "linear-gradient(135deg, #1A0020, #3D0050)", title: "Virat Kohli 50th T20 Century — Goat moments", likes: 156000, views: "3.4M", verified: true },
-  { id: 3, creator: "ronaldo.zone", sport: "football", emoji: "⚽", bg: "linear-gradient(135deg, #001A10, #003D25)", title: "CR7 Top 10 Free Kicks of the Decade 🔥", likes: 210000, views: "5.1M", verified: false },
-  { id: 4, creator: "tennis_magic", sport: "tennis", emoji: "🎾", bg: "linear-gradient(135deg, #1A1A00, #3D3D00)", title: "Wimbledon Final — 5 Epic Match Points!", likes: 44500, views: "890K", verified: false },
-];
-
-const MOCK_TICKETS = [
-  { id: 1, match: "India vs England", type: "ODI", venue: "Eden Gardens, Kolkata", date: "July 14, 2026", price: "₹1,500", seats: "E Block", sport: "cricket", color: "#00D4FF" },
-  { id: 2, match: "Arsenal vs Chelsea", type: "Premier League", venue: "Emirates Stadium, London", date: "Aug 3, 2026", price: "₹8,200", seats: "North Stand", sport: "football", color: "#00E676" },
-  { id: 3, match: "IPL Final 2027", type: "T20", venue: "Narendra Modi Stadium", date: "May 25, 2027", price: "₹4,999", seats: "Premium", sport: "cricket", color: "#FFD700" },
-  { id: 4, match: "Wimbledon Final", type: "Grand Slam", venue: "All England Club, London", date: "July 13, 2026", price: "₹22,000", seats: "Centre Court", sport: "tennis", color: "#7C3AED" },
-];
-
-const STORIES = [
-  { label: "Your Story", emoji: "➕", active: false },
-  { label: "mahi.ipl", emoji: "🏏", active: true },
-  { label: "kohli.27", emoji: "👑", active: true },
-  { label: "ipl2026", emoji: "🏆", active: true },
-  { label: "football", emoji: "⚽", active: false },
-  { label: "tennis", emoji: "🎾", active: true },
-];
-
-// ── Utility ───────────────────────────────────────────────────────
-const fmt = (n) => n >= 1000 ? (n / 1000).toFixed(1) + "K" : n;
-
-// ── Sub-components ────────────────────────────────────────────────
-function LiveCard({ match }) {
-  return (
-    <div style={styles.liveCard}>
-      <div style={styles.cardGlow(match.color)} />
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 10 }}>
-        <div style={styles.liveBadge}>
-          {match.status === "live" && <div style={styles.liveDot} />}
-          {match.status === "live" ? "Live" : "Upcoming"}
-        </div>
-        <div style={{ ...styles.tag(match.color) }}>{match.competition}</div>
-      </div>
-      <div style={styles.matchTeams}>
-        <div style={styles.teamBlock}>
-          <div style={styles.teamEmoji}>{match.team1}</div>
-          <div style={styles.teamName}>{match.name1}</div>
-        </div>
-        <div style={styles.scoreBlock}>
-          {match.status === "live" ? (
-            <>
-              <div style={styles.scoreText}>{match.score1}</div>
-              <div style={{ ...styles.vsText, fontSize: 9, color: COLORS.textMuted }}>vs</div>
-              <div style={{ ...styles.scoreText, fontSize: 16, color: COLORS.textSecondary }}>{match.score2}</div>
-            </>
-          ) : (
-            <div style={{ fontSize: 13, color: COLORS.textSecondary, textAlign: "center" }}>
-              <div style={{ fontWeight: 700, color: COLORS.textPrimary, fontSize: 16 }}>VS</div>
-              <div style={{ fontSize: 11, marginTop: 4 }}>{match.over}</div>
-            </div>
-          )}
-        </div>
-        <div style={styles.teamBlock}>
-          <div style={styles.teamEmoji}>{match.team2}</div>
-          <div style={styles.teamName}>{match.name2}</div>
-        </div>
-      </div>
-      {match.status === "live" && (
-        <div style={{ marginTop: 10, fontSize: 11, color: COLORS.textMuted, textAlign: "center" }}>
-          ⏱ {match.over}
-        </div>
-      )}
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SportSnap PRO</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { background: #0A0E1A; color: #F0F4FF; font-family: Arial, sans-serif; padding: 20px; }
+    .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; padding-bottom: 20px; border-bottom: 2px solid #1E2D45; }
+    h1 { font-size: 28px; background: linear-gradient(135deg, #00D4FF, #7C3AED); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    .sport-selector { display: flex; gap: 10px; flex-wrap: wrap; }
+    button { padding: 10px 20px; border: 2px solid #1E2D45; background: transparent; color: #8A9BB5; border-radius: 20px; cursor: pointer; font-size: 14px; font-weight: 600; transition: all 0.3s; }
+    button:hover { border-color: #00D4FF; color: #00D4FF; }
+    button.active { border-color: #00D4FF; color: #00D4FF; background: rgba(0, 212, 255, 0.1); }
+    .matches-container { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; margin-top: 20px; }
+    .match-card { background: #111827; border: 1px solid #1E2D45; border-radius: 16px; padding: 20px; transition: all 0.3s; }
+    .match-card:hover { background: #151D2E; border-color: #00D4FF; box-shadow: 0 0 20px rgba(0, 212, 255, 0.2); }
+    .badge { display: inline-block; background: rgba(255, 61, 87, 0.2); color: #FF3D57; padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 700; margin-bottom: 10px; text-transform: uppercase; }
+    .match-title { font-size: 16px; font-weight: 700; margin-bottom: 10px; color: #F0F4FF; }
+    .score { display: flex; justify-content: space-around; align-items: center; margin-bottom: 15px; padding: 15px; background: rgba(0, 212, 255, 0.05); border-radius: 10px; }
+    .team { text-align: center; flex: 1; }
+    .team-name { font-size: 12px; color: #8A9BB5; margin-bottom: 5px; }
+    .team-score { font-size: 24px; font-weight: 900; color: #00D4FF; }
+    .status { font-size: 12px; color: #4A5568; text-align: center; margin-top: 10px; }
+    .loading { text-align: center; padding: 40px; color: #8A9BB5; font-size: 16px; }
+    .error { background: rgba(255, 61, 87, 0.1); border: 1px solid #FF3D57; color: #FF3D57; padding: 20px; border-radius: 10px; margin-bottom: 20px; }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1>🏏 SportSnap PRO ⚡</h1>
+    <div class="sport-selector">
+      <button class="sport-btn active" data-sport="cricket">🏏 Cricket</button>
+      <button class="sport-btn" data-sport="football">⚽ Football</button>
+      <button class="sport-btn" data-sport="basketball">🏀 Basketball</button>
+      <button class="sport-btn" data-sport="tennis">🎾 Tennis</button>
     </div>
-  );
-}
+  </div>
 
-function AIAnalyst({ match }) {
-  const [text, setText] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [fetched, setFetched] = useState(false);
+  <div id="error-container"></div>
+  <div id="matches-container" class="matches-container"></div>
 
-  const getAnalysis = async () => {
-    setLoading(true);
-    setFetched(true);
-    setText("");
-    try {
-      const response = await fetch("https://api.anthropic.com/v1/messages", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          model: "claude-sonnet-4-6",
-          max_tokens: 1000,
-          stream: true,
-          messages: [{
-            role: "user",
-            content: `You are a live sports AI analyst for SportSnap app. Give a short, exciting, expert analysis (3-4 sentences max) for this match. Be dynamic and use emojis: ${match.name1} vs ${match.name2} in ${match.competition}. Current score: ${match.score1} - ${match.score2}. ${match.over ? `Time/Over: ${match.over}` : ""}. Predict the likely winner and highlight key factors.`
-          }],
-        }),
+  <script>
+    let selectedSport = 'cricket';
+
+    // Button events
+    document.querySelectorAll('.sport-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.sport-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        selectedSport = btn.dataset.sport;
+        fetchMatches();
       });
+    });
 
-      const reader = response.body.getReader();
-      const decoder = new TextDecoder();
-      let buffer = "";
+    // Fetch matches
+    async function fetchMatches() {
+      const container = document.getElementById('matches-container');
+      const errorContainer = document.getElementById('error-container');
+      
+      container.innerHTML = '<div class="loading">⏳ Loading matches...</div>';
+      errorContainer.innerHTML = '';
 
-      while (true) {
-        const { done, value } = await reader.read();
-        if (done) break;
-        buffer += decoder.decode(value, { stream: true });
-        const lines = buffer.split("\n");
-        buffer = lines.pop();
-        for (const line of lines) {
-          if (line.startsWith("data: ")) {
-            const data = line.slice(6).trim();
-            if (data === "[DONE]") continue;
-            try {
-              const json = JSON.parse(data);
-              const delta = json.delta?.text;
-              if (delta) setText(prev => prev + delta);
-            } catch {}
-          }
+      try {
+        const response = await fetch(`/api/scores?sport=${selectedSport}`);
+        
+        if (!response.ok) {
+          throw new Error(`HTTP ${response.status}`);
         }
-      }
-    } catch (e) {
-      setText("AI Analyst is warming up… Please try again in a moment.");
-    }
-    setLoading(false);
-  };
 
-  return (
-    <div style={styles.aiBox}>
-      <div style={styles.aiTitle}>
-        <span>🤖</span> AI Analyst
-      </div>
-      {!fetched ? (
-        <button
-          onClick={getAnalysis}
-          style={{ ...styles.bookBtn, fontSize: 12, padding: "7px 14px", background: "rgba(0,212,255,0.15)", color: COLORS.accent, border: `1px solid rgba(0,212,255,0.3)` }}
-        >
-          ✨ Analyse this match
-        </button>
-      ) : loading && !text ? (
-        <div style={{ ...styles.aiText, color: COLORS.accent }}>Analysing live data… ⚡</div>
-      ) : (
-        <div style={styles.aiText}>{text}{loading && <span style={{ color: COLORS.accent }}>▋</span>}</div>
-      )}
-    </div>
-  );
-}
+        const data = await response.json();
 
-function HomeTab({ activeSport, setActiveSport }) {
-  const filteredMatches = activeSport === "all"
-    ? MOCK_MATCHES
-    : MOCK_MATCHES.filter(m => m.sport === activeSport);
+        if (!data || data.length === 0) {
+          container.innerHTML = `<div class="loading">📭 No ${selectedSport} matches right now. Check back soon! 🏟️</div>`;
+          return;
+        }
 
-  const liveMatches = filteredMatches.filter(m => m.status === "live");
-  const upcomingMatches = filteredMatches.filter(m => m.status === "upcoming");
-
-  return (
-    <div style={{ paddingBottom: 90 }}>
-      {/* Stories */}
-      <div style={{ padding: "14px 0 8px" }}>
-        <div style={styles.storyRow}>
-          {STORIES.map((s, i) => (
-            <div key={i} style={styles.storyItem}>
-              <div style={styles.storyRing(s.active)}>
-                <div style={styles.storyInner}>{s.emoji}</div>
+        container.innerHTML = data.map(match => `
+          <div class="match-card">
+            <div class="badge">🔴 LIVE</div>
+            <div class="match-title">${match.team1} vs ${match.team2}</div>
+            <div class="score">
+              <div class="team">
+                <div class="team-name">${match.team1}</div>
+                <div class="team-score">${match.score1}</div>
               </div>
-              <div style={styles.storyLabel}>{s.label}</div>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* Sport filter chips */}
-      <div style={{ ...styles.scrollRow, padding: "8px 20px 12px" }}>
-        <div
-          style={styles.chip(activeSport === "all", COLORS.accent)}
-          onClick={() => setActiveSport("all")}
-        >
-          🌐 All Sports
-        </div>
-        {SPORTS.map(s => (
-          <div
-            key={s.id}
-            style={styles.chip(activeSport === s.id, s.color)}
-            onClick={() => setActiveSport(s.id)}
-          >
-            {s.emoji} {s.name}
-          </div>
-        ))}
-      </div>
-
-      {/* Live matches */}
-      {liveMatches.length > 0 && (
-        <div style={styles.section}>
-          <div style={styles.sectionTitle}>🔴 Live Now</div>
-          <div style={styles.scrollRow}>
-            {liveMatches.map(m => <LiveCard key={m.id} match={m} />)}
-          </div>
-        </div>
-      )}
-
-      {/* AI Analyst for first live match */}
-      {liveMatches.length > 0 && <AIAnalyst match={liveMatches[0]} />}
-
-      {/* Match Stats preview */}
-      {liveMatches.length > 0 && (
-        <div style={styles.matchDetail}>
-          <div style={{ padding: "12px 16px 8px", fontSize: 12, fontWeight: 700, color: COLORS.textSecondary, textTransform: "uppercase", letterSpacing: 1 }}>
-            Live Stats — {liveMatches[0].name1} vs {liveMatches[0].name2}
-          </div>
-          {[
-            { label: "Run Rate", val1: 8.2, val2: 7.1, max: 12 },
-            { label: "Possession", val1: 62, val2: 38, max: 100 },
-            { label: "Wickets / Goals", val1: 6, val2: 2, max: 10 },
-          ].map((s, i) => (
-            <div key={i} style={styles.statRow}>
-              <div style={{ fontSize: 13, fontWeight: 700, color: COLORS.textPrimary, minWidth: 28 }}>{s.val1}</div>
-              <div style={{ flex: 1 }}>
-                <div style={{ fontSize: 10, color: COLORS.textMuted, textAlign: "center", marginBottom: 4 }}>{s.label}</div>
-                <div style={{ display: "flex", gap: 3 }}>
-                  <div style={{ flex: s.val1, height: 4, borderRadius: 2, background: COLORS.accent }} />
-                  <div style={{ flex: s.val2, height: 4, borderRadius: 2, background: COLORS.border }} />
-                </div>
-              </div>
-              <div style={{ fontSize: 13, fontWeight: 700, color: COLORS.textSecondary, minWidth: 28, textAlign: "right" }}>{s.val2}</div>
-            </div>
-          ))}
-        </div>
-      )}
-
-      {/* Upcoming */}
-      {upcomingMatches.length > 0 && (
-        <div style={styles.section}>
-          <div style={styles.sectionTitle}>📅 Upcoming</div>
-          <div style={styles.scrollRow}>
-            {upcomingMatches.map(m => <LiveCard key={m.id} match={m} />)}
-          </div>
-        </div>
-      )}
-
-      {/* Quick News */}
-      <div style={styles.sectionTitle}>⚡ Top Stories</div>
-      {MOCK_NEWS.filter(n => activeSport === "all" || n.sport === activeSport).slice(0, 3).map(n => (
-        <div key={n.id} style={styles.newsCard}>
-          <div style={styles.newsEmoji}>{n.emoji}</div>
-          <div style={{ flex: 1 }}>
-            <div style={styles.newsTitle}>{n.title}</div>
-            <div style={styles.newsMeta}>
-              <span>{n.source}</span>
-              <div style={styles.newsDot} />
-              <span>{n.time}</span>
-              {n.hot && <span style={styles.tag(COLORS.red)}>🔥 Hot</span>}
-            </div>
-          </div>
-        </div>
-      ))}
-
-      {filteredMatches.length === 0 && (
-        <div style={styles.emptyState}>
-          <div style={{ fontSize: 48 }}>🏟️</div>
-          <div style={{ fontSize: 15, fontWeight: 700, color: COLORS.textSecondary }}>No matches right now</div>
-          <div style={{ fontSize: 13, color: COLORS.textMuted, textAlign: "center" }}>Check back soon for live updates on {activeSport}</div>
-        </div>
-      )}
-    </div>
-  );
-}
-
-function ClubsTab() {
-  const [clubs, setClubs] = useState(MOCK_CLUBS);
-
-  const toggleJoin = (id) => {
-    setClubs(clubs.map(c => c.id === id ? { ...c, joined: !c.joined, members: c.joined ? c.members - 1 : c.members + 1 } : c));
-  };
-
-  return (
-    <div style={{ paddingBottom: 90, paddingTop: 8 }}>
-      <div style={{ padding: "0 20px 16px" }}>
-        <div style={{ background: `linear-gradient(135deg, rgba(0,212,255,0.1), rgba(124,58,237,0.1))`, border: `1px solid ${COLORS.border}`, borderRadius: 16, padding: "14px 16px" }}>
-          <div style={{ fontSize: 14, fontWeight: 700, color: COLORS.textPrimary, marginBottom: 4 }}>🏆 Create your own club</div>
-          <div style={{ fontSize: 12, color: COLORS.textSecondary, marginBottom: 12 }}>Start a fan club for your favourite team and connect with fans worldwide</div>
-          <button style={styles.bookBtn}>+ Create Club</button>
-        </div>
-      </div>
-      <div style={styles.sectionTitle}>🔥 Popular Clubs</div>
-      {clubs.map(club => (
-        <div key={club.id} style={styles.clubCard}>
-          <div style={styles.clubBadge(club.color)}>{club.emoji}</div>
-          <div style={{ flex: 1 }}>
-            <div style={styles.clubName}>{club.name}</div>
-            <div style={styles.clubMeta}>{fmt(club.members)} members</div>
-          </div>
-          <button style={styles.joinBtn(club.joined ? COLORS.green : COLORS.accent)} onClick={() => toggleJoin(club.id)}>
-            {club.joined ? "✓ Joined" : "+ Join"}
-          </button>
-        </div>
-      ))}
-    </div>
-  );
-}
-
-function ReelsTab() {
-  const [aiCaption, setAiCaption] = useState({});
-  const [loadingCaption, setLoadingCaption] = useState({});
-
-  const generateCaption = async (reel) => {
-    setLoadingCaption(prev => ({ ...prev, [reel.id]: true }));
-    try {
-      const res = await fetch("https://api.anthropic.com/v1/messages", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          model: "claude-sonnet-4-6",
-          max_tokens: 1000,
-          messages: [{
-            role: "user",
-            content: `Write a punchy viral sports reel caption (1-2 lines, max 120 chars) for a sports reel titled: "${reel.title}" by @${reel.creator}. Use emojis. Make it hype and shareable.`
-          }]
-        })
-      });
-      const data = await res.json();
-      const caption = data.content?.[0]?.text || "🔥 Epic sports moment!";
-      setAiCaption(prev => ({ ...prev, [reel.id]: caption }));
-    } catch {
-      setAiCaption(prev => ({ ...prev, [reel.id]: "🔥 Can't miss this one!" }));
-    }
-    setLoadingCaption(prev => ({ ...prev, [reel.id]: false }));
-  };
-
-  return (
-    <div style={{ paddingBottom: 90, paddingTop: 8 }}>
-      <div style={styles.sectionTitle}>🎬 Trending Reels</div>
-      {MOCK_REELS.map(reel => (
-        <div key={reel.id} style={styles.reelCard}>
-          <div style={{ ...styles.reelThumb, background: reel.bg }}>
-            <span>{reel.emoji}</span>
-            <div style={styles.reelPlay}>▶</div>
-            <div style={{ position: "absolute", bottom: 10, right: 12, ...styles.tag(COLORS.red) }}>
-              {reel.views} views
-            </div>
-          </div>
-          <div style={styles.reelInfo}>
-            <div style={{ fontSize: 14, fontWeight: 700, color: COLORS.textPrimary, marginBottom: 6 }}>{reel.title}</div>
-            <div style={{ fontSize: 12, color: COLORS.textSecondary, marginBottom: 8, display: "flex", alignItems: "center", gap: 4 }}>
-              @{reel.creator} {reel.verified && "✅"}
-            </div>
-            {aiCaption[reel.id] ? (
-              <div style={{ fontSize: 12, color: COLORS.accent, fontStyle: "italic", marginBottom: 8 }}>✨ {aiCaption[reel.id]}</div>
-            ) : (
-              <button
-                onClick={() => generateCaption(reel)}
-                disabled={loadingCaption[reel.id]}
-                style={{ ...styles.bookBtn, fontSize: 11, padding: "5px 12px", marginBottom: 8, background: "transparent", color: COLORS.accent, border: `1px solid ${COLORS.accent}44`, opacity: loadingCaption[reel.id] ? 0.6 : 1 }}
-              >
-                {loadingCaption[reel.id] ? "Generating…" : "✨ AI Caption"}
-              </button>
-            )}
-            <div style={{ display: "flex", gap: 16 }}>
-              <span style={{ fontSize: 12, color: COLORS.textSecondary }}>❤️ {fmt(reel.likes)}</span>
-              <span style={{ fontSize: 12, color: COLORS.textSecondary }}>💬 Comment</span>
-              <span style={{ fontSize: 12, color: COLORS.textSecondary }}>📤 Share</span>
-            </div>
-          </div>
-        </div>
-      ))}
-    </div>
-  );
-}
-
-function TicketsTab() {
-  const [booked, setBooked] = useState({});
-
-  return (
-    <div style={{ paddingBottom: 90, paddingTop: 8 }}>
-      <div style={styles.sectionTitle}>🎟️ Book Tickets</div>
-      {MOCK_TICKETS.map(t => (
-        <div key={t.id} style={styles.ticketCard}>
-          <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 3, background: `linear-gradient(90deg, ${t.color}, ${t.color}55)` }} />
-          <div style={styles.ticketTop}>
-            <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 10 }}>
-              <div style={styles.tag(t.color)}>{t.type}</div>
-              <div style={{ fontSize: 12, color: COLORS.textMuted }}>{t.date}</div>
-            </div>
-            <div style={{ fontSize: 17, fontWeight: 800, color: COLORS.textPrimary, marginBottom: 6 }}>{t.match}</div>
-            <div style={{ fontSize: 12, color: COLORS.textSecondary }}>📍 {t.venue}</div>
-          </div>
-          <div style={styles.ticketDivider} />
-          <div style={styles.ticketBottom}>
-            <div>
-              <div style={{ fontSize: 18, fontWeight: 900, color: COLORS.textPrimary }}>{t.price}</div>
-              <div style={{ fontSize: 11, color: COLORS.textMuted }}>{t.seats}</div>
-            </div>
-            {booked[t.id] ? (
-              <div style={{ ...styles.tag(COLORS.green), fontSize: 13, padding: "8px 16px" }}>✓ Booked!</div>
-            ) : (
-              <button
-                style={styles.bookBtn}
-                onClick={() => setBooked(prev => ({ ...prev, [t.id]: true }))}
-              >
-                Book Now →
-              </button>
-            )}
-          </div>
-        </div>
-      ))}
-    </div>
-  );
-}
-
-function NewsTab() {
-  const [summary, setSummary] = useState({});
-  const [loading, setLoading] = useState({});
-
-  const summarize = async (news) => {
-    if (summary[news.id] || loading[news.id]) return;
-    setLoading(prev => ({ ...prev, [news.id]: true }));
-    try {
-      const res = await fetch("https://api.anthropic.com/v1/messages", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          model: "claude-sonnet-4-6",
-          max_tokens: 1000,
-          messages: [{
-            role: "user",
-            content: `You are a sports journalist. Write a brief 2-sentence expansion/summary for this sports headline: "${news.title}". Be informative and factual, add context. Do not use quotes.`
-          }]
-        })
-      });
-      const data = await res.json();
-      const text = data.content?.[0]?.text || "";
-      setSummary(prev => ({ ...prev, [news.id]: text }));
-    } catch {
-      setSummary(prev => ({ ...prev, [news.id]: "Tap to read the full story on the source website." }));
-    }
-    setLoading(prev => ({ ...prev, [news.id]: false }));
-  };
-
-  return (
-    <div style={{ paddingBottom: 90, paddingTop: 8 }}>
-      <div style={styles.sectionTitle}>📰 All Sports News</div>
-      {MOCK_NEWS.map(n => (
-        <div key={n.id} style={{ ...styles.newsCard, flexDirection: "column", gap: 10 }} onClick={() => summarize(n)}>
-          <div style={{ display: "flex", gap: 14, alignItems: "flex-start" }}>
-            <div style={styles.newsEmoji}>{n.emoji}</div>
-            <div style={{ flex: 1 }}>
-              <div style={styles.newsTitle}>{n.title}</div>
-              <div style={styles.newsMeta}>
-                <span>{n.source}</span>
-                <div style={styles.newsDot} />
-                <span>{n.time}</span>
-                {n.hot && <span style={styles.tag(COLORS.red)}>🔥</span>}
+              <div style="font-size: 12px; color: #8A9BB5; margin: 0 10px;">VS</div>
+              <div class="team">
+                <div class="team-name">${match.team2}</div>
+                <div class="team-score">${match.score2}</div>
               </div>
             </div>
+            <div class="status">⏱️ ${match.status}</div>
           </div>
-          {loading[n.id] && <div style={{ fontSize: 12, color: COLORS.accent }}>✨ Loading AI summary…</div>}
-          {summary[n.id] && (
-            <div style={{ fontSize: 12, color: COLORS.textSecondary, lineHeight: 1.6, paddingTop: 4, borderTop: `1px solid ${COLORS.border}` }}>
-              {summary[n.id]}
-            </div>
-          )}
-          {!summary[n.id] && !loading[n.id] && (
-            <div style={{ fontSize: 11, color: COLORS.textMuted }}>Tap for AI summary ✨</div>
-          )}
-        </div>
-      ))}
-    </div>
-  );
-}
+        `).join('');
 
-// ── Main App ──────────────────────────────────────────────────────
-export default function SportSnap() {
-  const [activeTab, setActiveTab] = useState(0);
-  const [activeSport, setActiveSport] = useState("all");
-
-  useEffect(() => {
-    const style = document.createElement("style");
-    style.textContent = `
-      @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
-      * { box-sizing: border-box; margin: 0; padding: 0; }
-      ::-webkit-scrollbar { display: none; }
-      @keyframes pulse {
-        0%, 100% { opacity: 1; transform: scale(1); }
-        50% { opacity: 0.4; transform: scale(0.85); }
+      } catch (error) {
+        errorContainer.innerHTML = `
+          <div class="error">
+            ⚠️ Error: ${error.message}<br>
+            Make sure you're connected to the internet.
+          </div>
+        `;
+        container.innerHTML = '';
       }
-      @keyframes shimmer {
-        0% { opacity: 0.6; }
-        50% { opacity: 1; }
-        100% { opacity: 0.6; }
-      }
-    `;
-    document.head.appendChild(style);
-    return () => document.head.removeChild(style);
-  }, []);
-
-  const renderTab = () => {
-    switch (activeTab) {
-      case 0: return <HomeTab activeSport={activeSport} setActiveSport={setActiveSport} />;
-      case 1: return <ClubsTab />;
-      case 2: return <ReelsTab />;
-      case 3: return <TicketsTab />;
-      case 4: return <NewsTab />;
-      default: return null;
     }
-  };
 
-  return (
-    <div style={styles.root}>
-      {/* Header */}
-      <div style={styles.header}>
-        <div style={styles.logo}>
-          <div>
-            <div style={styles.logoText}>SportSnap</div>
-          </div>
-          <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-            <div style={{ fontSize: 11, fontStyle: "italic", fontWeight: 900, color: COLORS.accent, letterSpacing: 3 }}>ADS</div>
-            <div style={{ fontSize: 20, cursor: "pointer", color: COLORS.textSecondary }}>🔔</div>
-            <div style={{ fontSize: 20, cursor: "pointer", color: COLORS.textSecondary }}>🔍</div>
-            <div style={styles.avatar}>⚡</div>
-          </div>
-        </div>
-      </div>
-
-      {/* Content */}
-      <div style={{ paddingTop: 0 }}>
-        {renderTab()}
-      </div>
-
-      {/* Bottom Nav */}
-      <div style={styles.navbar}>
-        {TABS.map((tab, i) => (
-          <div key={i} style={styles.navItem(activeTab === i)} onClick={() => setActiveTab(i)}>
-            <div style={styles.navIndicator(activeTab === i)} />
-            <div style={styles.navIcon(activeTab === i)}>{TAB_ICONS[i]}</div>
-            <div style={styles.navLabel(activeTab === i)}>{tab}</div>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-}
+    // Initial load
+    fetchMatches();
+    
+    // Refresh every 30 seconds
+    setInterval(fetchMatches, 30000);
+  </script>
+</body>
+</html>
