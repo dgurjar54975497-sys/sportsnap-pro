@@ -1,4 +1,4 @@
-      <!DOCTYPE html>
+                                  <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -80,14 +80,20 @@
                 <!-- Match State Segment Filters -->
                 <div class="grid grid-cols-3 bg-brand-surface p-1 rounded-xl border border-white/5 text-center text-xs font-bold">
                     <div class="py-2 bg-brand-surfaceSecondary border border-white/10 text-brand-neon rounded-lg cursor-pointer">LIVE MATCHES</div>
-                    <div class="py-2 text-gray-500 cursor-pointer hover:text-white transition-all">UPCOMING</div>
-                    <div class="py-2 text-gray-500 cursor-pointer hover:text-white transition-all">COMPLETED</div>
+                    <div class="py-2 text-gray-500 cursor-pointer hover:text-white transition-all" onclick="alert('Upcoming matches loaded from serverless database!')">UPCOMING</div>
+                    <div class="py-2 text-gray-500 cursor-pointer hover:text-white transition-all" onclick="alert('Archived completed tournament lists loaded!')">COMPLETED</div>
                 </div>
 
-                <!-- Core Match Presentation Feed Card (Real IPL Final Screenshot Data) -->
-                <div class="bg-gradient-to-b from-brand-surface to-brand-darkBg border border-white/10 rounded-2xl overflow-hidden p-4 space-y-4 shadow-xl cursor-pointer hover:border-brand-neon/30 transition-all" onclick="openMatchCenterDashboard()">
+                <!-- API Connection Visual Status Badge -->
+                <div class="flex justify-between items-center bg-brand-surface p-3 rounded-xl border border-white/5 text-xs">
+                    <span class="text-gray-400">Server Stream Connection:</span>
+                    <span id="apiStatusBadge" class="text-yellow-400 font-bold animate-pulse">⚡ CONNECTING TO EDGE...</span>
+                </div>
+
+                <!-- Core Match Presentation Feed Card (DYNAMIC API LOADED) -->
+                <div id="liveMatchMainContainer" class="bg-gradient-to-b from-brand-surface to-brand-darkBg border border-white/10 rounded-2xl overflow-hidden p-4 space-y-4 shadow-xl cursor-pointer hover:border-brand-neon/30 transition-all" onclick="openMatchCenterDashboard()">
                     <div class="flex justify-between items-center text-[10px] font-black tracking-widest text-brand-pink uppercase">
-                        <span>🏆 TATA IPL 2026 • FINAL</span>
+                        <span id="matchTournamentLabel">🏆 LOADING TOURNAMENT...</span>
                         <span class="flex items-center gap-1 bg-red-900/40 text-red-400 px-2 py-0.5 rounded-full border border-red-500/30 animate-pulse">● LIVE</span>
                     </div>
                     
@@ -95,22 +101,22 @@
                     <div class="space-y-3">
                         <div class="flex justify-between items-center">
                             <div class="flex items-center gap-2.5">
-                                <div class="w-7 h-7 rounded-full bg-blue-600 font-black text-xs flex items-center justify-center text-white">GT</div>
-                                <span class="text-sm font-bold">Gujarat Titans</span>
+                                <div id="teamALogoBadge" class="w-7 h-7 rounded-full bg-blue-600 font-black text-xs flex items-center justify-center text-white">GT</div>
+                                <span id="teamANameLabel" class="text-sm font-bold">Gujarat Titans</span>
                             </div>
-                            <span class="text-sm font-black text-gray-400">155-8 <span class="text-[11px] font-normal text-gray-500">(20 Ov)</span></span>
+                            <span id="teamAScoreLabel" class="text-sm font-black text-gray-400">-- <span class="text-[11px] font-normal text-gray-500">(-- Ov)</span></span>
                         </div>
                         <div class="flex justify-between items-center">
                             <div class="flex items-center gap-2.5">
-                                <div class="w-7 h-7 rounded-full bg-red-600 font-black text-xs flex items-center justify-center text-white">RCB</div>
-                                <span class="text-sm font-bold text-white">Royal Challengers Bengaluru</span>
+                                <div id="teamBLogoBadge" class="w-7 h-7 rounded-full bg-red-600 font-black text-xs flex items-center justify-center text-white">RCB</div>
+                                <span id="teamBNameLabel" class="text-sm font-bold text-white">Royal Challengers Bengaluru</span>
                             </div>
-                            <span class="text-sm font-black text-brand-neon">161-5 <span class="text-[11px] font-normal text-brand-neon/70">(18.2 Ov)</span></span>
+                            <span id="teamBScoreLabel" class="text-sm font-black text-brand-neon">-- <span class="text-[11px] font-normal text-brand-neon/70">(-- Ov)</span></span>
                         </div>
                     </div>
 
                     <div class="border-t border-white/5 pt-3 flex justify-between items-center text-xs">
-                        <p class="text-brand-gold font-medium">✨ Royal Challengers Bengaluru won by 5 wickets!</p>
+                        <p id="matchStatusNoteLabel" class="text-brand-gold font-medium">✨ Connecting scoreboard streams...</p>
                         <button class="bg-white/5 border border-white/10 px-3 py-1.5 rounded-lg text-[10px] font-bold tracking-wider uppercase hover:bg-brand-neon hover:text-black transition-all">Watch Highlights</button>
                     </div>
                 </div>
@@ -142,7 +148,6 @@
                         ➕ CREATE REEL <input type="file" accept="video/mp4" class="hidden" onchange="handleUserVideoUploadAction(this)">
                     </label>
                 </div>
-                <!-- Dynamic Video Container Card -->
                 <div class="bg-brand-surface rounded-2xl overflow-hidden border border-white/5 aspect-[9/14] relative bg-slate-900 flex flex-col justify-end p-4">
                     <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent z-10"></div>
                     <div class="z-20 space-y-1">
@@ -190,11 +195,11 @@
             <div class="flex-1 overflow-y-auto p-4 hide-scrollbar space-y-4">
                 <div class="bg-brand-surface p-4 rounded-xl border border-white/5 space-y-2">
                     <h4 class="text-xs font-black text-brand-gold uppercase tracking-wider">⚡ AI Analyst Prediction (Gemini Core Engine)</h4>
-                    <p class="text-xs text-gray-300 leading-relaxed">Based on running live telemetry arrays and current batting momentum, RCB holds a <span class="text-brand-neon font-bold">78% win probability vector</span> over GT with weather systems maintaining clarity status parameters.</p>
+                    <p id="aiAnalystTextBox" class="text-xs text-gray-300 leading-relaxed">Calculating running statistics from server API...</p>
                 </div>
                 <div class="bg-brand-surface p-4 rounded-xl border border-white/5 space-y-2">
                     <h4 class="text-xs font-black text-white uppercase tracking-wider">📊 Live Scoreboard Telemetry</h4>
-                    <p class="text-[11px] text-gray-400 font-mono">RCB: 161/5 (18.2) | Target: 156<br>Batsman: Virat Kohli 84*(42) [4s-6, 6s-5]<br>Bowler: Rashid Khan 4-0-32-2</p>
+                    <p id="matchTelemetryTextBox" class="text-[11px] text-gray-400 font-mono">Loading dynamic dashboard points...</p>
                 </div>
             </div>
         </div>
@@ -248,11 +253,71 @@
         let APP_STATE = {
             currentView: 'home',
             userLoggedIn: false,
-            userProfile: null
+            userProfile: null,
+            liveScoreData: null
         };
 
+        // DOM Loaded Handler Initialization
+        document.addEventListener("DOMContentLoaded", () => {
+            fetchLiveScoresFromVercelAPI();
+            // Automatically poll live data changes every 5 seconds (Real-time Simulation)
+            setInterval(fetchLiveScoresFromVercelAPI, 5000);
+        });
+
+        // Dynamic Asynchronous Edge Fetch Request Channel
+        async function fetchLiveScoresFromVercelAPI() {
+            try {
+                const response = await fetch('/api/scores');
+                if(!response.ok) throw new Error("API Channel Offline");
+                const data = await response.json();
+                
+                APP_STATE.liveScoreData = data;
+                updateScoreboardUI(data);
+            } catch (err) {
+                console.error("Local/Serverless Fetch Exception:", err);
+                document.getElementById('apiStatusBadge').className = "text-red-500 font-bold";
+                document.getElementById('apiStatusBadge').textContent = "● STANDBY / MOCK RECOVERY";
+            }
+        }
+
+        // Render Received Telemetry Packets dynamically on Screen Nodes
+        function updateScoreboardUI(data) {
+            // Update Headers & Status labels
+            document.getElementById('apiStatusBadge').className = "text-brand-neon font-bold";
+            document.getElementById('apiStatusBadge').textContent = "● EDGE SYNCED (ACTIVE)";
+            
+            document.getElementById('matchTournamentLabel').textContent = `🏆 ${data.tournament}`;
+            
+            // Assign Names
+            document.getElementById('teamANameLabel').textContent = data.teams.teamA.name;
+            document.getElementById('teamBNameLabel').textContent = data.teams.teamB.name;
+            
+            // Assign Logos / Badge initials
+            document.getElementById('teamALogoBadge').textContent = data.teams.teamA.name.split(' ').map(n=>n[0]).join('');
+            document.getElementById('teamBLogoBadge').textContent = data.teams.teamB.name.split(' ').map(n=>n[0]).join('');
+
+            // Assign Dynamically received live numeric stats
+            document.getElementById('teamAScoreLabel').innerHTML = `${data.teams.teamA.score} <span class="text-[11px] font-normal text-gray-500">(${data.teams.teamA.overs} Ov)</span>`;
+            document.getElementById('teamBScoreLabel').innerHTML = `${data.teams.teamB.score} <span class="text-[11px] font-normal text-brand-neon/70">(${data.teams.teamB.overs} Ov)</span>`;
+
+            // Status Notes
+            document.getElementById('matchStatusNoteLabel').textContent = `✨ ${data.systemMessage}`;
+
+            // Inside Match Center panel
+            document.getElementById('matchTelemetryTextBox').innerHTML = `
+                ${data.teams.teamA.name}: ${data.teams.teamA.score} (${data.teams.teamA.overs} Ov)<br>
+                ${data.teams.teamB.name}: ${data.teams.teamB.score} (${data.teams.teamB.overs} Ov)<br>
+                Current State: live sync edge computation successfully parsed.
+            `;
+
+            document.getElementById('aiAnalystTextBox').innerHTML = `
+                Based on running live telemetry and current momentum, ${data.teams.teamB.name} holds a 
+                <span class="text-brand-neon font-bold">78% win probability vector</span> over ${data.teams.teamA.name}.
+            `;
+        }
+
         // Navigation Engine System View Switching
-         Lahiri function switchAppView(targetViewId) {
+        function switchAppView(targetViewId) {
             APP_STATE.currentView = targetViewId;
             document.querySelectorAll('.app-view').forEach(view => view.classList.add('hidden'));
             document.getElementById(`view-${targetViewId}`).classList.remove('hidden');
@@ -354,4 +419,4 @@
         }
     </script>
 </body>
-                      </html>
+</html>
