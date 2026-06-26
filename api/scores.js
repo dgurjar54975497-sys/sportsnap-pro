@@ -1,69 +1,55 @@
-```
-```javascript:Dynamic Serverless API Logic:api/scores.js
-// Runtime Global State Variables to track simulated real-time ticks
-let currentRunA = 155;
-let currentWicketA = 8;
-let currentRunB = 120;
-let currentWicketB = 4;
-let currentBallsB = 92; // 15.2 overs default starting points
+cd ~/sportsnap_pro
 
-module.exports = async (request, response) => {
-  response.setHeader('Access-Control-Allow-Origin', '*');
-  response.setHeader('Content-Type', 'application/json');
+cat > api/scores.js << 'EOF'
+module.exports = async (req, res) => {
+  res.setHeader('Access-Control-Allow-Origin', '*');
   
-  // Real-time calculation loop logic simulation to emulate live updates on refresh
-  // Every request slightly changes the live game scenario dynamically
-  const randomTrigger = Math.random();
-  if (randomTrigger > 0.6 && currentRunB < 161) {
-    // Add runs to RCB
-    const runAdd = Math.floor(Math.random() * 4) + 1; // Add 1, 2, 3, or 4 runs
-    currentRunB += runAdd;
-    currentBallsB += 1;
-  } else if (randomTrigger < 0.1 && currentWicketB < 9 && currentRunB < 161) {
-    // Take a wicket!
-    currentWicketB += 1;
-    currentBallsB += 1;
-  } else if (currentRunB < 161) {
-    // Just a dot ball or single
-    currentBallsB += 1;
-  }
-
-  // Calculate overs from ball counters
-  const completedOvers = Math.floor(currentBallsB / 6);
-  const remainingBalls = currentBallsB % 6;
-  const formattedOversB = `${completedOvers}.${remainingBalls}`;
-
-  let matchStatusNoteText = "RCB needs 36 runs to win from 28 balls.";
-  if (currentRunB >= 161) {
-    matchStatusNoteText = "Match finished! RCB won by 5 wickets!";
-  } else {
-    const runsNeeded = 161 - currentRunB;
-    const ballsRemaining = 120 - currentBallsB;
-    matchStatusNoteText = `RCB needs ${runsNeeded} runs to win from ${ballsRemaining} balls.`;
-  }
-
-  const liveMatchTelemetryMockData = {
-    sport: "Cricket",
-    tournament: "TATA IPL 2026 FINAL",
-    status: "LIVE",
-    teams: {
-      teamA: { 
-        name: "Gujarat Titans", 
-        score: `${currentRunA}-${currentWicketA}`, 
-        overs: "20.0" 
-      },
-      teamB: { 
-        name: "Royal Challengers Bengaluru", 
-        score: `${currentRunB}-${currentWicketB}`, 
-        overs: formattedOversB 
+  const sport = req.query.sport || 'cricket';
+  
+  // CRICKET API - Real data
+  if (sport === 'cricket') {
+    try {
+      const cricResponse = await fetch(
+        'https://api.cricapi.com/v1/currentMatches?apikey=e39b71a0-9c0c-4b8a-80c6-c849f3bee991
+      );
+      const cricData = await cricResponse.json();
+      
+      if (cricData.data && cricData.data.length > 0) {
+        const matches = cricData.data.slice(0, 5).map(match => ({
+          team1: match.teams[0],
+          team2: match.teams[1],
+          score1: match.score[0]?.inning1 || match.score[0]?.runs || 'TBD',
+          score2: match.score[1]?.inning1 || match.score[1]?.runs || 'TBD',
+          status: match.status || 'Live'
+        }));
+        res.status(200).json(matches);
+        return;
       }
-    },
-    systemMessage: matchStatusNoteText
+    } catch (error) {
+      console.log('Cricket API error:', error.message);
+    }
+  }
+  
+  // Fallback - Mock data
+  const mockData = {
+    cricket: [
+      { team1: 'India', team2: 'England', score1: '287/6', score2: '41/2', status: 'Live - 35.2 ov' },
+      { team1: 'Pakistan', team2: 'Australia', score1: '150', score2: '155', status: 'Live - 20.1 ov' }
+    ],
+    football: [
+      { team1: 'Arsenal', team2: 'Chelsea', score1: '2', score2: '1', status: 'Live - 67 min' },
+      { team1: 'Man City', team2: 'Liverpool', score1: '1', score2: '1', status: 'HT' }
+    ],
+    basketball: [
+      { team1: 'Lakers', team2: 'Warriors', score1: '98', score2: '95', status: 'Q3 - 8:22' },
+      { team1: 'Celtics', team2: 'Heat', score1: '102', score2: '98', status: 'Q4 - 2:15' }
+    ],
+    tennis: [
+      { team1: 'Djokovic', team2: 'Alcaraz', score1: '6-4, 3', score2: '2', status: 'Set 3' },
+      { team1: 'Sinner', team2: 'Medvedev', score1: '4-6', score2: '7-5', status: 'Set 2' }
+    ]
   };
-
-  return response.status(200).json(liveMatchTelemetryMockData);
+  
+  res.status(200).json(mockData[sport] || []);
 };
-```
-
----
-
+EOF
