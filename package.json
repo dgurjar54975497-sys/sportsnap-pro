@@ -1,13 +1,23 @@
 {
-  "name": "sportsnap-pro-engine",
-  "version": "2.0.0",
-  "description": "Premium High-Fidelity Zero Cost Sports System Deployed on Vercel Node Matrix Layer",
-  "main": "index.html",
-  "dependencies": {
-    "axios": "^1.6.0",
-    "dotenv": "^16.3.0"
-  },
-  "engines": {
-    "node": "18.x"
-  }
+"name": "sportsnap-pro-engine",
+"version": "2.0.0",
+"description": "Premium High-Fidelity Zero Cost Sports System Deployed on Vercel Node Matrix Layer",
+"main": "index.html",
+"dependencies": {
+"axios": "^1.6.0",
+"dotenv": "^16.3.0"
+},
+"engines": {
+"node": "24.x"
 }
+}
+
+eof
+
+### Aapko ab kya karna hai:
+1. GitHub par apni repository **`sportsnap-pro`** me jao.
+2. **`package.json`** file ko open karke edit (pencil icon) par click karo.
+3. Purana code poora hatakar upar diya hua naya code paste kar do (isme humne node version `"24.x"` kar diya hai).
+4. Neeche **"Commit changes"** par click karke save kar do.
+
+Jaise hi aap commit karoge, Vercel automatic background me building start kar dega aur is baar bina kisi error ke successfully green check (✓) ke sath deploy ho jayega!
