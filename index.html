@@ -41,6 +41,13 @@
             color: #000;
             font-weight: 900;
         }
+        @keyframes scrollComment {
+            from { transform: translateX(100%); }
+            to { transform: translateX(-100%); }
+        }
+        .live-chat-bubble {
+            animation: scrollComment 8s linear infinite;
+        }
     </style>
 </head>
 <body class="bg-black text-gray-200 font-sans antialiased flex justify-center items-center min-h-screen">
@@ -94,23 +101,23 @@
 
                 <!-- 10 Global Sports Category Navigation Rails -->
                 <div class="flex gap-2.5 overflow-x-auto hide-scrollbar pb-1">
-                    <button onclick="filterSportCategory('cricket')" class="sport-tab-btn bg-brand-neon text-black font-bold text-xs px-4 py-2.5 rounded-full whitespace-nowrap transition-all">🏏 Cricket</button>
-                    <button onclick="filterSportCategory('football')" class="sport-tab-btn bg-brand-surface border border-white/5 font-semibold text-xs px-4 py-2.5 rounded-full text-gray-400 whitespace-nowrap transition-all">⚽ Football</button>
-                    <button onclick="filterSportCategory('basketball')" class="sport-tab-btn bg-brand-surface border border-white/5 font-semibold text-xs px-4 py-2.5 rounded-full text-gray-400 whitespace-nowrap transition-all">🏀 Basketball</button>
-                    <button onclick="filterSportCategory('volleyball')" class="sport-tab-btn bg-brand-surface border border-white/5 font-semibold text-xs px-4 py-2.5 rounded-full text-gray-400 whitespace-nowrap transition-all">🏐 Volleyball</button>
-                    <button onclick="filterSportCategory('handball')" class="sport-tab-btn bg-brand-surface border border-white/5 font-semibold text-xs px-4 py-2.5 rounded-full text-gray-400 whitespace-nowrap transition-all">🤾 Handball</button>
-                    <button onclick="filterSportCategory('tennis')" class="sport-tab-btn bg-brand-surface border border-white/5 font-semibold text-xs px-4 py-2.5 rounded-full text-gray-400 whitespace-nowrap transition-all">🎾 Tennis</button>
-                    <button onclick="filterSportCategory('hockey')" class="sport-tab-btn bg-brand-surface border border-white/5 font-semibold text-xs px-4 py-2.5 rounded-full text-gray-400 whitespace-nowrap transition-all">🏑 Hockey</button>
-                    <button onclick="filterSportCategory('badminton')" class="sport-tab-btn bg-brand-surface border border-white/5 font-semibold text-xs px-4 py-2.5 rounded-full text-gray-400 whitespace-nowrap transition-all">🏸 Badminton</button>
-                    <button onclick="filterSportCategory('chess')" class="sport-tab-btn bg-brand-surface border border-white/5 font-semibold text-xs px-4 py-2.5 rounded-full text-gray-400 whitespace-nowrap transition-all">♟️ Chess</button>
-                    <button onclick="filterSportCategory('athletics')" class="sport-tab-btn bg-brand-surface border border-white/5 font-semibold text-xs px-4 py-2.5 rounded-full text-gray-400 whitespace-nowrap transition-all">🏃 Athletics</button>
+                    <button id="sportTab-cricket" onclick="filterSportCategory('cricket')" class="sport-tab-btn bg-brand-neon text-black font-bold text-xs px-4 py-2.5 rounded-full whitespace-nowrap transition-all">🏏 Cricket</button>
+                    <button id="sportTab-football" onclick="filterSportCategory('football')" class="sport-tab-btn bg-brand-surface border border-white/5 font-semibold text-xs px-4 py-2.5 rounded-full text-gray-400 whitespace-nowrap transition-all">⚽ Football</button>
+                    <button id="sportTab-basketball" onclick="filterSportCategory('basketball')" class="sport-tab-btn bg-brand-surface border border-white/5 font-semibold text-xs px-4 py-2.5 rounded-full text-gray-400 whitespace-nowrap transition-all">🏀 Basketball</button>
+                    <button id="sportTab-volleyball" onclick="filterSportCategory('volleyball')" class="sport-tab-btn bg-brand-surface border border-white/5 font-semibold text-xs px-4 py-2.5 rounded-full text-gray-400 whitespace-nowrap transition-all">🏐 Volleyball</button>
+                    <button id="sportTab-handball" onclick="filterSportCategory('handball')" class="sport-tab-btn bg-brand-surface border border-white/5 font-semibold text-xs px-4 py-2.5 rounded-full text-gray-400 whitespace-nowrap transition-all">🤾 Handball</button>
+                    <button id="sportTab-tennis" onclick="filterSportCategory('tennis')" class="sport-tab-btn bg-brand-surface border border-white/5 font-semibold text-xs px-4 py-2.5 rounded-full text-gray-400 whitespace-nowrap transition-all">🎾 Tennis</button>
+                    <button id="sportTab-hockey" onclick="filterSportCategory('hockey')" class="sport-tab-btn bg-brand-surface border border-white/5 font-semibold text-xs px-4 py-2.5 rounded-full text-gray-400 whitespace-nowrap transition-all">🏑 Hockey</button>
+                    <button id="sportTab-badminton" onclick="filterSportCategory('badminton')" class="sport-tab-btn bg-brand-surface border border-white/5 font-semibold text-xs px-4 py-2.5 rounded-full text-gray-400 whitespace-nowrap transition-all">🏸 Badminton</button>
+                    <button id="sportTab-chess" onclick="filterSportCategory('chess')" class="sport-tab-btn bg-brand-surface border border-white/5 font-semibold text-xs px-4 py-2.5 rounded-full text-gray-400 whitespace-nowrap transition-all">♟️ Chess</button>
+                    <button id="sportTab-athletics" onclick="filterSportCategory('athletics')" class="sport-tab-btn bg-brand-surface border border-white/5 font-semibold text-xs px-4 py-2.5 rounded-full text-gray-400 whitespace-nowrap transition-all">🏃 Athletics</button>
                 </div>
 
                 <!-- Match State Segment Filters -->
                 <div class="grid grid-cols-3 bg-brand-surface p-1 rounded-xl border border-white/5 text-center text-xs font-bold">
-                    <div class="py-2 bg-brand-surfaceSecondary border border-white/10 text-brand-neon rounded-lg cursor-pointer">LIVE MATCHES</div>
-                    <div class="py-2 text-gray-500 cursor-pointer hover:text-white transition-all" onclick="alert('Upcoming matches loaded from serverless database!')">UPCOMING</div>
-                    <div class="py-2 text-gray-500 cursor-pointer hover:text-white transition-all" onclick="alert('Archived completed tournament lists loaded!')">COMPLETED</div>
+                    <button id="matchStateTab-live" onclick="filterMatchState('live')" class="py-2 bg-brand-surfaceSecondary border border-white/10 text-brand-neon rounded-lg cursor-pointer">LIVE MATCHES</button>
+                    <button id="matchStateTab-upcoming" onclick="filterMatchState('upcoming')" class="py-2 text-gray-500 cursor-pointer hover:text-white transition-all">UPCOMING</button>
+                    <button id="matchStateTab-completed" onclick="filterMatchState('completed')" class="py-2 text-gray-500 cursor-pointer hover:text-white transition-all">COMPLETED</button>
                 </div>
 
                 <!-- API Connection Visual Status Badge -->
@@ -123,7 +130,7 @@
                 <div id="liveMatchMainContainer" class="bg-gradient-to-b from-brand-surface to-brand-darkBg border border-white/10 rounded-2xl overflow-hidden p-4 space-y-4 shadow-xl cursor-pointer hover:border-brand-neon/30 transition-all" onclick="openMatchCenterDashboard()">
                     <div class="flex justify-between items-center text-[10px] font-black tracking-widest text-brand-pink uppercase">
                         <span id="matchTournamentLabel">🏆 LOADING TOURNAMENT...</span>
-                        <span class="flex items-center gap-1 bg-red-900/40 text-red-400 px-2 py-0.5 rounded-full border border-red-500/30 animate-pulse">● LIVE</span>
+                        <span id="matchLiveBadge" class="flex items-center gap-1 bg-red-900/40 text-red-400 px-2 py-0.5 rounded-full border border-red-500/30 animate-pulse">● LIVE</span>
                     </div>
                     
                     <!-- Team Scores Breakdown Grid -->
@@ -146,7 +153,7 @@
 
                     <div class="border-t border-white/5 pt-3 flex justify-between items-center text-xs">
                         <p id="matchStatusNoteLabel" class="text-brand-gold font-medium">✨ Connecting scoreboard streams...</p>
-                        <button class="bg-white/5 border border-white/10 px-3 py-1.5 rounded-lg text-[10px] font-bold tracking-wider uppercase hover:bg-brand-neon hover:text-black transition-all">Watch Highlights</button>
+                        <button class="bg-white/5 border border-white/10 px-3 py-1.5 rounded-lg text-[10px] font-bold tracking-wider uppercase hover:bg-brand-neon hover:text-black transition-all">Watch Live Stream</button>
                     </div>
                 </div>
 
@@ -203,17 +210,56 @@
 
             <!-- 3. REELS SCREEN VIEW (Hidden Default) -->
             <div id="view-reels" class="app-view hidden space-y-4">
-                <div class="flex justify-between items-center">
-                    <h2 class="text-sm font-black uppercase tracking-wider text-white">Trending Creator Streams</h2>
-                    <label class="bg-brand-neon text-black font-bold text-[10px] px-3 py-1.5 rounded-lg cursor-pointer">
-                        ➕ CREATE REEL <input type="file" accept="video/mp4" class="hidden" onchange="handleUserVideoUploadAction(this)">
-                    </label>
+                <div class="flex justify-between items-center bg-brand-surface p-1 rounded-xl border border-white/5 text-xs font-bold">
+                    <button id="reelTab-feed" onclick="switchReelSubView('feed')" class="flex-1 py-2 bg-brand-surfaceSecondary text-brand-neon border border-white/10 rounded-lg">LIVE REELS FEED</button>
+                    <button id="reelTab-studio" onclick="switchReelSubView('studio')" class="flex-1 py-2 text-gray-500 hover:text-white transition-all">📈 CREATOR STUDIO</button>
                 </div>
-                <div class="bg-brand-surface rounded-2xl overflow-hidden border border-white/5 aspect-[9/14] relative bg-slate-900 flex flex-col justify-end p-4">
-                    <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent z-10"></div>
-                    <div class="z-20 space-y-1">
-                        <p class="text-xs font-black text-brand-neon">@dinesh_gurjar_4747_</p>
-                        <p class="text-xs text-gray-300">2026 Final celebration with Virat Kohli iconic sixer! #rcb</p>
+
+                <div id="reelsMainFeedSection" class="space-y-4">
+                    <div class="flex justify-between items-center">
+                        <h2 class="text-sm font-black uppercase tracking-wider text-white">Trending Creator Streams</h2>
+                        <label class="bg-brand-neon text-black font-bold text-[10px] px-3 py-1.5 rounded-lg cursor-pointer">
+                            ➕ CREATE REEL <input type="file" accept="video/mp4" class="hidden" onchange="handleUserVideoUploadAction(this)">
+                        </label>
+                    </div>
+                    <div class="bg-brand-surface rounded-2xl overflow-hidden border border-white/5 aspect-[9/14] relative bg-slate-900 flex flex-col justify-end p-4">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent z-10"></div>
+                        <div class="z-20 space-y-1">
+                            <p class="text-xs font-black text-brand-neon">@dinesh_gurjar_4747_</p>
+                            <p class="text-xs text-gray-300">2026 Final celebration with Virat Kohli iconic sixer! #rcb</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- YT monetization details dashboard -->
+                <div id="creatorStudioDashboard" class="hidden space-y-4">
+                    <div class="bg-gradient-to-r from-brand-pink/20 to-brand-neon/10 p-5 rounded-2xl border border-white/10 text-center space-y-2">
+                        <h3 class="text-xs font-black tracking-widest text-brand-pink uppercase">Sportsnap Partner Program 💎</h3>
+                        <p class="text-[11px] text-gray-400">Add sports content, generate high engagements, and unlock automatic monetization payouts!</p>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-3 text-center">
+                        <div class="bg-brand-surface p-4 rounded-xl border border-white/5">
+                            <span class="text-gray-500 text-[10px] uppercase font-bold block">Estimated Revenue</span>
+                            <span class="text-xl font-extrabold text-brand-neon">₹45,250.00</span>
+                        </div>
+                        <div class="bg-brand-surface p-4 rounded-xl border border-white/5">
+                            <span class="text-gray-500 text-[10px] uppercase font-bold block">Creator Tier</span>
+                            <span class="text-xl font-extrabold text-brand-gold">Gold Pro ⭐</span>
+                        </div>
+                    </div>
+
+                    <!-- Payout Progress Targets -->
+                    <div class="bg-brand-surface p-4 rounded-2xl border border-white/5 space-y-3">
+                        <h4 class="text-xs font-black text-white">Next Payout Milestone Metrics</h4>
+                        <div class="space-y-2 text-xs">
+                            <div class="flex justify-between text-gray-400"><span>Watch Hours Progress</span> <span class="text-brand-neon">3,240 / 4,000 hrs</span></div>
+                            <div class="w-full bg-black/40 h-1.5 rounded-full overflow-hidden"><div class="bg-brand-neon h-full" style="width: 81%;"></div></div>
+                        </div>
+                        <div class="space-y-2 text-xs">
+                            <div class="flex justify-between text-gray-400"><span>Loyal Subscribers</span> <span class="text-brand-pink">8,900 / 10,000</span></div>
+                            <div class="w-full bg-black/40 h-1.5 rounded-full overflow-hidden"><div class="bg-brand-pink h-full" style="width: 89%;"></div></div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -254,6 +300,31 @@
             </div>
             
             <div class="flex-1 overflow-y-auto p-4 hide-scrollbar space-y-4">
+                <div id="jioHotstarStreamEngineContainer" class="bg-black rounded-2xl border border-white/10 overflow-hidden relative aspect-video">
+                    <div class="absolute inset-0 z-10 pointer-events-none flex flex-col justify-between p-3">
+                        <div class="flex justify-between items-center">
+                            <span class="bg-red-600 text-[9px] font-black text-white px-2 py-0.5 rounded-md tracking-wider flex items-center gap-1">● JioHotstar LIVE</span>
+                            <span class="bg-black/60 backdrop-blur-md text-[9px] text-brand-neon px-2 py-0.5 rounded">1080p Stream</span>
+                        </div>
+                        <!-- Comments ticker overlay scrolling on player screen -->
+                        <div class="w-full overflow-hidden h-6 relative bg-black/30 backdrop-blur-sm rounded">
+                            <div class="live-chat-bubble text-[9px] text-brand-neon font-black py-1 whitespace-nowrap">
+                                @viratkohliFan: OMG Kohli playing like a king today! 🔥 • @cricketexpert: That cover drive was pure perfection! • @sportsnapFan: V20 live stream is incredibly smooth! No lag at all! 🚀
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <video class="w-full h-full object-cover" muted autoplay loop playsinline>
+                        <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4">
+                    </video>
+
+                    <!-- Stream control server toggles -->
+                    <div class="absolute bottom-10 right-2 z-20 flex gap-1">
+                        <button onclick="alert('Switched to Server Node 1 Stream')" class="bg-brand-neon text-black font-bold text-[8px] px-2 py-1 rounded">SERVER 1</button>
+                        <button onclick="alert('Switched to Backup CDN Server 2')" class="bg-white/10 text-white font-bold text-[8px] px-2 py-1 rounded">SERVER 2</button>
+                    </div>
+                </div>
+
                 <div class="bg-brand-surface p-4 rounded-xl border border-white/5 space-y-3">
                     <div class="flex justify-between items-center">
                         <h4 class="text-xs font-black text-brand-gold uppercase tracking-wider">⚡ AI Analyst Prediction (Gemini Core Engine)</h4>
@@ -327,6 +398,8 @@
             liveScoreData: null,
             // Gemini API Configs
             geminiApiKey: "", // Securely loaded at runtime inside the iframe environment
+            currentSport: 'cricket',
+            currentMatchState: 'live',
             // Persistent Data Storage Reference
             clubs: JSON.parse(localStorage.getItem('sportsnap_clubs')) || [],
             threads: JSON.parse(localStorage.getItem('sportsnap_threads')) || [
@@ -353,20 +426,66 @@
             renderPersistentThreads(); // Render saved threads on startup
         });
 
-        // ================= GEMINI API CLIENT SYSTEM INTEGRATIONS =================
-        // Helper to execute exponential backoff retry network loop
-        async function fetchWithRetry(url, options, retries = 5, delay = 1000) {
-            try {
-                const response = await fetch(url, options);
-                if (response.ok) return response;
-                throw new Error(`API returned status ${response.status}`);
-            } catch (error) {
-                if (retries > 0) {
-                    await new Promise(resolve => setTimeout(resolve, delay));
-                    return fetchWithRetry(url, options, retries - 1, delay * 2);
-                } else {
-                    throw error;
-                }
+        const GLOBAL_MATCHES_DB = {
+            cricket: {
+                live: { tournament: "TATA IPL 2026 FINAL", status: "LIVE", teams: { teamA: { name: "Gujarat Titans", score: "155-8", overs: "20.0" }, teamB: { name: "Royal Challengers Bengaluru", score: "161-5", overs: "18.2" } }, systemMessage: "Royal Challengers Bengaluru won by 5 wickets!" },
+                upcoming: { tournament: "TATA IPL 2026", status: "UPCOMING", teams: { teamA: { name: "Chennai Super Kings", score: "--", overs: "--" }, teamB: { name: "Mumbai Indians", score: "--", overs: "--" } }, systemMessage: "Match starts tomorrow at 7:30 PM, Wankhede Stadium" },
+                completed: { tournament: "TATA IPL 2026 Qualifier 2", status: "COMPLETED", teams: { teamA: { name: "Gujarat Titans", score: "182-4", overs: "20.0" }, teamB: { name: "Kolkata Knight Riders", score: "152-10", overs: "17.4" } }, systemMessage: "Gujarat Titans won by 30 runs" }
+            },
+            football: {
+                live: { tournament: "Hero ISL Final", status: "LIVE", teams: { teamA: { name: "Mumbai City FC", score: "2", overs: "1st Half" }, teamB: { name: "Mohun Bagan SG", score: "1", overs: "34'" } }, systemMessage: "Goal by Chhangte at 24th minute!" },
+                upcoming: { tournament: "Hero ISL League Match", status: "UPCOMING", teams: { teamA: { name: "Kerala Blasters", score: "--", overs: "--" }, teamB: { name: "Bengaluru FC", score: "--", overs: "--" } }, systemMessage: "Match starts Sunday at 8:00 PM" },
+                completed: { tournament: "Hero ISL Semifinal", status: "COMPLETED", teams: { teamA: { name: "Mumbai City FC", score: "3", overs: "Full Time" }, teamB: { name: "FC Goa", score: "0", overs: "Full Time" } }, systemMessage: "Mumbai City FC won 3-0 on aggregate" }
+            }
+        };
+
+        function filterSportCategory(sportName) {
+            APP_STATE.currentSport = sportName;
+            document.querySelectorAll('.sport-tab-btn').forEach(btn => {
+                btn.className = "sport-tab-btn bg-brand-surface border border-white/5 font-semibold text-xs px-4 py-2.5 rounded-full text-gray-400 whitespace-nowrap transition-all";
+            });
+            document.getElementById(`sportTab-${sportName}`).className = "sport-tab-btn bg-brand-neon text-black font-bold text-xs px-4 py-2.5 rounded-full whitespace-nowrap transition-all";
+            
+            triggerTelemetryEngineSync();
+        }
+
+        function filterMatchState(stateName) {
+            APP_STATE.currentMatchState = stateName;
+            document.querySelectorAll('[id^="matchStateTab-"]').forEach(btn => {
+                btn.className = "py-2 text-gray-500 cursor-pointer hover:text-white transition-all";
+            });
+            document.getElementById(`matchStateTab-${stateName}`).className = "py-2 bg-brand-surfaceSecondary border border-white/10 text-brand-neon rounded-lg cursor-pointer";
+            
+            triggerTelemetryEngineSync();
+        }
+
+        function triggerTelemetryEngineSync() {
+            const sportDB = GLOBAL_MATCHES_DB[APP_STATE.currentSport] || GLOBAL_MATCHES_DB['cricket'];
+            const dataNode = sportDB[APP_STATE.currentMatchState] || sportDB['live'];
+            
+            if(APP_STATE.currentMatchState === 'live') {
+                document.getElementById('matchLiveBadge').classList.remove('hidden');
+            } else {
+                document.getElementById('matchLiveBadge').classList.add('hidden');
+            }
+
+            updateScoreboardUI(dataNode);
+        }
+
+        // Creator Studio view switching logic
+        function switchReelSubView(targetSubView) {
+            document.querySelectorAll('[id^="reelTab-"]').forEach(btn => {
+                btn.className = "flex-1 py-2 text-gray-500 hover:text-white transition-all";
+            });
+            
+            if(targetSubView === 'feed') {
+                document.getElementById('reelTab-feed').className = "flex-1 py-2 bg-brand-surfaceSecondary text-brand-neon border border-white/10 rounded-lg";
+                document.getElementById('reelsMainFeedSection').classList.remove('hidden');
+                document.getElementById('creatorStudioDashboard').classList.add('hidden');
+            } else {
+                document.getElementById('reelTab-studio').className = "flex-1 py-2 bg-brand-surfaceSecondary text-brand-neon border border-white/10 rounded-lg";
+                document.getElementById('reelsMainFeedSection').classList.add('hidden');
+                document.getElementById('creatorStudioDashboard').classList.remove('hidden');
             }
         }
 
@@ -493,7 +612,10 @@
                 if (response.ok) {
                     const data = await response.json();
                     APP_STATE.liveScoreData = data;
-                    updateScoreboardUI(data);
+                    // Trigger UI updates with fetched endpoint telemetry only if user is watching cricket-live
+                    if(APP_STATE.currentSport === 'cricket' && APP_STATE.currentMatchState === 'live') {
+                        updateScoreboardUI(data);
+                    }
                 } else {
                     useFallbackLiveScoreData();
                 }
@@ -515,7 +637,9 @@
                 systemMessage: "Offline backup active. Score synced inside local sandbox."
             };
             APP_STATE.liveScoreData = fallbackData;
-            updateScoreboardUI(fallbackData);
+            if(APP_STATE.currentSport === 'cricket' && APP_STATE.currentMatchState === 'live') {
+                updateScoreboardUI(fallbackData);
+            }
         }
 
         function updateScoreboardUI(data) {
@@ -723,4 +847,4 @@
         }
     </script>
 </body>
-                      </html>
+                        </html>
