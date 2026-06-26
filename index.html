@@ -1,4 +1,4 @@
-                                  <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -235,49 +235,67 @@
                 By connection, you agree to Sportsnap <span class="text-brand-neon underline cursor-pointer">Terms of Premium Service</span>.
             </div>
         </div>
-
-        <!-- ================= 5-PART BOTTOM NAVIGATION ENGINE ================= -->
-        <nav class="absolute bottom-0 inset-x-0 bg-brand-surface/90 backdrop-blur-md border-t border-white/5 grid grid-cols-5 py-3 text-center z-40">
-            <div onclick="switchAppView('home')" class="nav-item cursor-pointer text-brand-neon flex flex-col items-center gap-0.5"><span class="text-base">🏠</span><span class="text-[9px] font-bold tracking-wider uppercase">Home</span></div>
-            <div onclick="switchAppView('clubs')" class="nav-item cursor-pointer text-gray-500 flex flex-col items-center gap-0.5"><span class="text-base">🛡️</span><span class="text-[9px] font-bold tracking-wider uppercase">Clubs</span></div>
-            <div onclick="switchAppView('reels')" class="nav-item cursor-pointer text-gray-500 flex flex-col items-center gap-0.5"><span class="text-base">🎬</span><span class="text-[9px] font-bold tracking-wider uppercase">Reels</span></div>
-            <div onclick="switchAppView('tickets')" class="nav-item cursor-pointer text-gray-500 flex flex-col items-center gap-0.5"><span class="text-base">🎟️</span><span class="text-[9px] font-bold tracking-wider uppercase">Tickets</span></div>
-            <div onclick="switchAppView('news')" class="nav-item cursor-pointer text-gray-500 flex flex-col items-center gap-0.5"><span class="text-base">📰</span><span class="text-[9px] font-bold tracking-wider uppercase">News</span></div>
-        </nav>
-
-    </div>
-
-    <!-- ================= JAVASCRIPT GLOBAL RUNTIME CONTROLLER ================= -->
+        <!-- ================= JAVASCRIPT GLOBAL RUNTIME CONTROLLER ================= -->
     <script>
         // Central Application Core Repository Memory Parameters
         let APP_STATE = {
             currentView: 'home',
             userLoggedIn: false,
             userProfile: null,
-            liveScoreData: null
+            liveScoreData: null,
+            // New: Persistent Data Storage Reference
+            clubs: JSON.parse(localStorage.getItem('sportsnap_clubs')) || []
+        };
+
+        // NEW: Data Persistence Engine
+        const StorageEngine = {
+            saveClubs: (clubs) => {
+                localStorage.setItem('sportsnap_clubs', JSON.stringify(clubs));
+            },
+            loadClubs: () => {
+                return JSON.parse(localStorage.getItem('sportsnap_clubs')) || [];
+            }
         };
 
         // DOM Loaded Handler Initialization
         document.addEventListener("DOMContentLoaded", () => {
             fetchLiveScoresFromVercelAPI();
-            // Automatically poll live data changes every 5 seconds (Real-time Simulation)
             setInterval(fetchLiveScoresFromVercelAPI, 5000);
+            renderPersistentClubs(); // Render saved clubs on startup
         });
 
         // Dynamic Asynchronous Edge Fetch Request Channel
-        async function fetchLiveScoresFromVercelAPI() {
-            try {
-                const response = await fetch('/api/scores');
-                if(!response.ok) throw new Error("API Channel Offline");
-                const data = await response.json();
-                
-                APP_STATE.liveScoreData = data;
-                updateScoreboardUI(data);
-            } catch (err) {
-                console.error("Local/Serverless Fetch Exception:", err);
-                document.getElementById('apiStatusBadge').className = "text-red-500 font-bold";
-                document.getElementById('apiStatusBadge').textContent = "● STANDBY / MOCK RECOVERY";
-            }
+        // NEW: Persistent Club Rendering
+        function renderPersistentClubs() {
+            const container = document.getElementById('clubsGridContainer');
+            container.innerHTML = ''; // Clear current
+            
+            APP_STATE.clubs.forEach(club => {
+                container.innerHTML += `
+                    <div class="bg-brand-surface p-3.5 rounded-xl border border-brand-neon/30 flex justify-between items-center">
+                        <div><h4 class="text-sm font-bold text-brand-neon">${club.name}</h4><p class="text-[11px] text-gray-400">${club.tagline}</p></div>
+                        <span class="text-[10px] text-brand-neon font-black px-2 py-1 bg-brand-neon/10 rounded-md border border-brand-neon/20">OWNER</span>
+                    </div>
+                `;
+            });
+        }
+
+        // Updated: Club Creation with Persistence
+        function createNewUserOwnedClub() {
+            const name = document.getElementById('newClubNameInput').value.trim();
+            const tagline = document.getElementById('newClubTaglineInput').value.trim();
+            if(!name) return alert("Club title missing.");
+            
+            // Add to state and save
+            APP_STATE.clubs.push({ name, tagline });
+            StorageEngine.saveClubs(APP_STATE.clubs);
+            
+            // Re-render
+            renderPersistentClubs();
+            
+            // Clear Inputs
+            document.getElementById('newClubNameInput').value = '';
+            document.getElementById('newClubTaglineInput').value = '';
         }
 
         // Render Received Telemetry Packets dynamically on Screen Nodes
@@ -419,4 +437,4 @@
         }
     </script>
 </body>
-</html>
+                      </html>
