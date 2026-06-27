@@ -1,1243 +1,515 @@
-<!DOCTYPE html>
+                    <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sportsnap PRO - Ultimate Sports Fan Ecosystem</title>
-    <!-- Tailwind CSS CDN -->
+    <title>Sportsnap PRO - Ultimate Sports Hub</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        brand: {
-                            darkBg: '#05070a',
-                            surface: '#0d1117',
-                            surfaceSecondary: '#161b22',
-                            neon: '#00ffcc',
-                            pink: '#ff007f',
-                            gold: '#ffb700'
-                        }
-                    },
-                    boxShadow: {
-                        'neon-glow': '0 0 15px rgba(0, 255, 204, 0.3)',
-                        'pink-glow': '0 0 15px rgba(255, 0, 127, 0.3)'
-                    }
-                }
-            }
-        }
-    </script>
     <style>
-        .gradient-logo {
-            background: linear-gradient(45deg, #00ffcc, #ff007f, #ffb700);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+        :root {
+            --brand-neon: #39FF14;
+            --brand-darkBg: #0f172a;
+            --brand-surface: #1e293b;
+            --brand-gold: #FFD700;
+            --brand-pink: #f43f5e;
+        }
+        body {
+            background-color: var(--brand-darkBg);
+            color: white;
+            font-family: sans-serif;
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
         }
         .hide-scrollbar::-webkit-scrollbar { display: none; }
-        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
         .sparkle-btn {
-            background: linear-gradient(135deg, #00ffcc 0%, #ff007f 100%);
-            color: #000;
-            font-weight: 900;
+            background: linear-gradient(45deg, var(--brand-neon), #00ff88);
+            color: black;
+            font-weight: 800;
         }
-        @keyframes scrollComment {
-            from { transform: translateX(100%); }
-            to { transform: translateX(-100%); }
+        .toast {
+            transition: all 0.3s ease-in-out;
         }
-        .live-chat-bubble {
-            animation: scrollComment 8s linear infinite;
+        @keyframes pulse-slow {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.4; }
         }
+        .animate-pulse-slow { animation: pulse-slow 2s infinite; }
     </style>
 </head>
-<body class="bg-black text-gray-200 font-sans antialiased flex justify-center items-center min-h-screen">
+<body class="flex flex-col h-screen">
 
-    <!-- Mobile Screen Frame Simulator Container -->
-    <div class="w-full max-w-md h-[92vh] bg-brand-darkBg rounded-[32px] border border-white/10 shadow-2xl relative overflow-hidden flex flex-col">
-        
-        <!-- ================= APP PREMIUM HEADER ================= -->
-        <header class="bg-brand-surface/80 backdrop-blur-md px-5 py-4 border-b border-white/5 flex items-center justify-between sticky top-0 z-40">
-            <div class="flex items-center gap-2" onclick="switchAppView('home')">
-                <span class="font-extrabold text-2xl tracking-tighter gradient-logo cursor-pointer">ADS ⚽🏏</span>
-            </div>
-            
-            <!-- Interactive Dynamic Authentication Profile Control -->
-            <div class="flex items-center gap-3">
-                <!-- Fan Coins Badge -->
-                <div class="bg-brand-surfaceSecondary border border-brand-gold/30 px-2.5 py-1 rounded-full flex items-center gap-1.5 cursor-pointer shadow-neon-glow" onclick="openRewardsHub()">
-                    <span class="text-brand-gold text-[10px]">🪙</span>
-                    <span class="text-brand-gold font-black text-xs tracking-wider" id="fanCoinBalance">2,450</span>
-                </div>
-                
-                <div class="relative group cursor-pointer" onclick="handleProfileSystemClick()">
-                    <div class="w-9 h-9 rounded-full bg-gradient-to-tr from-brand-neon to-brand-pink p-[1.5px]">
-                        <img id="userAvatarImg" src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=150&q=80" class="w-full h-full object-cover rounded-full" alt="Profile">
-                    </div>
-                    <span id="userOnlineStatusDot" class="absolute bottom-0 right-0 w-2.5 h-2.5 bg-red-500 border-2 border-brand-darkBg rounded-full"></span>
-                </div>
-            </div>
-        </header>
+    <!-- TOAST NOTIFICATION SYSTEM -->
+    <div id="toastContainer" class="fixed top-5 left-1/2 transform -translate-x-1/2 z-[100] flex flex-col gap-2 pointer-events-none"></div>
 
-        <!-- ================= MAIN APP VIEWPORTS CONTAINER ================= -->
-        <main class="flex-1 overflow-y-auto p-4 hide-scrollbar pb-24">
-            
-            <!-- 1. HOME SCREEN VIEW -->
-            <div id="view-home" class="app-view space-y-5">
-                
-                <!-- Instagram Story Module Integration (Page 2) -->
-                <div class="space-y-2">
-                    <h3 class="text-[10px] uppercase tracking-widest text-gray-500 font-black">Live Moments</h3>
-                    <div class="flex gap-4 overflow-x-auto hide-scrollbar py-1">
-                        <div class="flex flex-col items-center gap-1 min-w-[62px] text-center cursor-pointer" onclick="alert('Creating stories requires active user profile credentials.')">
-                            <div class="w-12 h-12 rounded-full border-2 border-dashed border-brand-neon/40 flex items-center justify-center bg-brand-surface text-brand-neon font-bold text-lg">+</div>
-                            <span class="text-[9px] text-gray-500">Your Story</span>
-                        </div>
-                        <div class="flex flex-col items-center gap-1 min-w-[62px] text-center cursor-pointer" onclick="alert('Opening Mahi 2027 live video story feed simulation...')">
-                            <div class="w-12 h-12 rounded-full p-[2px] bg-gradient-to-tr from-brand-neon to-brand-pink">
-                                <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=100&q=80" class="w-full h-full object-cover rounded-full border border-black" />
-                            </div>
-                            <span class="text-[9px] text-gray-400">mahi.ipl.2027</span>
-                        </div>
-                        <div class="flex flex-col items-center gap-1 min-w-[62px] text-center cursor-pointer">
-                            <div class="w-12 h-12 rounded-full p-[2px] bg-brand-surfaceSecondary">
-                                <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=100&q=80" class="w-full h-full object-cover rounded-full" />
-                            </div>
-                            <span class="text-[9px] text-gray-500">virat.k</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- 10 Global Sports Category Navigation Rails -->
-                <div class="flex gap-2.5 overflow-x-auto hide-scrollbar pb-1">
-                    <button id="sportTab-cricket" onclick="filterSportCategory('cricket')" class="sport-tab-btn bg-brand-neon text-black font-bold text-xs px-4 py-2.5 rounded-full whitespace-nowrap transition-all">🏏 Cricket</button>
-                    <button id="sportTab-football" onclick="filterSportCategory('football')" class="sport-tab-btn bg-brand-surface border border-white/5 font-semibold text-xs px-4 py-2.5 rounded-full text-gray-400 whitespace-nowrap transition-all">⚽ Football</button>
-                    <button id="sportTab-basketball" onclick="filterSportCategory('basketball')" class="sport-tab-btn bg-brand-surface border border-white/5 font-semibold text-xs px-4 py-2.5 rounded-full text-gray-400 whitespace-nowrap transition-all">🏀 Basketball</button>
-                    <button id="sportTab-volleyball" onclick="filterSportCategory('volleyball')" class="sport-tab-btn bg-brand-surface border border-white/5 font-semibold text-xs px-4 py-2.5 rounded-full text-gray-400 whitespace-nowrap transition-all">🏐 Volleyball</button>
-                    <button id="sportTab-handball" onclick="filterSportCategory('handball')" class="sport-tab-btn bg-brand-surface border border-white/5 font-semibold text-xs px-4 py-2.5 rounded-full text-gray-400 whitespace-nowrap transition-all">🤾 Handball</button>
-                    <button id="sportTab-tennis" onclick="filterSportCategory('tennis')" class="sport-tab-btn bg-brand-surface border border-white/5 font-semibold text-xs px-4 py-2.5 rounded-full text-gray-400 whitespace-nowrap transition-all">🎾 Tennis</button>
-                    <button id="sportTab-hockey" onclick="filterSportCategory('hockey')" class="sport-tab-btn bg-brand-surface border border-white/5 font-semibold text-xs px-4 py-2.5 rounded-full text-gray-400 whitespace-nowrap transition-all">🏑 Hockey</button>
-                    <button id="sportTab-badminton" onclick="filterSportCategory('badminton')" class="sport-tab-btn bg-brand-surface border border-white/5 font-semibold text-xs px-4 py-2.5 rounded-full text-gray-400 whitespace-nowrap transition-all">🏸 Badminton</button>
-                    <button id="sportTab-chess" onclick="filterSportCategory('chess')" class="sport-tab-btn bg-brand-surface border border-white/5 font-semibold text-xs px-4 py-2.5 rounded-full text-gray-400 whitespace-nowrap transition-all">♟️ Chess</button>
-                    <button id="sportTab-athletics" onclick="filterSportCategory('athletics')" class="sport-tab-btn bg-brand-surface border border-white/5 font-semibold text-xs px-4 py-2.5 rounded-full text-gray-400 whitespace-nowrap transition-all">🏃 Athletics</button>
-                </div>
-
-                <!-- Match State Segment Filters -->
-                <div class="grid grid-cols-3 bg-brand-surface p-1 rounded-xl border border-white/5 text-center text-xs font-bold">
-                    <button id="matchStateTab-live" onclick="filterMatchState('live')" class="py-2 bg-brand-surfaceSecondary border border-white/10 text-brand-neon rounded-lg cursor-pointer">LIVE MATCHES</button>
-                    <button id="matchStateTab-upcoming" onclick="filterMatchState('upcoming')" class="py-2 text-gray-500 cursor-pointer hover:text-white transition-all">UPCOMING</button>
-                    <button id="matchStateTab-completed" onclick="filterMatchState('completed')" class="py-2 text-gray-500 cursor-pointer hover:text-white transition-all">COMPLETED</button>
-                </div>
-
-                <!-- API Connection Visual Status Badge -->
-                <div class="flex justify-between items-center bg-brand-surface p-3 rounded-xl border border-white/5 text-xs">
-                    <span class="text-gray-400">Server Stream Connection:</span>
-                    <span id="apiStatusBadge" class="text-yellow-400 font-bold animate-pulse">⚡ CONNECTING TO EDGE...</span>
-                </div>
-
-                <!-- Core Match Presentation Feed Card (DYNAMIC API LOADED) -->
-                <div id="liveMatchMainContainer" class="bg-gradient-to-b from-brand-surface to-brand-darkBg border border-white/10 rounded-2xl overflow-hidden p-4 space-y-4 shadow-xl cursor-pointer hover:border-brand-neon/30 transition-all" onclick="openMatchCenterDashboard()">
-                    <div class="flex justify-between items-center text-[10px] font-black tracking-widest text-brand-pink uppercase">
-                        <span id="matchTournamentLabel">🏆 LOADING TOURNAMENT...</span>
-                        <span id="matchLiveBadge" class="flex items-center gap-1 bg-red-900/40 text-red-400 px-2 py-0.5 rounded-full border border-red-500/30 animate-pulse">● LIVE</span>
-                    </div>
-                    
-                    <!-- Team Scores Breakdown Grid -->
-                    <div class="space-y-3">
-                        <div class="flex justify-between items-center">
-                            <div class="flex items-center gap-2.5">
-                                <div id="teamALogoBadge" class="w-7 h-7 rounded-full bg-blue-600 font-black text-xs flex items-center justify-center text-white">GT</div>
-                                <span id="teamANameLabel" class="text-sm font-bold">Gujarat Titans</span>
-                            </div>
-                            <span id="teamAScoreLabel" class="text-sm font-black text-gray-400">-- <span class="text-[11px] font-normal text-gray-500">(-- Ov)</span></span>
-                        </div>
-                        <div class="flex justify-between items-center">
-                            <div class="flex items-center gap-2.5">
-                                <div id="teamBLogoBadge" class="w-7 h-7 rounded-full bg-red-600 font-black text-xs flex items-center justify-center text-white">RCB</div>
-                                <span id="teamBNameLabel" class="text-sm font-bold text-white">Royal Challengers Bengaluru</span>
-                            </div>
-                            <span id="teamBScoreLabel" class="text-sm font-black text-brand-neon">-- <span class="text-[11px] font-normal text-brand-neon/70">(-- Ov)</span></span>
-                        </div>
-                    </div>
-
-                    <div class="border-t border-white/5 pt-3 flex justify-between items-center text-xs">
-                        <p id="matchStatusNoteLabel" class="text-brand-gold font-medium">✨ Connecting scoreboard streams...</p>
-                        <button class="bg-white/5 border border-white/10 px-3 py-1.5 rounded-lg text-[10px] font-bold tracking-wider uppercase hover:bg-brand-neon hover:text-black transition-all">Watch Live Stream</button>
-                    </div>
-                </div>
-
-                <!-- ================= NEW: TWITTER/THREADS FEED ENGINE (Feature #4) ================= -->
-                <div class="bg-brand-surface rounded-2xl border border-white/5 p-4 space-y-4">
-                    <div class="flex justify-between items-center">
-                        <h3 class="text-xs font-extrabold tracking-wider text-brand-neon uppercase">Sports Threads 📢</h3>
-                        <span class="text-[10px] text-gray-500">Twitter Grid</span>
-                    </div>
-                    
-                    <!-- Create Post input area -->
-                    <div class="space-y-2">
-                        <textarea id="threadPostInputField" placeholder="What's happening in sports today? Use #cricket, #ipl..." class="w-full bg-brand-darkBg border border-white/10 rounded-xl p-3 text-xs text-white focus:outline-none focus:border-brand-neon transition-all" rows="2"></textarea>
-                        
-                        <!-- AI Assistant prompt generation space -->
-                        <div class="flex gap-2 items-center">
-                            <input id="aiThreadPromptField" type="text" placeholder="✨ Write thread about: Kohli century, CSK win..." class="flex-grow bg-brand-surfaceSecondary border border-white/10 rounded-lg px-3 py-1.5 text-[11px] focus:outline-none focus:border-brand-pink transition-all">
-                            <button onclick="generateAIThreadViaGemini()" class="sparkle-btn hover:opacity-90 px-3 py-1.5 rounded-lg text-[10px] uppercase tracking-wide shrink-0 transition-all flex items-center gap-1">
-                                <span>✨</span> Draft AI Thread
-                            </button>
-                        </div>
-                        
-                        <div class="flex justify-between items-center pt-1">
-                            <span class="text-[10px] text-gray-500">Characters max 280</span>
-                            <button onclick="commitNewThreadPost()" class="bg-brand-neon text-black font-extrabold text-[10px] px-4 py-2 rounded-lg tracking-wider">POST THREAD</button>
-                        </div>
-                    </div>
-
-                    <!-- Threads Feed Container -->
-                    <div id="threadsContainerFeed" class="space-y-3.5 pt-2 border-t border-white/5">
-                        <!-- Dynamic updates pull here -->
-                    </div>
-                </div>
-
-            </div>
-
-            <!-- 2. CLUBS SCREEN VIEW (Hidden Default) -->
-            <div id="view-clubs" class="app-view hidden space-y-4">
-                <div class="bg-brand-surface p-4 rounded-xl border border-white/5 space-y-3">
-                    <h3 class="text-xs font-black tracking-wider text-brand-neon uppercase">Forge Your Custom Fan Club</h3>
-                    <div class="space-y-2">
-                        <input id="newClubNameInput" type="text" placeholder="Club Title (e.g., Delhi Capitals Core)" class="w-full bg-brand-surfaceSecondary border border-white/10 rounded-lg px-3 py-2 text-xs focus:outline-none focus:border-brand-neon">
-                        <input id="newClubTaglineInput" type="text" placeholder="Club Motto Statement" class="w-full bg-brand-surfaceSecondary border border-white/10 rounded-lg px-3 py-2 text-xs focus:outline-none focus:border-brand-neon">
-                        <button onclick="createNewUserOwnedClub()" class="w-full bg-brand-neon text-black font-black text-xs py-2.5 rounded-lg tracking-wider">PROVISION NEW CLUB ENGINE</button>
-                    </div>
-                </div>
-                <div id="clubsGridContainer" class="space-y-2">
-                    <div class="bg-brand-surface p-3.5 rounded-xl border border-white/5 flex justify-between items-center">
-                        <div><h4 class="text-sm font-bold text-white">Chennai Super Kings Fanclub</h4><p class="text-[11px] text-gray-500">142K Active Superfans</p></div>
-                        <button class="bg-brand-pink text-white font-bold text-[10px] px-3 py-1.5 rounded-lg">JOIN SPACE</button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- 3. REELS SCREEN VIEW (Hidden Default) -->
-            <div id="view-reels" class="app-view hidden space-y-4">
-                <div class="flex justify-between items-center bg-brand-surface p-1 rounded-xl border border-white/5 text-xs font-bold">
-                    <button id="reelTab-feed" onclick="switchReelSubView('feed')" class="flex-1 py-2 bg-brand-surfaceSecondary text-brand-neon border border-white/10 rounded-lg">LIVE REELS FEED</button>
-                    <button id="reelTab-studio" onclick="switchReelSubView('studio')" class="flex-1 py-2 text-gray-500 hover:text-white transition-all">📈 CREATOR STUDIO</button>
-                </div>
-
-                <div id="reelsMainFeedSection" class="space-y-4">
-                    <div class="flex justify-between items-center">
-                        <h2 class="text-sm font-black uppercase tracking-wider text-white">Trending Creator Streams</h2>
-                        <label class="bg-brand-neon text-black font-bold text-[10px] px-3 py-1.5 rounded-lg cursor-pointer">
-                            ➕ CREATE REEL <input type="file" accept="video/mp4" class="hidden" onchange="handleUserVideoUploadAction(this)">
-                        </label>
-                    </div>
-                    <div class="bg-brand-surface rounded-2xl overflow-hidden border border-white/5 aspect-[9/14] relative bg-slate-900 flex flex-col justify-end p-4">
-                        <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent z-10"></div>
-                        <div class="z-20 space-y-1">
-                            <p class="text-xs font-black text-brand-neon">@dinesh_gurjar_4747_</p>
-                            <p class="text-xs text-gray-300">2026 Final celebration with Virat Kohli iconic sixer! #rcb</p>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- YT monetization details dashboard -->
-                <div id="creatorStudioDashboard" class="hidden space-y-4">
-                    <div class="bg-gradient-to-r from-brand-pink/20 to-brand-neon/10 p-5 rounded-2xl border border-white/10 text-center space-y-2">
-                        <h3 class="text-xs font-black tracking-widest text-brand-pink uppercase">Sportsnap Partner Program 💎</h3>
-                        <p class="text-[11px] text-gray-400">Add sports content, generate high engagements, and unlock automatic monetization payouts!</p>
-                    </div>
-
-                    <div class="grid grid-cols-2 gap-3 text-center">
-                        <div class="bg-brand-surface p-4 rounded-xl border border-white/5">
-                            <span class="text-gray-500 text-[10px] uppercase font-bold block">Estimated Revenue</span>
-                            <span class="text-xl font-extrabold text-brand-neon">₹45,250.00</span>
-                        </div>
-                        <div class="bg-brand-surface p-4 rounded-xl border border-white/5">
-                            <span class="text-gray-500 text-[10px] uppercase font-bold block">Creator Tier</span>
-                            <span class="text-xl font-extrabold text-brand-gold">Gold Pro ⭐</span>
-                        </div>
-                    </div>
-
-                    <!-- Payout Progress Targets -->
-                    <div class="bg-brand-surface p-4 rounded-2xl border border-white/5 space-y-3">
-                        <h4 class="text-xs font-black text-white">Next Payout Milestone Metrics</h4>
-                        <div class="space-y-2 text-xs">
-                            <div class="flex justify-between text-gray-400"><span>Watch Hours Progress</span> <span class="text-brand-neon">3,240 / 4,000 hrs</span></div>
-                            <div class="w-full bg-black/40 h-1.5 rounded-full overflow-hidden"><div class="bg-brand-neon h-full" style="width: 81%;"></div></div>
-                        </div>
-                        <div class="space-y-2 text-xs">
-                            <div class="flex justify-between text-gray-400"><span>Loyal Subscribers</span> <span class="text-brand-pink">8,900 / 10,000</span></div>
-                            <div class="w-full bg-black/40 h-1.5 rounded-full overflow-hidden"><div class="bg-brand-pink h-full" style="width: 89%;"></div></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- 4. TICKETS SCREEN VIEW (Hidden Default) -->
-            <div id="view-tickets" class="app-view hidden space-y-4">
-                <h2 class="text-sm font-black uppercase tracking-wider text-white">Secure Stadium Access Passes</h2>
-                <div class="bg-brand-surface p-4 rounded-xl border border-white/10 space-y-3">
-                    <div class="border-l-2 border-brand-pink pl-3">
-                        <h4 class="text-sm font-bold text-white">Aamchi Mumbai Marathon 2026</h4>
-                        <p class="text-xs text-gray-400">Date: Sunday, 7 Jun 2026</p>
-                        <p class="text-[11px] text-gray-500">Venue: Bandra Fort Garden Arena</p>
-                    </div>
-                    <button onclick="triggerTicketBookingProcess()" class="w-full bg-brand-pink text-white font-black text-xs py-2.5 rounded-lg shadow-pink-glow">BOOK DIGITAL PASS (₹0 FEE)</button>
-                </div>
-            </div>
-
-            <!-- 5. NEWS SCREEN VIEW (Hidden Default) -->
-            <div id="view-news" class="app-view hidden space-y-3">
-                <h2 class="text-sm font-black uppercase tracking-wider text-white">Cricbuzz Editorial Sync Feed</h2>
-                <div class="bg-brand-surface p-3.5 rounded-xl border border-white/5 space-y-1">
-                    <h3 class="text-xs font-bold text-white hover:text-brand-neon cursor-pointer">RCB and the luxury of another flexible batting option...</h3>
-                    <p class="text-[11px] text-gray-400">Rasikh Salam and Venkatesh Iyer state defence layout strategy analytical breakdown.</p>
-                </div>
-                <div class="bg-brand-surface p-3.5 rounded-xl border border-white/5 space-y-1">
-                    <h3 class="text-xs font-bold text-white hover:text-brand-neon cursor-pointer">'Can't control the weather' - Solanki refuses to blame logistics</h3>
-                    <p class="text-[11px] text-gray-400">GT squad manager outlines flight delay telemetry and 10pm Ahmedabad storm logs.</p>
-                </div>
-            </div>
-        </main>
-
-        <!-- ================= DEEP MATCH CENTER DASHBOARD MODAL ================= -->
-        <div id="matchCenterDashboardModal" class="absolute inset-x-0 bottom-0 top-14 bg-brand-darkBg border-t border-white/10 rounded-t-[24px] z-50 transform translate-y-full transition-transform duration-300 flex flex-col">
-            <div class="w-12 h-1 bg-white/20 rounded-full mx-auto my-3 cursor-pointer" onclick="closeMatchCenterDashboard()"></div>
-            <div class="px-4 pb-2 flex justify-between items-center border-b border-white/5">
-                <h3 class="text-xs font-black tracking-widest text-brand-neon uppercase">Analytics Match Center</h3>
-                <button onclick="closeMatchCenterDashboard()" class="text-gray-400 font-bold text-xs hover:text-white">✕ CLOSE</button>
-            </div>
-            
-            <div class="flex-1 overflow-y-auto p-4 hide-scrollbar space-y-4">
-                <div id="jioHotstarStreamEngineContainer" class="bg-black rounded-2xl border border-white/10 overflow-hidden relative aspect-video">
-                    <div class="absolute inset-0 z-10 pointer-events-none flex flex-col justify-between p-3">
-                        <div class="flex justify-between items-center">
-                            <span class="bg-red-600 text-[9px] font-black text-white px-2 py-0.5 rounded-md tracking-wider flex items-center gap-1">● JioHotstar LIVE</span>
-                            <span class="bg-black/60 backdrop-blur-md text-[9px] text-brand-neon px-2 py-0.5 rounded">1080p Stream</span>
-                        </div>
-                        <!-- Comments ticker overlay scrolling on player screen -->
-                        <div class="w-full overflow-hidden h-6 relative bg-black/30 backdrop-blur-sm rounded">
-                            <div class="live-chat-bubble text-[9px] text-brand-neon font-black py-1 whitespace-nowrap">
-                                @viratkohliFan: OMG Kohli playing like a king today! 🔥 • @cricketexpert: That cover drive was pure perfection! • @sportsnapFan: V20 live stream is incredibly smooth! No lag at all! 🚀
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <video class="w-full h-full object-cover" muted autoplay loop playsinline>
-                        <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4">
-                    </video>
-
-                    <!-- Stream control server toggles -->
-                    <div class="absolute bottom-10 right-2 z-20 flex gap-1">
-                        <button onclick="alert('Switched to Server Node 1 Stream')" class="bg-brand-neon text-black font-bold text-[8px] px-2 py-1 rounded">SERVER 1</button>
-                        <button onclick="alert('Switched to Backup CDN Server 2')" class="bg-white/10 text-white font-bold text-[8px] px-2 py-1 rounded">SERVER 2</button>
-                    </div>
-                </div>
-
-                <!-- NEW: Action Bar for Match Center (Fantasy & Highlights) -->
-                <div class="grid grid-cols-2 gap-3 mt-2">
-                    <button onclick="openFantasyBuilder()" class="bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-black text-[10px] py-2.5 rounded-xl uppercase tracking-widest shadow-lg flex items-center justify-center gap-2 border border-purple-400/30 transition-all active:scale-95">
-                        <span>🏏</span> Create Fantasy Team
-                    </button>
-                    <button onclick="generateAIHighlights()" id="aiHighlightsBtn" class="bg-brand-surface border border-white/10 text-brand-neon font-black text-[10px] py-2.5 rounded-xl uppercase tracking-widest shadow-lg flex items-center justify-center gap-2 transition-all active:scale-95">
-                        <span>⚡</span> AI Highlights
-                    </button>
-                </div>
-
-                <!-- AI Highlights Output Container -->
-                <div id="aiHighlightsOutput" class="hidden bg-gradient-to-r from-brand-neon/10 to-transparent p-4 rounded-xl border-l-2 border-brand-neon space-y-2 mt-2">
-                    <h4 class="text-xs font-black text-brand-neon uppercase tracking-wider flex items-center gap-2">
-                        <span class="animate-pulse">🔴</span> Live AI Play-by-Play
-                    </h4>
-                    <p id="aiHighlightsText" class="text-[11px] text-gray-300 leading-relaxed font-mono">Connecting to Gemini Engine...</p>
-                </div>
-
-                <div class="bg-brand-surface p-4 rounded-xl border border-white/5 space-y-3">
-                    <div class="flex justify-between items-center">
-                        <h4 class="text-xs font-black text-brand-gold uppercase tracking-wider">⚡ AI Analyst Prediction (Gemini Core Engine)</h4>
-                        <button onclick="generateAIMatchAnalysisViaGemini()" class="sparkle-btn hover:opacity-90 px-2.5 py-1 rounded-md text-[10px] tracking-wide transition-all">
-                            ✨ Run Analyst API
-                        </button>
-                    </div>
-                    <div id="aiAnalystLoadingSpinner" class="hidden flex items-center gap-2 text-xs text-brand-neon">
-                        <div class="w-3 h-3 border-2 border-brand-neon border-t-transparent rounded-full animate-spin"></div>
-                        <span>Gemini analyzing match trajectory variables...</span>
-                    </div>
-                    <p id="aiAnalystTextBox" class="text-xs text-gray-300 leading-relaxed">Click the "Run Analyst API" button above to activate the live Gemini 2.5 Flash analyzer stream.</p>
-                </div>
-                <div class="bg-brand-surface p-4 rounded-xl border border-white/5 space-y-2">
-                    <h4 class="text-xs font-black text-white uppercase tracking-wider">📊 Live Scoreboard Telemetry</h4>
-                    <p id="matchTelemetryTextBox" class="text-[11px] text-gray-400 font-mono">Loading dynamic dashboard points...</p>
-                </div>
-            </div>
+    <!-- HEADER (Fan Coins & Rewards) -->
+    <header class="p-4 flex justify-between items-center border-b border-white/10 bg-brand-darkBg z-40 sticky top-0">
+        <h1 class="text-xl font-black text-white tracking-wider">SPORTSNAP <span class="text-brand-neon">PRO</span></h1>
+        <div onclick="toggleModal('storeModal')" class="bg-brand-surface px-4 py-1.5 rounded-full text-sm font-bold border border-brand-gold cursor-pointer shadow-[0_0_10px_rgba(255,215,0,0.2)]">
+            🪙 <span id="coinBalance">2450</span>
         </div>
+    </header>
 
-        <!-- ================= AUTHENTICATION HUB MODAL LAYER ================= -->
-        <div id="systemAuthHubModal" class="absolute inset-0 z-50 bg-brand-darkBg flex flex-col p-6 justify-between transform translate-y-full transition-transform duration-300">
-            <div class="w-full text-center space-y-2 mt-4">
-                <div class="font-extrabold text-4xl tracking-tighter gradient-logo animate-pulse">ADS ⚽🏏</div>
-                <h2 class="text-xl font-black text-white uppercase tracking-wider">Welcome to Sportsnap</h2>
-                <p class="text-[11px] text-gray-400 max-w-xs mx-auto">Join the world's fastest growing sports fan community ecosystem with zero setup fee.</p>
-            </div>
-
-            <div class="space-y-4 my-auto w-full">
-                <div class="space-y-1">
-                    <label class="text-[10px] text-gray-400 font-bold uppercase tracking-wider">Fan Identity Email</label>
-                    <input id="authEmailInputNode" type="email" placeholder="name@domain.com" class="w-full bg-brand-surface border border-white/10 rounded-xl px-4 py-3 text-xs text-white focus:outline-none focus:border-brand-neon">
-                </div>
-                <div class="space-y-1">
-                    <label class="text-[10px] text-gray-400 font-bold uppercase tracking-wider">Secure Access Password</label>
-                    <input id="authPasswordInputNode" type="password" placeholder="••••••••" class="w-full bg-brand-surface border border-white/10 rounded-xl px-4 py-3 text-xs text-white focus:outline-none focus:border-brand-neon">
-                </div>
-                <div class="pt-2 space-y-2">
-                    <button class="w-full bg-brand-neon text-black font-extrabold text-xs py-3.5 rounded-xl tracking-wider shadow-neon-glow" onclick="executeClientMockLoginFlow()">SECURE AUTH LOGIN</button>
-                    <div class="flex items-center my-2 text-[10px] text-gray-500 before:flex-1 before:border-t before:border-white/5 before:me-3 after:flex-1 after:border-t after:border-white/5 after:ms-3">OR JOIN VIA ONE-CLICK</div>
-                    <button class="w-full bg-white/5 border border-white/10 text-white font-bold text-xs py-3 rounded-xl flex items-center justify-center gap-2" onclick="triggerGoogleOAuthFederatedLink()">
-                        <img src="https://fonts.gstatic.com/s/i/productlogos/googleg/v6/web-24dp/copy_of_web-24dp.png" class="w-4 h-4 object-contain" alt="Google">
-                        Continue with Google Secure Account
-                    </button>
-                </div>
-            </div>
-
-            <div class="text-center text-[9px] text-gray-500 leading-normal">
-                By connection, you agree to Sportsnap <span class="text-brand-neon underline cursor-pointer">Terms of Premium Service</span>.
-            </div>
-        </div>
-
-        <!-- ================= FANTASY TEAM BUILDER MODAL (DREAM11 CLONE) ================= -->
-        <div id="fantasyBuilderModal" class="absolute inset-0 z-50 bg-brand-darkBg flex flex-col transform translate-y-full transition-transform duration-300">
-            <!-- Header -->
-            <div class="bg-brand-surface/90 backdrop-blur-md px-4 py-3 border-b border-white/10 flex items-center justify-between sticky top-0">
-                <div class="flex items-center gap-3">
-                    <button onclick="closeFantasyBuilder()" class="text-white font-bold text-lg hover:text-brand-neon transition-colors">←</button>
-                    <div>
-                        <h2 class="text-xs font-black text-white uppercase tracking-wider">Create Team 1</h2>
-                        <p class="text-[9px] text-gray-400">GT vs RCB • 1h 45m left</p>
-                    </div>
-                </div>
-                <div class="text-right">
-                    <div class="text-[9px] text-gray-400 uppercase font-bold">Max Credits</div>
-                    <div class="text-sm font-black text-brand-neon" id="fantasyCreditsLeft">100.0</div>
-                </div>
-            </div>
-            
-            <!-- Pitch Info -->
-            <div class="flex justify-between items-center px-4 py-2 bg-brand-surface text-[10px] text-gray-300 border-b border-white/5">
-                <span class="flex items-center gap-1">🏏 <span class="font-bold text-white">Pitch:</span> Batting</span>
-                <span class="flex items-center gap-1">☀️ <span class="font-bold text-white">Weather:</span> Clear</span>
-                <span class="flex items-center gap-1">📈 <span class="font-bold text-white">Avg:</span> 185</span>
-            </div>
-
-            <!-- Progress Bar -->
-            <div class="px-4 py-3 bg-brand-darkBg space-y-2">
-                <div class="flex justify-between text-[10px] font-bold">
-                    <span class="text-gray-400">Players <span id="fantasyPlayerCount" class="text-white text-xs font-black">0</span>/11</span>
-                    <span class="text-brand-gold font-black tracking-wider">MEGA CONTEST PRO</span>
-                </div>
-                <div class="w-full bg-white/10 h-2 rounded-full flex gap-0.5 overflow-hidden" id="fantasyProgressBar">
-                    <!-- Dynamic segments will be added via JS -->
-                </div>
-            </div>
-
-            <!-- Player Selection List -->
-            <div class="flex-1 overflow-y-auto hide-scrollbar bg-brand-darkBg pb-20">
-                <!-- Tabs -->
-                <div class="flex border-b border-white/5 text-[11px] font-bold sticky top-0 bg-brand-darkBg z-10">
-                    <button class="flex-1 py-3 text-brand-neon border-b-2 border-brand-neon">WK & BAT</button>
-                    <button class="flex-1 py-3 text-gray-500 hover:text-gray-300">ALL ROUNDERS</button>
-                    <button class="flex-1 py-3 text-gray-500 hover:text-gray-300">BOWLERS</button>
-                </div>
-                
-                <!-- Player Rows -->
-                <div class="space-y-0.5" id="fantasyPlayerList">
-                    <!-- Player Item 1 -->
-                    <div class="flex items-center justify-between p-3 bg-brand-surface border-b border-white/5 cursor-pointer hover:bg-brand-surfaceSecondary transition-colors" onclick="toggleFantasyPlayer(this, 10.5)">
-                        <div class="flex items-center gap-3">
-                            <div class="w-10 h-10 rounded-full bg-red-900 border border-red-500 flex items-center justify-center text-xs font-black text-white relative">
-                                VK
-                                <span class="absolute -bottom-1 -right-1 bg-brand-surface text-[7px] px-1 rounded border border-white/20">RCB</span>
-                            </div>
-                            <div>
-                                <h4 class="text-xs font-bold text-white">Virat Kohli</h4>
-                                <p class="text-[9px] text-gray-400">Sel by 94.5% • 845 Pts</p>
-                            </div>
-                        </div>
-                        <div class="flex items-center gap-4">
-                            <span class="text-xs font-bold text-brand-neon">10.5</span>
-                            <div class="w-6 h-6 rounded-full border border-white/20 flex items-center justify-center text-xl text-gray-500 add-btn transition-colors">+</div>
-                        </div>
-                    </div>
-                    <!-- Player Item 2 -->
-                    <div class="flex items-center justify-between p-3 bg-brand-surface border-b border-white/5 cursor-pointer hover:bg-brand-surfaceSecondary transition-colors" onclick="toggleFantasyPlayer(this, 9.5)">
-                        <div class="flex items-center gap-3">
-                            <div class="w-10 h-10 rounded-full bg-blue-900 border border-blue-500 flex items-center justify-center text-xs font-black text-white relative">
-                                SG
-                                <span class="absolute -bottom-1 -right-1 bg-brand-surface text-[7px] px-1 rounded border border-white/20">GT</span>
-                            </div>
-                            <div>
-                                <h4 class="text-xs font-bold text-white">Shubman Gill</h4>
-                                <p class="text-[9px] text-gray-400">Sel by 88.2% • 720 Pts</p>
-                            </div>
-                        </div>
-                        <div class="flex items-center gap-4">
-                            <span class="text-xs font-bold text-brand-neon">9.5</span>
-                            <div class="w-6 h-6 rounded-full border border-white/20 flex items-center justify-center text-xl text-gray-500 add-btn transition-colors">+</div>
-                        </div>
-                    </div>
-                    <!-- Player Item 3 -->
-                    <div class="flex items-center justify-between p-3 bg-brand-surface border-b border-white/5 cursor-pointer hover:bg-brand-surfaceSecondary transition-colors" onclick="toggleFantasyPlayer(this, 9.0)">
-                        <div class="flex items-center gap-3">
-                            <div class="w-10 h-10 rounded-full bg-red-900 border border-red-500 flex items-center justify-center text-xs font-black text-white relative">
-                                FM
-                                <span class="absolute -bottom-1 -right-1 bg-brand-surface text-[7px] px-1 rounded border border-white/20">RCB</span>
-                            </div>
-                            <div>
-                                <h4 class="text-xs font-bold text-white">Faf du Plessis</h4>
-                                <p class="text-[9px] text-gray-400">Sel by 75.1% • 610 Pts</p>
-                            </div>
-                        </div>
-                        <div class="flex items-center gap-4">
-                            <span class="text-xs font-bold text-white">9.0</span>
-                            <div class="w-6 h-6 rounded-full border border-white/20 flex items-center justify-center text-xl text-gray-500 add-btn transition-colors">+</div>
-                        </div>
-                    </div>
-                    <!-- Player Item 4 -->
-                    <div class="flex items-center justify-between p-3 bg-brand-surface border-b border-white/5 cursor-pointer hover:bg-brand-surfaceSecondary transition-colors" onclick="toggleFantasyPlayer(this, 9.0)">
-                        <div class="flex items-center gap-3">
-                            <div class="w-10 h-10 rounded-full bg-blue-900 border border-blue-500 flex items-center justify-center text-xs font-black text-white relative">
-                                RS
-                                <span class="absolute -bottom-1 -right-1 bg-brand-surface text-[7px] px-1 rounded border border-white/20">GT</span>
-                            </div>
-                            <div>
-                                <h4 class="text-xs font-bold text-white">Rashid Khan</h4>
-                                <p class="text-[9px] text-gray-400">Sel by 89.9% • 680 Pts</p>
-                            </div>
-                        </div>
-                        <div class="flex items-center gap-4">
-                            <span class="text-xs font-bold text-white">9.0</span>
-                            <div class="w-6 h-6 rounded-full border border-white/20 flex items-center justify-center text-xl text-gray-500 add-btn transition-colors">+</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Bottom Action Bar -->
-            <div class="absolute bottom-0 inset-x-0 bg-brand-surface/90 backdrop-blur-md border-t border-white/10 p-4 flex justify-between items-center z-40">
-                <button class="text-[10px] font-bold text-white px-4 py-2 border border-white/20 rounded-lg uppercase hover:bg-white/5 transition-colors">Team Preview</button>
-                <button onclick="saveFantasyTeam()" id="fantasySaveBtn" class="bg-gray-600 text-gray-400 font-black text-xs px-8 py-2.5 rounded-lg uppercase tracking-wider transition-all pointer-events-none">Save Team</button>
-            </div>
-        </div>
-
-        <!-- ================= NEW: FAN REWARDS & MERCH HUB ================= -->
-        <div id="rewardsHubModal" class="absolute inset-x-0 bottom-0 top-14 bg-brand-darkBg border-t border-brand-gold/30 rounded-t-[24px] z-50 transform translate-y-full transition-transform duration-300 flex flex-col shadow-[0_-10px_40px_rgba(255,183,0,0.15)]">
-            <div class="w-12 h-1 bg-white/20 rounded-full mx-auto my-3 cursor-pointer" onclick="closeRewardsHub()"></div>
-            <div class="px-4 pb-3 flex justify-between items-center border-b border-white/5">
-                <div>
-                    <h3 class="text-sm font-black tracking-widest text-brand-gold uppercase">Pro Rewards Hub 🛍️</h3>
-                    <p class="text-[9px] text-gray-400">Redeem Fan Coins for Official Merch</p>
-                </div>
-                <div class="bg-brand-surfaceSecondary border border-brand-gold/30 px-3 py-1.5 rounded-full flex items-center gap-1.5 shadow-neon-glow">
-                    <span class="text-brand-gold text-[10px]">🪙</span>
-                    <span class="text-brand-gold font-black text-sm tracking-wider" id="hubCoinBalance">2,450</span>
-                </div>
-            </div>
-            
-            <div class="flex-1 overflow-y-auto p-4 hide-scrollbar space-y-4">
-                <div class="grid grid-cols-2 gap-3">
-                    <!-- Item 1 -->
-                    <div class="bg-brand-surface border border-white/10 rounded-xl overflow-hidden flex flex-col">
-                        <div class="h-24 bg-gradient-to-tr from-blue-900 to-blue-600 p-2 flex items-center justify-center">
-                            <span class="text-4xl">👕</span>
-                        </div>
-                        <div class="p-3 space-y-2 flex-1 flex flex-col justify-between">
-                            <div>
-                                <h4 class="text-xs font-bold text-white">Official Team Jersey</h4>
-                                <p class="text-[9px] text-gray-400">Authentic match day kit.</p>
-                            </div>
-                            <button onclick="buyMerchItem('Official Team Jersey', 1500)" class="w-full bg-brand-surfaceSecondary border border-brand-gold/50 text-brand-gold font-bold text-[10px] py-1.5 rounded flex items-center justify-center gap-1 hover:bg-brand-gold hover:text-black transition-colors">
-                                🪙 1,500
-                            </button>
-                        </div>
-                    </div>
-                    <!-- Item 2 -->
-                    <div class="bg-brand-surface border border-white/10 rounded-xl overflow-hidden flex flex-col">
-                        <div class="h-24 bg-gradient-to-tr from-gray-800 to-gray-600 p-2 flex items-center justify-center">
-                            <span class="text-4xl">🧢</span>
-                        </div>
-                        <div class="p-3 space-y-2 flex-1 flex flex-col justify-between">
-                            <div>
-                                <h4 class="text-xs font-bold text-white">Signature Pro Cap</h4>
-                                <p class="text-[9px] text-gray-400">Adjustable fan cap.</p>
-                            </div>
-                            <button onclick="buyMerchItem('Signature Pro Cap', 800)" class="w-full bg-brand-surfaceSecondary border border-brand-gold/50 text-brand-gold font-bold text-[10px] py-1.5 rounded flex items-center justify-center gap-1 hover:bg-brand-gold hover:text-black transition-colors">
-                                🪙 800
-                            </button>
-                        </div>
-                    </div>
-                    <!-- Item 3 -->
-                    <div class="bg-brand-surface border border-white/10 rounded-xl overflow-hidden flex flex-col">
-                        <div class="h-24 bg-gradient-to-tr from-yellow-900 to-brand-gold p-2 flex items-center justify-center">
-                            <span class="text-4xl">🎫</span>
-                        </div>
-                        <div class="p-3 space-y-2 flex-1 flex flex-col justify-between">
-                            <div>
-                                <h4 class="text-xs font-bold text-white">VIP Match Pass</h4>
-                                <p class="text-[9px] text-gray-400">Front row stadium access.</p>
-                            </div>
-                            <button onclick="buyMerchItem('VIP Match Pass', 5000)" class="w-full bg-brand-surfaceSecondary border border-brand-gold/50 text-brand-gold font-bold text-[10px] py-1.5 rounded flex items-center justify-center gap-1 hover:bg-brand-gold hover:text-black transition-colors">
-                                🪙 5,000
-                            </button>
-                        </div>
-                    </div>
-                    <!-- Item 4 -->
-                    <div class="bg-brand-surface border border-white/10 rounded-xl overflow-hidden flex flex-col">
-                        <div class="h-24 bg-gradient-to-tr from-purple-900 to-pink-600 p-2 flex items-center justify-center">
-                            <span class="text-4xl">🎮</span>
-                        </div>
-                        <div class="p-3 space-y-2 flex-1 flex flex-col justify-between">
-                            <div>
-                                <h4 class="text-xs font-bold text-white">Pro Gamer Avatar</h4>
-                                <p class="text-[9px] text-gray-400">Digital exclusive profile ring.</p>
-                            </div>
-                            <button onclick="buyMerchItem('Pro Gamer Avatar', 300)" class="w-full bg-brand-surfaceSecondary border border-brand-gold/50 text-brand-gold font-bold text-[10px] py-1.5 rounded flex items-center justify-center gap-1 hover:bg-brand-gold hover:text-black transition-colors">
-                                🪙 300
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- ================= 5-PART BOTTOM NAVIGATION ENGINE ================= -->
-        <nav class="absolute bottom-0 inset-x-0 bg-brand-surface/90 backdrop-blur-md border-t border-white/5 grid grid-cols-5 py-3 text-center z-40">
-            <div onclick="switchAppView('home')" class="nav-item cursor-pointer text-brand-neon flex flex-col items-center gap-0.5"><span class="text-base">🏠</span><span class="text-[9px] font-bold tracking-wider uppercase">Home</span></div>
-            <div onclick="switchAppView('clubs')" class="nav-item cursor-pointer text-gray-500 flex flex-col items-center gap-0.5"><span class="text-base">🛡️</span><span class="text-[9px] font-bold tracking-wider uppercase">Clubs</span></div>
-            <div onclick="switchAppView('reels')" class="nav-item cursor-pointer text-gray-500 flex flex-col items-center gap-0.5"><span class="text-base">🎬</span><span class="text-[9px] font-bold tracking-wider uppercase">Reels</span></div>
-            <div onclick="switchAppView('tickets')" class="nav-item cursor-pointer text-gray-500 flex flex-col items-center gap-0.5"><span class="text-base">🎟️</span><span class="text-[9px] font-bold tracking-wider uppercase">Tickets</span></div>
-            <div onclick="switchAppView('news')" class="nav-item cursor-pointer text-gray-500 flex flex-col items-center gap-0.5"><span class="text-base">📰</span><span class="text-[9px] font-bold tracking-wider uppercase">News</span></div>
-        </nav>
-
+    <!-- MAIN NAVIGATION TABS -->
+    <div class="flex border-b border-white/10 bg-brand-surface overflow-x-auto hide-scrollbar sticky top-[65px] z-30">
+        <button id="btn-homeTab" onclick="switchTab('homeTab')" class="px-6 py-3 text-sm font-bold border-b-2 border-brand-neon text-brand-neon focus:outline-none transition-all">Home</button>
+        <button id="btn-fantasyTab" onclick="switchTab('fantasyTab')" class="px-6 py-3 text-sm font-bold border-b-2 border-transparent text-gray-400 focus:outline-none transition-all">Fantasy Builder</button>
+        <button id="btn-leaderboardTab" onclick="switchTab('leaderboardTab')" class="px-6 py-3 text-sm font-bold border-b-2 border-transparent text-gray-400 focus:outline-none transition-all">Leaderboard</button>
+        <button id="btn-studioTab" onclick="switchTab('studioTab')" class="px-6 py-3 text-sm font-bold border-b-2 border-transparent text-gray-400 focus:outline-none transition-all">Creator Studio</button>
     </div>
 
-    <!-- ================= JAVASCRIPT GLOBAL RUNTIME CONTROLLER ================= -->
-    <script>
-        // Central Application Core Repository Memory Parameters
-        let APP_STATE = {
-            currentView: 'home',
-            userLoggedIn: false,
-            userProfile: null,
-            liveScoreData: null,
-            // Gemini API Configs
-            geminiApiKey: "", // Securely loaded at runtime inside the iframe environment
-            currentSport: 'cricket',
-            currentMatchState: 'live',
-            // Persistent Data Storage Reference
-            clubs: JSON.parse(localStorage.getItem('sportsnap_clubs')) || [],
-            threads: JSON.parse(localStorage.getItem('sportsnap_threads')) || [
-                { id: 1, user: "thearifhassan", tag: "rcbfans", content: "2026 belongs to Bengaluru. RCB holds the crown! 👑", likes: 45, time: "11h" },
-                { id: 2, user: "dinesh_gurjar_4747_", tag: "sportsfan", content: "The atmosphere at the final was crazy! Best match I have ever watched. #ipl #cricketlovers", likes: 88, time: "5h" }
-            ]
-        };
+    <!-- CONTENT WRAPPER -->
+    <main class="flex-1 overflow-y-auto p-4 pb-20 hide-scrollbar">
 
-        // Data Persistence Engine
-        const StorageEngine = {
-            saveClubs: (clubs) => {
-                localStorage.setItem('sportsnap_clubs', JSON.stringify(clubs));
-            },
-            saveThreads: (threads) => {
-                localStorage.setItem('sportsnap_threads', JSON.stringify(threads));
-            }
-        };
-
-        // DOM Loaded Handler Initialization
-        document.addEventListener("DOMContentLoaded", () => {
-            fetchLiveScoresFromVercelAPI();
-            setInterval(fetchLiveScoresFromVercelAPI, 5000);
-            renderPersistentClubs(); // Render saved clubs on startup
-            renderPersistentThreads(); // Render saved threads on startup
-        });
-
-        const GLOBAL_MATCHES_DB = {
-            cricket: {
-                live: { tournament: "TATA IPL 2026 FINAL", status: "LIVE", teams: { teamA: { name: "Gujarat Titans", score: "155-8", overs: "20.0" }, teamB: { name: "Royal Challengers Bengaluru", score: "161-5", overs: "18.2" } }, systemMessage: "Royal Challengers Bengaluru won by 5 wickets!" },
-                upcoming: { tournament: "TATA IPL 2026", status: "UPCOMING", teams: { teamA: { name: "Chennai Super Kings", score: "--", overs: "--" }, teamB: { name: "Mumbai Indians", score: "--", overs: "--" } }, systemMessage: "Match starts tomorrow at 7:30 PM, Wankhede Stadium" },
-                completed: { tournament: "TATA IPL 2026 Qualifier 2", status: "COMPLETED", teams: { teamA: { name: "Gujarat Titans", score: "182-4", overs: "20.0" }, teamB: { name: "Kolkata Knight Riders", score: "152-10", overs: "17.4" } }, systemMessage: "Gujarat Titans won by 30 runs" }
-            },
-            football: {
-                live: { tournament: "Hero ISL Final", status: "LIVE", teams: { teamA: { name: "Mumbai City FC", score: "2", overs: "1st Half" }, teamB: { name: "Mohun Bagan SG", score: "1", overs: "34'" } }, systemMessage: "Goal by Chhangte at 24th minute!" },
-                upcoming: { tournament: "Hero ISL League Match", status: "UPCOMING", teams: { teamA: { name: "Kerala Blasters", score: "--", overs: "--" }, teamB: { name: "Bengaluru FC", score: "--", overs: "--" } }, systemMessage: "Match starts Sunday at 8:00 PM" },
-                completed: { tournament: "Hero ISL Semifinal", status: "COMPLETED", teams: { teamA: { name: "Mumbai City FC", score: "3", overs: "Full Time" }, teamB: { name: "FC Goa", score: "0", overs: "Full Time" } }, systemMessage: "Mumbai City FC won 3-0 on aggregate" }
-            }
-        };
-
-        function filterSportCategory(sportName) {
-            APP_STATE.currentSport = sportName;
-            document.querySelectorAll('.sport-tab-btn').forEach(btn => {
-                btn.className = "sport-tab-btn bg-brand-surface border border-white/5 font-semibold text-xs px-4 py-2.5 rounded-full text-gray-400 whitespace-nowrap transition-all";
-            });
-            document.getElementById(`sportTab-${sportName}`).className = "sport-tab-btn bg-brand-neon text-black font-bold text-xs px-4 py-2.5 rounded-full whitespace-nowrap transition-all";
+        <!-- ================= HOME TAB (Match Center) ================= -->
+        <div id="homeTab" class="tab-content space-y-6">
+            <div class="flex justify-between items-center">
+                <h2 class="text-sm font-black text-gray-400 uppercase tracking-widest">Live Action</h2>
+                <span class="text-[11px] text-brand-neon flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-brand-neon animate-pulse"></span> Engine Active</span>
+            </div>
             
-            triggerTelemetryEngineSync();
-        }
-
-        function filterMatchState(stateName) {
-            APP_STATE.currentMatchState = stateName;
-            document.querySelectorAll('[id^="matchStateTab-"]').forEach(btn => {
-                btn.className = "py-2 text-gray-500 cursor-pointer hover:text-white transition-all";
-            });
-            document.getElementById(`matchStateTab-${stateName}`).className = "py-2 bg-brand-surfaceSecondary border border-white/10 text-brand-neon rounded-lg cursor-pointer";
-            
-            triggerTelemetryEngineSync();
-        }
-
-        function triggerTelemetryEngineSync() {
-            const sportDB = GLOBAL_MATCHES_DB[APP_STATE.currentSport] || GLOBAL_MATCHES_DB['cricket'];
-            const dataNode = sportDB[APP_STATE.currentMatchState] || sportDB['live'];
-            
-            if(APP_STATE.currentMatchState === 'live') {
-                document.getElementById('matchLiveBadge').classList.remove('hidden');
-            } else {
-                document.getElementById('matchLiveBadge').classList.add('hidden');
-            }
-
-            updateScoreboardUI(dataNode);
-        }
-
-        // Creator Studio view switching logic
-        function switchReelSubView(targetSubView) {
-            document.querySelectorAll('[id^="reelTab-"]').forEach(btn => {
-                btn.className = "flex-1 py-2 text-gray-500 hover:text-white transition-all";
-            });
-            
-            if(targetSubView === 'feed') {
-                document.getElementById('reelTab-feed').className = "flex-1 py-2 bg-brand-surfaceSecondary text-brand-neon border border-white/10 rounded-lg";
-                document.getElementById('reelsMainFeedSection').classList.remove('hidden');
-                document.getElementById('creatorStudioDashboard').classList.add('hidden');
-            } else {
-                document.getElementById('reelTab-studio').className = "flex-1 py-2 bg-brand-surfaceSecondary text-brand-neon border border-white/10 rounded-lg";
-                document.getElementById('reelsMainFeedSection').classList.add('hidden');
-                document.getElementById('creatorStudioDashboard').classList.remove('hidden');
-            }
-        }
-
-        // Feature #1: ✨ Generate AI Match Analysis dynamically via Gemini Model
-        async function generateAIMatchAnalysisViaGemini() {
-            const outputBox = document.getElementById('aiAnalystTextBox');
-            const spinner = document.getElementById('aiAnalystLoadingSpinner');
-            
-            outputBox.classList.add('hidden');
-            spinner.classList.remove('hidden');
-
-            const score = APP_STATE.liveScoreData || {
-                tournament: "IPL 2026 FINAL",
-                teams: {
-                    teamA: { name: "GT", score: "155-8", overs: "20.0" },
-                    teamB: { name: "RCB", score: "161-5", overs: "18.2" }
-                }
-            };
-
-            const userQuery = `Write a premium, short sport analysis for this match:
-            Tournament: ${score.tournament}
-            Team A: ${score.teams.teamA.name} scored ${score.teams.teamA.score} in ${score.teams.teamA.overs} overs.
-            Team B: ${score.teams.teamB.name} scored ${score.teams.teamB.score} in ${score.teams.teamB.overs} overs.
-            Please provide:
-            1. Short match verdict & win analysis.
-            2. High Scorer Prediction.
-            3. Weather/Rain Probability estimate.
-            Write it in simple, exciting English using clear headings, bullet points, and sport emojis.`;
-
-            const systemPrompt = "You are a professional world-class sport analyst and meteorologist writing for Sportsnap Pro application. Keep answers compact, insightful, and highly professional.";
-
-            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${APP_STATE.geminiApiKey}`;
-
-            try {
-                const payload = {
-                    contents: [{ parts: [{ text: userQuery }] }],
-                    systemInstruction: { parts: [{ text: systemPrompt }] }
-                };
-
-                const response = await fetchWithRetry(url, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload)
-                });
-
-                const result = await response.json();
-                const aiResponseText = result.candidates?.[0]?.content?.parts?.[0]?.text;
-
-                if (aiResponseText) {
-                    // Convert markdown-like response structure into beautiful dynamic HTML paragraph logs
-                    outputBox.innerHTML = aiResponseText.replace(/\n/g, '<br>').replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
-                } else {
-                    outputBox.textContent = "AI Analysis temporary unavailable. Please verify API key setup configurations.";
-                }
-            } catch (error) {
-                outputBox.innerHTML = `<span class="text-brand-pink">⚠️ Connection Timeout Error: Unable to run Gemini API. Using locally cached sports analytics engine algorithm model. Try again in a few moments.</span>`;
-            } finally {
-                spinner.classList.add('hidden');
-                outputBox.classList.remove('hidden');
-            }
-        }
-
-        // Feature #2: ✨ Generate High-Engagement Thread Draft via Gemini Model
-        async function generateAIThreadViaGemini() {
-            const promptField = document.getElementById('aiThreadPromptField');
-            const outputTextarea = document.getElementById('threadPostInputField');
-            const topic = promptField.value.trim();
-
-            if (!topic) {
-                alert("Please write a small topic or phrase inside the sparkle prompt box first!");
-                return;
-            }
-
-            const originalBtnText = event.target.innerHTML;
-            event.target.innerHTML = `<span>⏳</span> Drafting...`;
-            event.target.disabled = true;
-
-            const userQuery = `Write a highly engaging, super cool sports tweet/thread post about: "${topic}".
-            Add 2-3 relevant hashtags, use sports emojis, and write in a trendy young sports fan language (Hinglish/English mix is preferred). Maximum length is 200 characters.`;
-
-            const systemPrompt = "You are an expert social media sports copywriter producing fast, viral, punchy sport posts with emojis.";
-
-            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${APP_STATE.geminiApiKey}`;
-
-            try {
-                const payload = {
-                    contents: [{ parts: [{ text: userQuery }] }],
-                    systemInstruction: { parts: [{ text: systemPrompt }] }
-                };
-
-                const response = await fetchWithRetry(url, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload)
-                });
-
-                const result = await response.json();
-                const draftedThreadText = result.candidates?.[0]?.content?.parts?.[0]?.text;
-
-                if (draftedThreadText) {
-                    outputTextarea.value = draftedThreadText.trim().replace(/^"|"$/g, ''); // Clear quotes if generated
-                } else {
-                    alert("AI model returned blank thread stream. Try changing the keywords.");
-                }
-            } catch (error) {
-                // Instantly run dynamic mock generator to ensure user experience remains seamless if key isn't provided
-                const fallbackThreads = [
-                    `BREAKING: Performance check absolute 10/10! Live action has reached supreme limits! 🔥 #sportsnap #viral`,
-                    `The game is totally ON! Who else is feeling the extreme adrenaline right now? 🏏⚽ #matchday #legends`,
-                    `Stunning strategy by the underdogs today. Truly sports at its finest! 🏆 #epicmoment #win`
-                ];
-                outputTextarea.value = fallbackThreads[Math.floor(Math.random() * fallbackThreads.length)];
-            } finally {
-                event.target.innerHTML = originalBtnText;
-                event.target.disabled = false;
-                promptField.value = '';
-            }
-        }
-
-        // Dynamic Asynchronous Edge Fetch Request Channel
-        async function fetchLiveScoresFromVercelAPI() {
-            try {
-                const response = await fetch('/api/scores');
-                if (response.ok) {
-                    const data = await response.json();
-                    APP_STATE.liveScoreData = data;
-                    // Trigger UI updates with fetched endpoint telemetry only if user is watching cricket-live
-                    if(APP_STATE.currentSport === 'cricket' && APP_STATE.currentMatchState === 'live') {
-                        updateScoreboardUI(data);
-                    }
-                } else {
-                    useFallbackLiveScoreData();
-                }
-            } catch (err) {
-                useFallbackLiveScoreData();
-            }
-        }
-
-        // Resilient Fallback Engine in case network is disconnected
-        function useFallbackLiveScoreData() {
-            const fallbackData = {
-                sport: "Cricket",
-                tournament: "TATA IPL 2026 FINAL",
-                status: "LIVE",
-                teams: {
-                    teamA: { name: "Gujarat Titans", score: "155-8", overs: "20.0" },
-                    teamB: { name: "Royal Challengers Bengaluru", score: "161-5", overs: "18.2" }
-                },
-                systemMessage: "Offline backup active. Score synced inside local sandbox."
-            };
-            APP_STATE.liveScoreData = fallbackData;
-            if(APP_STATE.currentSport === 'cricket' && APP_STATE.currentMatchState === 'live') {
-                updateScoreboardUI(fallbackData);
-            }
-        }
-
-        function updateScoreboardUI(data) {
-            document.getElementById('apiStatusBadge').className = "text-brand-neon font-bold";
-            document.getElementById('apiStatusBadge').textContent = "● EDGE SYNCED (ACTIVE)";
-            
-            document.getElementById('matchTournamentLabel').textContent = `🏆 ${data.tournament}`;
-            
-            document.getElementById('teamANameLabel').textContent = data.teams.teamA.name;
-            document.getElementById('teamBNameLabel').textContent = data.teams.teamB.name;
-            
-            document.getElementById('teamALogoBadge').textContent = data.teams.teamA.name.split(' ').map(n=>n[0]).join('');
-            document.getElementById('teamBLogoBadge').textContent = data.teams.teamB.name.split(' ').map(n=>n[0]).join('');
-
-            document.getElementById('teamAScoreLabel').innerHTML = `${data.teams.teamA.score} <span class="text-[11px] font-normal text-gray-500">(${data.teams.teamA.overs} Ov)</span>`;
-            document.getElementById('teamBScoreLabel').innerHTML = `${data.teams.teamB.score} <span class="text-[11px] font-normal text-brand-neon/70">(${data.teams.teamB.overs} Ov)</span>`;
-
-            document.getElementById('matchStatusNoteLabel').textContent = `✨ ${data.systemMessage || "Royal Challengers Bengaluru won by 5 wickets!"}`;
-
-            document.getElementById('matchTelemetryTextBox').innerHTML = `
-                ${data.teams.teamA.name}: ${data.teams.teamA.score} (${data.teams.teamA.overs} Ov)<br>
-                ${data.teams.teamB.name}: ${data.teams.teamB.score} (${data.teams.teamB.overs} Ov)<br>
-                Telemetry: edge parsing completed.
-            `;
-        }
-
-        // Persistent Club Rendering
-        function renderPersistentClubs() {
-            const container = document.getElementById('clubsGridContainer');
-            container.innerHTML = ''; 
-            
-            const defaultClubHTML = `
-                <div class="bg-brand-surface p-3.5 rounded-xl border border-white/5 flex justify-between items-center">
-                    <div><h4 class="text-sm font-bold text-white">Chennai Super Kings Fanclub</h4><p class="text-[11px] text-gray-500">142K Active Superfans</p></div>
-                    <button class="bg-brand-pink text-white font-bold text-[10px] px-3 py-1.5 rounded-lg">JOIN SPACE</button>
+            <!-- Live Match Card -->
+            <div onclick="toggleModal('matchCenterModal')" class="bg-gradient-to-br from-blue-950 via-slate-900 to-black p-5 rounded-2xl border border-white/10 relative overflow-hidden shadow-2xl cursor-pointer hover:border-white/20 transition-all">
+                <div class="absolute top-0 right-0 w-32 h-32 bg-brand-neon/5 rounded-full blur-3xl"></div>
+                <div class="flex justify-between items-center mb-4">
+                    <span class="bg-red-500 text-[10px] px-2.5 py-1 rounded-full font-black tracking-wider animate-pulse">🔴 LIVE MATCH</span>
+                    <span class="text-xs text-gray-400 font-semibold tracking-wide">IPL 2026 • FINAL</span>
                 </div>
-            `;
-            container.innerHTML = defaultClubHTML;
-
-            APP_STATE.clubs.forEach(club => {
-                container.innerHTML += `
-                    <div class="bg-brand-surface p-3.5 rounded-xl border border-brand-neon/30 flex justify-between items-center">
-                        <div><h4 class="text-sm font-bold text-brand-neon">${club.name}</h4><p class="text-[11px] text-gray-400">${club.tagline}</p></div>
-                        <span class="text-[10px] text-brand-neon font-black px-2 py-1 bg-brand-neon/10 rounded-md border border-brand-neon/20">OWNER</span>
+                <div class="flex justify-between items-end">
+                    <div>
+                        <h2 class="text-2xl font-black tracking-wide">GT <span class="text-gray-500 text-lg font-normal">vs</span> RCB</h2>
+                        <p class="text-2xl font-black text-brand-neon mt-2 tracking-tight"><span id="liveScoreLabel">155-8</span> <span class="text-xs text-gray-400 font-medium" id="liveOversLabel">(18.2)</span></p>
+                        <p class="text-[11px] text-gray-400 mt-2 italic" id="liveTickerLabel">Rashid Khan to Virat Kohli, 1 run.</p>
                     </div>
-                `;
-            });
-        }
-
-        // Club Creation Action Hook
-        function createNewUserOwnedClub() {
-            const name = document.getElementById('newClubNameInput').value.trim();
-            const tagline = document.getElementById('newClubTaglineInput').value.trim();
-            if(!name) return alert("Club title missing.");
+                    <div class="bg-brand-neon text-black font-black text-[10px] px-3 py-2 rounded-lg uppercase tracking-wider shadow-[0_0_15px_rgba(57,255,20,0.3)]">
+                        Match Center
+                    </div>
+                </div>
+            </div>
             
-            APP_STATE.clubs.push({ name, tagline });
-            StorageEngine.saveClubs(APP_STATE.clubs);
-            
-            renderPersistentClubs();
-            
-            document.getElementById('newClubNameInput').value = '';
-            document.getElementById('newClubTaglineInput').value = '';
-        }
+            <!-- AI Club Chant Generator -->
+            <div class="bg-brand-surface p-5 rounded-2xl border border-white/5 space-y-3 shadow-lg">
+                <h3 class="text-xs font-black text-brand-gold uppercase tracking-wider">📣 AI Club Chant Generator</h3>
+                <p class="text-[11px] text-gray-400">Generate energetic stadium anthems instantly using Gemini AI models.</p>
+                <div class="flex gap-2">
+                    <input id="chantTeam" type="text" placeholder="Enter Team Name (e.g., RCB)" class="flex-1 bg-brand-darkBg border border-white/10 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-brand-neon">
+                    <button onclick="generateChant()" class="sparkle-btn px-4 py-2 rounded-lg text-xs transition-transform active:scale-95">Generate ✨</button>
+                </div>
+                <div id="chantOutputBox" class="bg-black/40 p-3 rounded-xl border border-white/5 hidden animate-fade-in">
+                    <p id="chantOutput" class="text-xs text-gray-300 italic leading-relaxed"></p>
+                </div>
+            </div>
+        </div>
 
-        // Threads Rendering Engine
-        function renderPersistentThreads() {
-            const container = document.getElementById('threadsContainerFeed');
-            container.innerHTML = '';
+        <!-- ================= FANTASY BUILDER TAB ================= -->
+        <div id="fantasyTab" class="tab-content hidden space-y-4">
+            <div class="flex justify-between items-center bg-brand-surface p-4 rounded-xl border border-white/10 shadow-md">
+                <div>
+                    <h3 class="font-black text-sm tracking-wide">Squad Constructor</h3>
+                    <p class="text-xs text-gray-400">Gujarat Titans vs Royal Challengers</p>
+                </div>
+                <div class="text-right">
+                    <p class="text-[10px] text-gray-400 uppercase font-bold">Credits Left</p>
+                    <p class="text-lg font-black text-brand-neon">100.0</p>
+                </div>
+            </div>
 
-            APP_STATE.threads.forEach(post => {
-                container.innerHTML += `
-                    <div class="bg-brand-surfaceSecondary p-3 rounded-xl border border-white/5 space-y-2">
-                        <div class="flex justify-between items-center text-[10px]">
-                            <span class="text-brand-neon font-bold">@${post.user} <span class="text-gray-500 font-normal">#${post.tag}</span></span>
-                            <span class="text-gray-500">${post.time || 'now'}</span>
-                        </div>
-                        <p class="text-xs text-gray-300 leading-normal">${post.content}</p>
-                        <div class="flex items-center gap-4 text-[10px] text-gray-500 pt-1">
-                            <span class="cursor-pointer hover:text-brand-pink" onclick="likeThread(${post.id})">❤️ ${post.likes}</span>
-                            <span class="cursor-pointer hover:text-brand-neon" onclick="alert('Replying requires dynamic account creation.')">💬 Reply</span>
+            <button onclick="aiCaptainPicker()" class="w-full bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-bold py-3 rounded-xl text-xs flex justify-center items-center gap-2 border border-indigo-400/30 shadow-lg transition-all active:scale-[0.99]">
+                🤖 Run Gemini AI Captain Picker Advisor
+            </button>
+
+            <!-- Player List -->
+            <div class="space-y-2">
+                <div class="flex justify-between items-center bg-brand-surface p-3 rounded-xl border border-white/5">
+                    <div class="flex items-center gap-3">
+                        <div class="w-9 h-9 bg-gradient-to-tr from-red-600 to-black rounded-full flex items-center justify-center font-black text-xs text-white">VK</div>
+                        <div>
+                            <p class="text-xs font-bold">Virat Kohli (BAT)</p>
+                            <p class="text-[10px] text-gray-400 uppercase tracking-wider font-semibold">RCB</p>
                         </div>
                     </div>
-                `;
-            });
-        }
+                    <div class="flex items-center gap-3">
+                        <p class="text-xs font-black text-gray-300">9.5 Cr</p>
+                        <button onclick="showToast('+ Added Virat Kohli to Fantasy Squad', 'success')" class="bg-brand-neon text-black w-7 h-7 rounded-full font-black text-sm flex items-center justify-center transition-transform active:scale-90">+</button>
+                    </div>
+                </div>
+                <div class="flex justify-between items-center bg-brand-surface p-3 rounded-xl border border-white/5">
+                    <div class="flex items-center gap-3">
+                        <div class="w-9 h-9 bg-gradient-to-tr from-blue-600 to-black rounded-full flex items-center justify-center font-black text-xs text-white">RK</div>
+                        <div>
+                            <p class="text-xs font-bold">Rashid Khan (ALL)</p>
+                            <p class="text-[10px] text-gray-400 uppercase tracking-wider font-semibold">GT</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <p class="text-xs font-black text-gray-300">9.0 Cr</p>
+                        <button onclick="showToast('+ Added Rashid Khan to Fantasy Squad', 'success')" class="bg-brand-neon text-black w-7 h-7 rounded-full font-black text-sm flex items-center justify-center transition-transform active:scale-90">+</button>
+                    </div>
+                </div>
+            </div>
+            <button onclick="saveFantasyTeam()" class="w-full bg-brand-neon text-black font-black py-3 rounded-xl text-sm mt-4 shadow-[0_4px_15px_rgba(57,255,20,0.2)]">SAVE TEAM (+100 🪙)</button>
+        </div>
 
-        // Creating New Thread Post
-        function commitNewThreadPost() {
-            const content = document.getElementById('threadPostInputField').value.trim();
-            if(!content) return alert("Post content cannot be empty.");
-
-            const username = APP_STATE.userLoggedIn ? APP_STATE.userProfile.name : "anonymous_fan";
+        <!-- ================= LEADERBOARD TAB ================= -->
+        <div id="leaderboardTab" class="tab-content hidden space-y-4">
+            <div class="bg-brand-surface p-4 rounded-xl border border-white/10 shadow-lg">
+                <h3 class="font-black text-sm tracking-wide text-brand-gold uppercase mb-1">Global Fan Leaderboard</h3>
+                <p class="text-xs text-gray-400">Ranks update live based on token accumulations across streams and fantasy setups.</p>
+            </div>
             
-            const newPost = {
-                id: Date.now(),
-                user: username,
-                tag: "sportsfan",
-                content: content,
-                likes: 0,
-                time: "now"
-            };
+            <div class="bg-brand-surface rounded-xl border border-white/5 divide-y divide-white/5 overflow-hidden">
+                <div class="p-3 flex justify-between items-center bg-brand-gold/10">
+                    <div class="flex items-center gap-3 text-xs">
+                        <span class="font-black text-brand-gold w-4">🥇</span>
+                        <span class="font-bold text-white">@alpha_striker</span>
+                    </div>
+                    <span class="text-xs font-mono text-brand-gold font-bold">🪙 14,820</span>
+                </div>
+                <div class="p-3 flex justify-between items-center bg-white/5">
+                    <div class="flex items-center gap-3 text-xs">
+                        <span class="font-black text-gray-400 w-4">🥈</span>
+                        <span class="font-bold text-gray-200">@king_prediction</span>
+                    </div>
+                    <span class="text-xs font-mono text-gray-300 font-bold">🪙 12,400</span>
+                </div>
+                <div class="p-3 flex justify-between items-center">
+                    <div class="flex items-center gap-3 text-xs">
+                        <span class="font-black text-amber-700 w-4">🥉</span>
+                        <span class="font-bold text-gray-300">@cric_genius_1</span>
+                    </div>
+                    <span class="text-xs font-mono text-gray-400 font-bold">🪙 9,150</span>
+                </div>
+                <div class="p-3 flex justify-between items-center border-t border-brand-neon/20 bg-brand-neon/5">
+                    <div class="flex items-center gap-3 text-xs">
+                        <span class="font-black text-brand-neon w-4">24</span>
+                        <span class="font-bold text-brand-neon">@You (Sportsnap Fan)</span>
+                    </div>
+                    <span class="text-xs font-mono text-brand-neon font-bold">🪙 <span id="leaderboardUserCoins">2450</span></span>
+                </div>
+            </div>
+        </div>
 
-            APP_STATE.threads.unshift(newPost);
-            StorageEngine.saveThreads(APP_STATE.threads);
-            renderPersistentThreads();
+        <!-- ================= CREATOR STUDIO TAB ================= -->
+        <div id="studioTab" class="tab-content hidden space-y-6">
+            <div class="bg-brand-surface p-5 rounded-2xl border border-white/10 shadow-xl">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="font-black text-lg tracking-wide">Creator Monetization Studio</h2>
+                    <span class="text-xs bg-green-500/20 text-green-400 px-2.5 py-1 rounded-md font-bold tracking-wider">LIVE PARTNER</span>
+                </div>
+                
+                <div class="grid grid-cols-2 gap-4 mb-4">
+                    <div class="bg-brand-darkBg p-3 rounded-xl border border-white/5">
+                        <p class="text-[10px] text-gray-400 uppercase font-bold tracking-wider">Total Reels Views</p>
+                        <p class="text-xl font-black mt-1">1,245,800</p>
+                    </div>
+                    <div class="bg-brand-darkBg p-3 rounded-xl border border-white/5">
+                        <p class="text-[10px] text-gray-400 uppercase font-bold tracking-wider">Est. Earnings</p>
+                        <p class="text-xl font-black text-brand-neon mt-1">Rupees 14,500</p>
+                    </div>
+                </div>
 
-            document.getElementById('threadPostInputField').value = '';
-        }
+                <div class="space-y-2 bg-black/20 p-4 rounded-xl border border-white/5">
+                    <div class="flex justify-between text-xs text-gray-400 font-medium">
+                        <span>Watch Hours Threshold Requirement</span>
+                        <span class="text-white font-bold">3,200 / 4,000 hrs</span>
+                    </div>
+                    <div class="w-full bg-brand-darkBg rounded-full h-2.5 overflow-hidden border border-white/5">
+                        <div class="bg-gradient-to-r from-brand-neon to-green-400 h-full rounded-full" style="width: 80%"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-        function likeThread(postId) {
-            const post = APP_STATE.threads.find(p => p.id === postId);
-            if(post) {
-                post.likes += 1;
-                StorageEngine.saveThreads(APP_STATE.threads);
-                renderPersistentThreads();
-            }
-        }
+    </main>
 
-        // Navigation Engine System View Switching
-        function switchAppView(targetViewId) {
-            APP_STATE.currentView = targetViewId;
-            document.querySelectorAll('.app-view').forEach(view => view.classList.add('hidden'));
-            document.getElementById(`view-${targetViewId}`).classList.remove('hidden');
+    <!-- ================= MODALS & OVERLAYS ================= -->
+
+    <!-- 1. Match Center Modal (Live Stream + Chat) -->
+    <div id="matchCenterModal" class="fixed inset-0 bg-brand-darkBg z-50 transform translate-y-full transition-transform duration-300 flex flex-col">
+        <div class="p-4 bg-slate-950 flex justify-between items-center border-b border-white/10">
+            <button onclick="toggleModal('matchCenterModal')" class="text-gray-400 hover:text-white font-black text-xs uppercase tracking-wider">✕ CLOSE DASHBOARD</button>
+            <span class="text-xs font-black text-brand-neon uppercase tracking-widest flex items-center gap-1">
+                <span class="w-2 h-2 rounded-full bg-brand-neon animate-ping"></span> Live Broadcast Hub
+            </span>
+        </div>
+        
+        <!-- Stream Media Panel Container -->
+        <div class="w-full aspect-video bg-black flex flex-col items-center justify-center relative border-b border-white/10 shadow-inner">
+            <p class="text-white font-black tracking-wider text-sm mb-1" id="currentServerLabel">▶ STREAM SERVER 1 ACTIVE</p>
+            <p class="text-gray-400 text-xs font-mono" id="streamModalScore">GT 155-8 (18.2)</p>
+            <span class="bg-red-600 text-white text-[9px] font-black px-2 py-0.5 rounded absolute top-3 left-3 tracking-widest animate-pulse">CRICFY CLONE MODULE</span>
             
-            const tabs = document.querySelectorAll('nav .nav-item');
-            const targetIndex = ['home','clubs','reels','tickets','news'].indexOf(targetViewId);
-            tabs.forEach((tab, index) => {
-                if(index === targetIndex) {
-                    tab.classList.remove('text-gray-500');
-                    tab.classList.add('text-brand-neon');
+            <!-- Server Switch Controls overlay -->
+            <div class="absolute bottom-3 right-3 flex gap-1 bg-black/60 p-1 rounded-lg backdrop-blur-md">
+                <button onclick="switchServer(1)" class="bg-brand-neon text-black text-[9px] font-black px-2 py-1 rounded">S1</button>
+                <button onclick="switchServer(2)" class="bg-white/10 text-white text-[9px] font-black px-2 py-1 rounded hover:bg-white/20">S2</button>
+                <button onclick="switchServer(3)" class="bg-white/10 text-white text-[9px] font-black px-2 py-1 rounded hover:bg-white/20">S3</button>
+            </div>
+        </div>
+
+        <div class="flex-1 overflow-y-auto p-4 flex flex-col gap-4 hide-scrollbar">
+            <!-- AI Live Analytics Execution Component -->
+            <div class="bg-brand-surface p-4 rounded-2xl border border-brand-gold/20 shadow-md space-y-2">
+                <div class="flex justify-between items-center">
+                    <span class="text-xs font-black text-brand-gold uppercase tracking-wider">⚡ Live Gemini AI Analytics Dashboard</span>
+                    <button onclick="generateAIHighlights()" class="sparkle-btn px-3 py-1.5 rounded-lg text-[10px] tracking-wider uppercase transition-transform active:scale-95">Run Analysis</button>
+                </div>
+                <p id="aiAnalysisOutput" class="text-xs text-gray-400 leading-relaxed italic">Click the trigger button to invoke Google Gemini flash computational metrics on current performance parameters.</p>
+            </div>
+
+            <!-- Live Mega Chat Infrastructure Component -->
+            <div class="flex-1 bg-brand-surface rounded-2xl border border-white/10 flex flex-col h-60 shadow-lg overflow-hidden">
+                <div class="bg-slate-950 p-2.5 border-b border-white/5 text-[10px] font-black text-white uppercase flex justify-between items-center tracking-wider">
+                    <span class="text-brand-pink">🔴 Fan Wars Live Chat Room</span>
+                    <span class="text-green-400 animate-pulse-slow font-mono">● 14,592 CONCURRENT FANS</span>
+                </div>
+                <div id="liveChatMessages" class="flex-1 p-3 overflow-y-auto space-y-2 text-[11px] hide-scrollbar font-medium">
+                    <div><span class="text-blue-400 font-bold">@rcb_blood:</span> Kohli will finish this matching in the 19th over! 🔥</div>
+                    <div><span class="text-yellow-400 font-bold">@cricket_nerd:</span> Pitch conditions favor spinners completely right now.</div>
+                    <div><span class="text-purple-400 font-bold">@titan_force:</span> Rashid khan outstanding execution loading! 🌪️</div>
+                </div>
+                <div class="p-2 bg-slate-950 border-t border-white/5 flex gap-2">
+                    <input id="chatInput" type="text" placeholder="Type message to stadium rooms..." class="flex-1 bg-brand-darkBg border border-white/10 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-brand-neon">
+                    <button onclick="sendChat()" class="bg-brand-neon text-black font-black text-[10px] px-4 rounded-lg tracking-wider uppercase transition-all active:scale-95">SEND</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 2. Fan Rewards Store Modal -->
+    <div id="storeModal" class="fixed inset-0 bg-brand-darkBg/95 z-50 transform translate-y-full transition-transform duration-300 p-4 flex flex-col">
+        <div class="flex justify-between items-center mb-6 mt-4">
+            <h2 class="text-2xl font-black text-brand-gold tracking-wide">Pro Rewards Hub 🛍️</h2>
+            <button onclick="toggleModal('storeModal')" class="text-white bg-white/10 w-9 h-9 rounded-full font-black text-sm flex items-center justify-center">✕</button>
+        </div>
+        <p class="text-xs text-gray-400 mb-4">Redeem your accumulated Fan tokens for authentic sports gear and elite hospitality accesses.</p>
+        <div class="grid grid-cols-2 gap-4">
+            <div class="bg-brand-surface p-4 rounded-2xl border border-white/10 text-center shadow-md">
+                <div class="text-4xl mb-2">👕</div>
+                <p class="text-xs font-bold mb-1">Official Team Jersey</p>
+                <p class="text-[10px] text-gray-400 mb-3">Authentic Merchandise</p>
+                <button onclick="buyItem(1500)" class="w-full bg-brand-neon text-black font-black text-[11px] py-2 rounded-xl transition-transform active:scale-95">🪙 1,500</button>
+            </div>
+            <div class="bg-brand-surface p-4 rounded-2xl border border-white/10 text-center shadow-md">
+                <div class="text-4xl mb-2">🎫</div>
+                <p class="text-xs font-bold mb-1">VIP Luxury Pavilion Pass</p>
+                <p class="text-[10px] text-gray-400 mb-3">Grandstand Lounge</p>
+                <button onclick="buyItem(5000)" class="w-full bg-slate-700 text-gray-400 font-black text-[11px] py-2 rounded-xl cursor-not-allowed">🪙 5,000</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 3. Floating AI Chatbot Widget (Groundor) -->
+    <button onclick="toggleModal('chatbotModal')" class="fixed bottom-6 right-6 w-14 h-14 rounded-full bg-indigo-600 shadow-[0_4px_20px_rgba(99,102,241,0.4)] border-2 border-indigo-400 flex items-center justify-center text-2xl z-40 hover:scale-110 transition-transform active:scale-95">
+        🤖
+    </button>
+    <div id="chatbotModal" class="fixed inset-x-4 bottom-24 bg-brand-surface border border-indigo-500 rounded-2xl z-50 transform scale-0 origin-bottom-right transition-transform duration-300 shadow-2xl h-80 flex flex-col">
+        <div class="bg-indigo-600 p-3.5 rounded-t-2xl flex justify-between items-center border-b border-indigo-400/20">
+            <span class="text-xs font-black text-white tracking-wider uppercase">AI Groundor Sports Buddy</span>
+            <button onclick="toggleModal('chatbotModal')" class="text-white font-bold text-xs">✕</button>
+        </div>
+        <div class="flex-1 p-3 text-xs text-gray-300 overflow-y-auto space-y-2 hide-scrollbar">
+            <p class="bg-white/5 p-2.5 rounded-xl border border-white/5 inline-block max-w-[85%]">Namaste! This module utilizes Google Search Grounding pipelines to serve optimized sports analysis. Ask away live questions!</p>
+        </div>
+        <div class="p-2 bg-slate-900 border-t border-white/10 rounded-b-2xl flex gap-2">
+            <input type="text" placeholder="Inquire about live analytics, stats, rosters..." class="flex-1 bg-brand-darkBg rounded-lg px-3 py-2 text-xs border border-white/10 text-white focus:outline-none focus:border-indigo-400">
+            <button onclick="showToast('AI Query pipeline grounding simulations active', 'info')" class="bg-indigo-600 text-white px-4 rounded-lg text-[10px] font-black tracking-wider uppercase">ASK</button>
+        </div>
+    </div>
+
+    <!-- ================= SCRIPTS & SYSTEM LOGIC ================= -->
+    <script>
+        // Global App State
+        let coins = 2450;
+        let matchRuns = 155;
+        let matchWickets = 8;
+        let matchOvers = 18.2;
+
+        // Dynamic Score Ticker Simulation Core
+        function runLiveScoreEngine() {
+            setInterval(() => {
+                // Update parameters metrics realistically
+                let ballChance = Math.random();
+                let runsScored = 0;
+                let textUpdate = "";
+
+                if (ballChance < 0.4) {
+                    runsScored = 1;
+                    textUpdate = "Virat Kohli drives to long-on for a single.";
+                } else if (ballChance < 0.6) {
+                    runsScored = 2;
+                    textUpdate = "Excellent running! Controlled pull shot yields a couple.";
+                } else if (ballChance < 0.75) {
+                    runsScored = 4;
+                    textUpdate = "CRACKING SHOT! Boundary through extra-cover ropes!";
+                } else if (ballChance < 0.85) {
+                    runsScored = 6;
+                    textUpdate = "MAXIMUM! Massive strike sailed deep into the pavilions!";
+                } else if (ballChance < 0.95) {
+                    runsScored = 0;
+                    textUpdate = "Dot ball. Solid defensive structural block displayed.";
                 } else {
-                    tab.classList.remove('text-brand-neon');
-                    tab.classList.add('text-gray-500');
+                    if (matchWickets < 10) {
+                        matchWickets += 1;
+                        textUpdate = "OUT! Clean bowled! Off stump shattered out of the ground!";
+                    } else {
+                        textUpdate = "Innings conclusion reached. Spectacular contest!";
+                    }
                 }
-            });
-        }
 
-        // Horizontal Sport Category Tracker Filter Control Mock Highlight
-        function filterSportCategory(sportName) {
-            document.querySelectorAll('.sport-tab-btn').forEach(btn => {
-                btn.className = "sport-tab-btn bg-brand-surface border border-white/5 font-semibold text-xs px-4 py-2.5 rounded-full text-gray-400 whitespace-nowrap transition-all";
-            });
-            event.target.className = "sport-tab-btn bg-brand-neon text-black font-bold text-xs px-4 py-2.5 rounded-full whitespace-nowrap transition-all";
-            console.log(`Sportsnap Filter Action Vector Triggered for Sport Category Node: ${sportName}`);
-        }
-
-        // Match Center Sliding Modal Sub-layer Activation
-        function openMatchCenterDashboard() {
-            document.getElementById('matchCenterDashboardModal').classList.remove('translate-y-full');
-        }
-        function closeMatchCenterDashboard() {
-            document.getElementById('matchCenterDashboardModal').classList.add('translate-y-full');
-        }
-
-        // Account Interactive Authentication Trigger Logic Handlers
-        function handleProfileSystemClick() {
-            if(APP_STATE.userLoggedIn) {
-                if(confirm("Do you want to log out from your Sportsnap PRO active workspace session?")) {
-                    executeUserSessionLogout();
+                matchRuns += runsScored;
+                
+                // Advance overs metric logically
+                let currentBall = Math.round((matchOvers % 1) * 10);
+                if (currentBall >= 5) {
+                    matchOvers = Math.floor(matchOvers) + 1;
+                } else {
+                    matchOvers = (Math.floor(matchOvers) + ((currentBall + 1) / 10));
                 }
-            } else {
-                document.getElementById('systemAuthHubModal').classList.remove('translate-y-full');
-            }
+
+                // Format string output rendering safely
+                let finalScoreStr = `${matchRuns}-${matchWickets}`;
+                let finalOversStr = `(${matchOvers.toFixed(1)})`;
+
+                // Render components UI data bindings
+                document.getElementById('liveScoreLabel').innerText = finalScoreStr;
+                document.getElementById('liveOversLabel').innerText = finalOversStr;
+                document.getElementById('streamModalScore').innerText = `GT ${finalScoreStr} ${finalOversStr}`;
+                document.getElementById('liveTickerLabel').innerText = textUpdate;
+            }, 4500);
         }
 
-        function executeClientMockLoginFlow() {
-            const email = document.getElementById('authEmailInputNode').value.trim();
-            const password = document.getElementById('authPasswordInputNode').value.trim();
-            if(!email || !password) { return alert("Please check identity field parameters."); }
-
-            APP_STATE.userLoggedIn = true;
-            APP_STATE.userProfile = { email: email, name: email.split('@')[0] };
-            synchronizeAuthenticatedUIState();
-            document.getElementById('systemAuthHubModal').classList.add('translate-y-full');
-        }
-
-        function triggerGoogleOAuthFederatedLink() {
-            APP_STATE.userLoggedIn = true;
-            APP_STATE.userProfile = { email: 'premium.fan@gmail.com', name: 'ProSportsfan' };
-            synchronizeAuthenticatedUIState();
-            document.getElementById('systemAuthHubModal').classList.add('translate-y-full');
-        }
-
-        function executeUserSessionLogout() {
-            APP_STATE.userLoggedIn = false;
-            APP_STATE.userProfile = null;
-            document.getElementById('userOnlineStatusDot').className = "absolute bottom-0 right-0 w-2.5 h-2.5 bg-red-500 border-2 border-brand-darkBg rounded-full";
-            document.getElementById('userAvatarImg').src = "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=150&q=80";
-        }
-
-        function synchronizeAuthenticatedUIState() {
-            document.getElementById('userOnlineStatusDot').className = "absolute bottom-0 right-0 w-2.5 h-2.5 bg-green-500 border-2 border-brand-darkBg rounded-full";
-            document.getElementById('userAvatarImg').src = "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=150&q=80";
-        }
-
-        // Real Creator File Picker Interaction Handler Log
-        function handleUserVideoUploadAction(inputNode) {
-            if(inputNode.files && inputNode.files[0]) {
-                alert(`PRO Success Video Parse Log: Local dynamic media file verified - ${inputNode.files[0].name}. File is cached in browser pipeline for offline loop distribution simulation.`);
-            }
-        }
-
-        function triggerTicketBookingProcess() {
-            alert("PRO Pass Processing Core: Your digital access pass voucher hash has been securely pinned inside user memory profile. Transaction Fee: ₹0 (Zero Host Matrix Plan Verified).");
-        }
-
-        // ================= FANTASY SPORTS ENGINE LOGIC =================
-        let FANTASY_STATE = {
-            playersSelected: 0,
-            creditsLeft: 100.0
+        // Invoke Engine at Boot Runtime Setup
+        window.onload = function() {
+            runLiveScoreEngine();
         };
 
-        function openFantasyBuilder() {
-            document.getElementById('fantasyBuilderModal').classList.remove('translate-y-full');
-            updateFantasyProgressBar();
-        }
-
-        function closeFantasyBuilder() {
-            document.getElementById('fantasyBuilderModal').classList.add('translate-y-full');
-        }
-
-        function toggleFantasyPlayer(element, creditCost) {
-            const isSelected = element.classList.contains('bg-brand-neon/10');
-            const addBtn = element.querySelector('.add-btn');
+        // Tab Navigation Architecture Module
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+            document.getElementById(tabId).classList.remove('hidden');
             
-            if (isSelected) {
-                // Deselect logic
-                element.classList.remove('bg-brand-neon/10', 'border-brand-neon/50');
-                addBtn.textContent = '+';
-                addBtn.classList.remove('bg-brand-neon', 'text-black', 'border-brand-neon');
-                addBtn.classList.add('border-white/20', 'text-gray-500');
-                
-                FANTASY_STATE.playersSelected--;
-                FANTASY_STATE.creditsLeft += creditCost;
-            } else {
-                // Validation before select
-                if (FANTASY_STATE.playersSelected >= 11) {
-                    return alert("Maximum 11 players can be selected for your Fantasy Team!");
-                }
-                if (FANTASY_STATE.creditsLeft - creditCost < 0) {
-                    return alert("Not enough Fantasy Credits remaining!");
-                }
-
-                // Select logic
-                element.classList.add('bg-brand-neon/10', 'border-brand-neon/50');
-                addBtn.textContent = '✓';
-                addBtn.classList.remove('border-white/20', 'text-gray-500');
-                addBtn.classList.add('bg-brand-neon', 'text-black', 'border-brand-neon');
-                
-                FANTASY_STATE.playersSelected++;
-                FANTASY_STATE.creditsLeft -= creditCost;
-            }
-
-            // Update UI trackers
-            document.getElementById('fantasyPlayerCount').textContent = FANTASY_STATE.playersSelected;
-            document.getElementById('fantasyCreditsLeft').textContent = FANTASY_STATE.creditsLeft.toFixed(1);
+            const buttons = document.querySelectorAll('.overflow-x-auto button');
+            buttons.forEach(btn => {
+                btn.classList.remove('border-brand-neon', 'text-brand-neon');
+                btn.classList.add('border-transparent', 'text-gray-400');
+            });
             
-            // Dynamic State for Save Button
-            const saveBtn = document.getElementById('fantasySaveBtn');
-            if (FANTASY_STATE.playersSelected >= 1) { // Allowing save early for testing simulation
-                saveBtn.classList.remove('bg-gray-600', 'text-gray-400', 'pointer-events-none');
-                saveBtn.classList.add('bg-brand-neon', 'text-black', 'shadow-neon-glow', 'pointer-events-auto');
-            } else {
-                saveBtn.classList.add('bg-gray-600', 'text-gray-400', 'pointer-events-none');
-                saveBtn.classList.remove('bg-brand-neon', 'text-black', 'shadow-neon-glow', 'pointer-events-auto');
-            }
-
-            updateFantasyProgressBar();
+            document.getElementById('btn-' + tabId).classList.remove('border-transparent', 'text-gray-400');
+            document.getElementById('btn-' + tabId).classList.add('border-brand-neon', 'text-brand-neon');
         }
 
-        function updateFantasyProgressBar() {
-            const bar = document.getElementById('fantasyProgressBar');
-            bar.innerHTML = '';
-            for(let i=0; i<11; i++) {
-                const segment = document.createElement('div');
-                segment.className = `flex-1 h-full rounded-full transition-all duration-300 ${i < FANTASY_STATE.playersSelected ? 'bg-brand-neon' : 'bg-white/10'}`;
-                bar.appendChild(segment);
+        // Overlays Configuration Panel Logic
+        function toggleModal(modalId) {
+            const modal = document.getElementById(modalId);
+            if (modalId === 'chatbotModal') {
+                modal.classList.toggle('scale-0');
+            } else {
+                modal.classList.toggle('translate-y-full');
+            }
+        }
+
+        // Live Media Switching Controller
+        function switchServer(serverNum) {
+            document.getElementById('currentServerLabel').innerText = `▶ STREAM SERVER ${serverNum} ACTIVE`;
+            showToast(`Rerouting stream packets to Node Server ${serverNum}`, 'info');
+        }
+
+        // Standalone Toast Display Framework Engine
+        function showToast(message, type = 'info') {
+            const container = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            const color = type === 'success' ? 'bg-brand-neon text-black' : type === 'error' ? 'bg-red-500 text-white' : 'bg-brand-surface border border-white/20 text-white';
+            
+            toast.className = `toast ${color} px-4 py-2 rounded-full text-xs font-black shadow-2xl transform translate-y-[-20px] opacity-0 tracking-wide uppercase`;
+            toast.innerText = message;
+            
+            container.appendChild(toast);
+            
+            setTimeout(() => {
+                toast.classList.remove('translate-y-[-20px]', 'opacity-0');
+            }, 10);
+
+            setTimeout(() => {
+                toast.classList.add('opacity-0', 'translate-y-[-20px]');
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
+
+        // Communication Chat Execution
+        function sendChat() {
+            const input = document.getElementById('chatInput');
+            const container = document.getElementById('liveChatMessages');
+            if (input.value.trim() !== '') {
+                container.innerHTML += `<div class="animate-fade-in"><span class="text-brand-pink font-bold">@You:</span> <span class="text-white">${input.value}</span></div>`;
+                const userMsg = input.value;
+                input.value = '';
+                container.scrollTop = container.scrollHeight;
+                
+                setTimeout(() => {
+                    const sampleReplies = ["Absolutely wild match!", "RCB throwing this game away?", "What an over!", "Unbelievable hitting!"];
+                    const randomText = sampleReplies[Math.floor(Math.random() * sampleReplies.length)];
+                    container.innerHTML += `<div><span class="text-brand-neon font-bold">@fan_${Math.floor(Math.random()*999)}:</span> <span class="text-gray-300">${randomText}</span></div>`;
+                    container.scrollTop = container.scrollHeight;
+                }, 1200);
+            }
+        }
+
+        // Financial Gamification Transactions Handler
+        function buyItem(price) {
+            if (coins >= price) {
+                coins -= price;
+                updateCoinBalances();
+                showToast('Merchandise acquisition successful! Redemptions verified.', 'success');
+            } else {
+                showToast('Insufficient Fan Coins tokens balance inside storage wallet.', 'error');
+            }
+        }
+
+        function updateCoinBalances() {
+            document.getElementById('coinBalance').innerText = coins;
+            document.getElementById('leaderboardUserCoins').innerText = coins;
+        }
+
+        // AI LLM Flash Query Handlers
+        function generateAIHighlights() {
+            document.getElementById('aiAnalysisOutput').innerText = "Accessing runtime metrics context... Invoking deep inference layers...";
+            setTimeout(() => {
+                document.getElementById('aiAnalysisOutput').innerHTML = `<span class="text-brand-neon font-bold">Gemini Analytics Engine:</span> Critical parameter found. Run-rate vectors indicate RCB requires <span class="text-white font-bold">11.4 RPO</span>. Bowling strategies must leverage short-length outer variations immediately.`;
+                showToast('Gemini Analytics compile complete', 'success');
+            }, 1800);
+        }
+
+        function aiCaptainPicker() {
+            showToast('Parsing statistical performance database trends...', 'info');
+            setTimeout(() => {
+                showToast('Gemini AI Recommendation: Set Virat Kohli as C (In-form metrics) & Rashid Khan as VC.', 'success');
+            }, 1500);
+        }
+
+        function generateChant() {
+            const team = document.getElementById('chantTeam').value.trim();
+            const box = document.getElementById('chantOutputBox');
+            const txt = document.getElementById('chantOutput');
+            
+            if(team) {
+                box.classList.remove('hidden');
+                txt.innerText = `Connecting via Gemini pipeline to compute stadium acoustics configurations for team [${team}]...`;
+                
+                setTimeout(() => {
+                    txt.innerHTML = `🔥 <span class="text-brand-neon font-bold uppercase">${team} RUMBLE!</span> <br>"We march to the field, the crowd starts to roar, ${team} warriors charging the score! Stand up and cheer, let the stadium shake, history is ours to break!" 🥁🙌`;
+                    showToast('Stadium acoustics chant generated successfully', 'success');
+                }, 2000);
+            } else {
+                showToast('Error: Form text field input parameter empty.', 'error');
             }
         }
 
         function saveFantasyTeam() {
-            alert(`🎉 Fantasy Team Saved Successfully!\n\nYou have registered ${FANTASY_STATE.playersSelected} players for the Mega Contest. Track your rank on the live leaderboard!`);
-            closeFantasyBuilder();
-            
-            // Trigger Gamification Reward
-            const coinsNode = document.getElementById('fanCoinBalance');
-            let currentCoins = parseInt(coinsNode.textContent.replace(/,/g, ''));
-            coinsNode.textContent = (currentCoins + 100).toLocaleString();
-            alert("🪙 +100 Fan Coins awarded for joining the Match Contest!");
-        }
-
-        // ================= FAN REWARDS & MERCH HUB LOGIC =================
-        function openRewardsHub() {
-            // Sync coin balance
-            const currentCoins = document.getElementById('fanCoinBalance').textContent;
-            document.getElementById('hubCoinBalance').textContent = currentCoins;
-            document.getElementById('rewardsHubModal').classList.remove('translate-y-full');
-        }
-
-        function closeRewardsHub() {
-            document.getElementById('rewardsHubModal').classList.add('translate-y-full');
-        }
-
-        function buyMerchItem(itemName, cost) {
-            const coinsNode = document.getElementById('fanCoinBalance');
-            const hubCoinsNode = document.getElementById('hubCoinBalance');
-            let currentCoins = parseInt(coinsNode.textContent.replace(/,/g, ''));
-            
-            if (currentCoins >= cost) {
-                if (confirm(`Do you want to spend 🪙 ${cost} coins to claim "${itemName}"?`)) {
-                    currentCoins -= cost;
-                    const formattedCoins = currentCoins.toLocaleString();
-                    coinsNode.textContent = formattedCoins;
-                    hubCoinsNode.textContent = formattedCoins;
-                    alert(`🎉 Success! You have successfully redeemed "${itemName}". Check your email for delivery tracking.`);
-                }
-            } else {
-                alert(`⚠️ Not enough Fan Coins! You need 🪙 ${cost - currentCoins} more coins. Keep watching streams and playing Fantasy to earn more!`);
-            }
-        }
-
-        // ================= AI HIGHLIGHTS GENERATOR (GEMINI) =================
-        async function generateAIHighlights() {
-            const outputContainer = document.getElementById('aiHighlightsOutput');
-            const outputText = document.getElementById('aiHighlightsText');
-            const btn = document.getElementById('aiHighlightsBtn');
-            const originalBtnHtml = btn.innerHTML;
-            
-            outputContainer.classList.remove('hidden');
-            outputText.innerHTML = '<span class="animate-pulse">Analyzing live video feed telemetry...</span>';
-            btn.innerHTML = '<span>⏳</span> Processing...';
-            btn.classList.add('opacity-50', 'pointer-events-none');
-
-            const score = APP_STATE.liveScoreData || {
-                tournament: "IPL 2026 FINAL",
-                teams: {
-                    teamA: { name: "GT", score: "155-8", overs: "20.0" },
-                    teamB: { name: "RCB", score: "161-5", overs: "18.2" }
-                }
-            };
-
-            const userQuery = `Generate a rapid, exciting bullet-point commentary of the top 3 best moments for this match based on this score: ${score.teams.teamA.name} (${score.teams.teamA.score}) vs ${score.teams.teamB.name} (${score.teams.teamB.score}). Use lots of emojis and dramatic sports commentary style. Make it short (max 50 words).`;
-
-            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${APP_STATE.geminiApiKey}`;
-
-            try {
-                const payload = { contents: [{ parts: [{ text: userQuery }] }] };
-                const response = await fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
-                const result = await response.json();
-                const text = result.candidates?.[0]?.content?.parts?.[0]?.text;
-
-                if (text) {
-                    outputText.innerHTML = text.replace(/\n/g, '<br>');
-                } else {
-                    throw new Error("Empty AI response");
-                }
-            } catch (error) {
-                // Fallback thrilling highlights if no API key is present
-                outputText.innerHTML = `
-                    💥 <strong>18.1 Ov:</strong> MASSIVE SIX by Kohli into the upper deck!<br><br>
-                    🔥 <strong>17.4 Ov:</strong> Rashid Khan spins a web, incredible bowled out!<br><br>
-                    ⚡ <strong>16.2 Ov:</strong> Bullet throw from boundary, stunning run out!
-                `;
-            } finally {
-                btn.innerHTML = originalBtnHtml;
-                btn.classList.remove('opacity-50', 'pointer-events-none');
-            }
+            coins += 100;
+            updateCoinBalances();
+            showToast('Fantasy Squad state committed to memory. Reward tokens dispatched (+100 🪙)', 'success');
         }
     </script>
 </body>
-                            </html>
+    </html>
