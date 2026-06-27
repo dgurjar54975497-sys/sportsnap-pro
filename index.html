@@ -64,7 +64,7 @@
             <!-- Interactive Dynamic Authentication Profile Control -->
             <div class="flex items-center gap-3">
                 <!-- Fan Coins Badge -->
-                <div class="bg-brand-surfaceSecondary border border-brand-gold/30 px-2.5 py-1 rounded-full flex items-center gap-1.5 cursor-pointer shadow-neon-glow" onclick="alert('Fan Coins 🪙\nEarn coins by watching live streams, posting threads, and winning fantasy leagues!')">
+                <div class="bg-brand-surfaceSecondary border border-brand-gold/30 px-2.5 py-1 rounded-full flex items-center gap-1.5 cursor-pointer shadow-neon-glow" onclick="openRewardsHub()">
                     <span class="text-brand-gold text-[10px]">🪙</span>
                     <span class="text-brand-gold font-black text-xs tracking-wider" id="fanCoinBalance">2,450</span>
                 </div>
@@ -338,9 +338,17 @@
                     <button onclick="openFantasyBuilder()" class="bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-black text-[10px] py-2.5 rounded-xl uppercase tracking-widest shadow-lg flex items-center justify-center gap-2 border border-purple-400/30 transition-all active:scale-95">
                         <span>🏏</span> Create Fantasy Team
                     </button>
-                    <button onclick="alert('Generating AI Highlights Reel...')" class="bg-brand-surface border border-white/10 text-brand-neon font-black text-[10px] py-2.5 rounded-xl uppercase tracking-widest shadow-lg flex items-center justify-center gap-2 transition-all active:scale-95">
+                    <button onclick="generateAIHighlights()" id="aiHighlightsBtn" class="bg-brand-surface border border-white/10 text-brand-neon font-black text-[10px] py-2.5 rounded-xl uppercase tracking-widest shadow-lg flex items-center justify-center gap-2 transition-all active:scale-95">
                         <span>⚡</span> AI Highlights
                     </button>
+                </div>
+
+                <!-- AI Highlights Output Container -->
+                <div id="aiHighlightsOutput" class="hidden bg-gradient-to-r from-brand-neon/10 to-transparent p-4 rounded-xl border-l-2 border-brand-neon space-y-2 mt-2">
+                    <h4 class="text-xs font-black text-brand-neon uppercase tracking-wider flex items-center gap-2">
+                        <span class="animate-pulse">🔴</span> Live AI Play-by-Play
+                    </h4>
+                    <p id="aiHighlightsText" class="text-[11px] text-gray-300 leading-relaxed font-mono">Connecting to Gemini Engine...</p>
                 </div>
 
                 <div class="bg-brand-surface p-4 rounded-xl border border-white/5 space-y-3">
@@ -516,6 +524,86 @@
             <div class="absolute bottom-0 inset-x-0 bg-brand-surface/90 backdrop-blur-md border-t border-white/10 p-4 flex justify-between items-center z-40">
                 <button class="text-[10px] font-bold text-white px-4 py-2 border border-white/20 rounded-lg uppercase hover:bg-white/5 transition-colors">Team Preview</button>
                 <button onclick="saveFantasyTeam()" id="fantasySaveBtn" class="bg-gray-600 text-gray-400 font-black text-xs px-8 py-2.5 rounded-lg uppercase tracking-wider transition-all pointer-events-none">Save Team</button>
+            </div>
+        </div>
+
+        <!-- ================= NEW: FAN REWARDS & MERCH HUB ================= -->
+        <div id="rewardsHubModal" class="absolute inset-x-0 bottom-0 top-14 bg-brand-darkBg border-t border-brand-gold/30 rounded-t-[24px] z-50 transform translate-y-full transition-transform duration-300 flex flex-col shadow-[0_-10px_40px_rgba(255,183,0,0.15)]">
+            <div class="w-12 h-1 bg-white/20 rounded-full mx-auto my-3 cursor-pointer" onclick="closeRewardsHub()"></div>
+            <div class="px-4 pb-3 flex justify-between items-center border-b border-white/5">
+                <div>
+                    <h3 class="text-sm font-black tracking-widest text-brand-gold uppercase">Pro Rewards Hub 🛍️</h3>
+                    <p class="text-[9px] text-gray-400">Redeem Fan Coins for Official Merch</p>
+                </div>
+                <div class="bg-brand-surfaceSecondary border border-brand-gold/30 px-3 py-1.5 rounded-full flex items-center gap-1.5 shadow-neon-glow">
+                    <span class="text-brand-gold text-[10px]">🪙</span>
+                    <span class="text-brand-gold font-black text-sm tracking-wider" id="hubCoinBalance">2,450</span>
+                </div>
+            </div>
+            
+            <div class="flex-1 overflow-y-auto p-4 hide-scrollbar space-y-4">
+                <div class="grid grid-cols-2 gap-3">
+                    <!-- Item 1 -->
+                    <div class="bg-brand-surface border border-white/10 rounded-xl overflow-hidden flex flex-col">
+                        <div class="h-24 bg-gradient-to-tr from-blue-900 to-blue-600 p-2 flex items-center justify-center">
+                            <span class="text-4xl">👕</span>
+                        </div>
+                        <div class="p-3 space-y-2 flex-1 flex flex-col justify-between">
+                            <div>
+                                <h4 class="text-xs font-bold text-white">Official Team Jersey</h4>
+                                <p class="text-[9px] text-gray-400">Authentic match day kit.</p>
+                            </div>
+                            <button onclick="buyMerchItem('Official Team Jersey', 1500)" class="w-full bg-brand-surfaceSecondary border border-brand-gold/50 text-brand-gold font-bold text-[10px] py-1.5 rounded flex items-center justify-center gap-1 hover:bg-brand-gold hover:text-black transition-colors">
+                                🪙 1,500
+                            </button>
+                        </div>
+                    </div>
+                    <!-- Item 2 -->
+                    <div class="bg-brand-surface border border-white/10 rounded-xl overflow-hidden flex flex-col">
+                        <div class="h-24 bg-gradient-to-tr from-gray-800 to-gray-600 p-2 flex items-center justify-center">
+                            <span class="text-4xl">🧢</span>
+                        </div>
+                        <div class="p-3 space-y-2 flex-1 flex flex-col justify-between">
+                            <div>
+                                <h4 class="text-xs font-bold text-white">Signature Pro Cap</h4>
+                                <p class="text-[9px] text-gray-400">Adjustable fan cap.</p>
+                            </div>
+                            <button onclick="buyMerchItem('Signature Pro Cap', 800)" class="w-full bg-brand-surfaceSecondary border border-brand-gold/50 text-brand-gold font-bold text-[10px] py-1.5 rounded flex items-center justify-center gap-1 hover:bg-brand-gold hover:text-black transition-colors">
+                                🪙 800
+                            </button>
+                        </div>
+                    </div>
+                    <!-- Item 3 -->
+                    <div class="bg-brand-surface border border-white/10 rounded-xl overflow-hidden flex flex-col">
+                        <div class="h-24 bg-gradient-to-tr from-yellow-900 to-brand-gold p-2 flex items-center justify-center">
+                            <span class="text-4xl">🎫</span>
+                        </div>
+                        <div class="p-3 space-y-2 flex-1 flex flex-col justify-between">
+                            <div>
+                                <h4 class="text-xs font-bold text-white">VIP Match Pass</h4>
+                                <p class="text-[9px] text-gray-400">Front row stadium access.</p>
+                            </div>
+                            <button onclick="buyMerchItem('VIP Match Pass', 5000)" class="w-full bg-brand-surfaceSecondary border border-brand-gold/50 text-brand-gold font-bold text-[10px] py-1.5 rounded flex items-center justify-center gap-1 hover:bg-brand-gold hover:text-black transition-colors">
+                                🪙 5,000
+                            </button>
+                        </div>
+                    </div>
+                    <!-- Item 4 -->
+                    <div class="bg-brand-surface border border-white/10 rounded-xl overflow-hidden flex flex-col">
+                        <div class="h-24 bg-gradient-to-tr from-purple-900 to-pink-600 p-2 flex items-center justify-center">
+                            <span class="text-4xl">🎮</span>
+                        </div>
+                        <div class="p-3 space-y-2 flex-1 flex flex-col justify-between">
+                            <div>
+                                <h4 class="text-xs font-bold text-white">Pro Gamer Avatar</h4>
+                                <p class="text-[9px] text-gray-400">Digital exclusive profile ring.</p>
+                            </div>
+                            <button onclick="buyMerchItem('Pro Gamer Avatar', 300)" class="w-full bg-brand-surfaceSecondary border border-brand-gold/50 text-brand-gold font-bold text-[10px] py-1.5 rounded flex items-center justify-center gap-1 hover:bg-brand-gold hover:text-black transition-colors">
+                                🪙 300
+                            </button>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -1072,6 +1160,84 @@
             coinsNode.textContent = (currentCoins + 100).toLocaleString();
             alert("🪙 +100 Fan Coins awarded for joining the Match Contest!");
         }
+
+        // ================= FAN REWARDS & MERCH HUB LOGIC =================
+        function openRewardsHub() {
+            // Sync coin balance
+            const currentCoins = document.getElementById('fanCoinBalance').textContent;
+            document.getElementById('hubCoinBalance').textContent = currentCoins;
+            document.getElementById('rewardsHubModal').classList.remove('translate-y-full');
+        }
+
+        function closeRewardsHub() {
+            document.getElementById('rewardsHubModal').classList.add('translate-y-full');
+        }
+
+        function buyMerchItem(itemName, cost) {
+            const coinsNode = document.getElementById('fanCoinBalance');
+            const hubCoinsNode = document.getElementById('hubCoinBalance');
+            let currentCoins = parseInt(coinsNode.textContent.replace(/,/g, ''));
+            
+            if (currentCoins >= cost) {
+                if (confirm(`Do you want to spend 🪙 ${cost} coins to claim "${itemName}"?`)) {
+                    currentCoins -= cost;
+                    const formattedCoins = currentCoins.toLocaleString();
+                    coinsNode.textContent = formattedCoins;
+                    hubCoinsNode.textContent = formattedCoins;
+                    alert(`🎉 Success! You have successfully redeemed "${itemName}". Check your email for delivery tracking.`);
+                }
+            } else {
+                alert(`⚠️ Not enough Fan Coins! You need 🪙 ${cost - currentCoins} more coins. Keep watching streams and playing Fantasy to earn more!`);
+            }
+        }
+
+        // ================= AI HIGHLIGHTS GENERATOR (GEMINI) =================
+        async function generateAIHighlights() {
+            const outputContainer = document.getElementById('aiHighlightsOutput');
+            const outputText = document.getElementById('aiHighlightsText');
+            const btn = document.getElementById('aiHighlightsBtn');
+            const originalBtnHtml = btn.innerHTML;
+            
+            outputContainer.classList.remove('hidden');
+            outputText.innerHTML = '<span class="animate-pulse">Analyzing live video feed telemetry...</span>';
+            btn.innerHTML = '<span>⏳</span> Processing...';
+            btn.classList.add('opacity-50', 'pointer-events-none');
+
+            const score = APP_STATE.liveScoreData || {
+                tournament: "IPL 2026 FINAL",
+                teams: {
+                    teamA: { name: "GT", score: "155-8", overs: "20.0" },
+                    teamB: { name: "RCB", score: "161-5", overs: "18.2" }
+                }
+            };
+
+            const userQuery = `Generate a rapid, exciting bullet-point commentary of the top 3 best moments for this match based on this score: ${score.teams.teamA.name} (${score.teams.teamA.score}) vs ${score.teams.teamB.name} (${score.teams.teamB.score}). Use lots of emojis and dramatic sports commentary style. Make it short (max 50 words).`;
+
+            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${APP_STATE.geminiApiKey}`;
+
+            try {
+                const payload = { contents: [{ parts: [{ text: userQuery }] }] };
+                const response = await fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+                const result = await response.json();
+                const text = result.candidates?.[0]?.content?.parts?.[0]?.text;
+
+                if (text) {
+                    outputText.innerHTML = text.replace(/\n/g, '<br>');
+                } else {
+                    throw new Error("Empty AI response");
+                }
+            } catch (error) {
+                // Fallback thrilling highlights if no API key is present
+                outputText.innerHTML = `
+                    💥 <strong>18.1 Ov:</strong> MASSIVE SIX by Kohli into the upper deck!<br><br>
+                    🔥 <strong>17.4 Ov:</strong> Rashid Khan spins a web, incredible bowled out!<br><br>
+                    ⚡ <strong>16.2 Ov:</strong> Bullet throw from boundary, stunning run out!
+                `;
+            } finally {
+                btn.innerHTML = originalBtnHtml;
+                btn.classList.remove('opacity-50', 'pointer-events-none');
+            }
+        }
     </script>
 </body>
-                            </html>
+    </html>
