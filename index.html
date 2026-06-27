@@ -62,11 +62,19 @@
             </div>
             
             <!-- Interactive Dynamic Authentication Profile Control -->
-            <div class="relative group cursor-pointer" onclick="handleProfileSystemClick()">
-                <div class="w-9 h-9 rounded-full bg-gradient-to-tr from-brand-neon to-brand-pink p-[1.5px]">
-                    <img id="userAvatarImg" src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=150&q=80" class="w-full h-full object-cover rounded-full" alt="Profile">
+            <div class="flex items-center gap-3">
+                <!-- Fan Coins Badge -->
+                <div class="bg-brand-surfaceSecondary border border-brand-gold/30 px-2.5 py-1 rounded-full flex items-center gap-1.5 cursor-pointer shadow-neon-glow" onclick="alert('Fan Coins 🪙\nEarn coins by watching live streams, posting threads, and winning fantasy leagues!')">
+                    <span class="text-brand-gold text-[10px]">🪙</span>
+                    <span class="text-brand-gold font-black text-xs tracking-wider" id="fanCoinBalance">2,450</span>
                 </div>
-                <span id="userOnlineStatusDot" class="absolute bottom-0 right-0 w-2.5 h-2.5 bg-red-500 border-2 border-brand-darkBg rounded-full"></span>
+                
+                <div class="relative group cursor-pointer" onclick="handleProfileSystemClick()">
+                    <div class="w-9 h-9 rounded-full bg-gradient-to-tr from-brand-neon to-brand-pink p-[1.5px]">
+                        <img id="userAvatarImg" src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=150&q=80" class="w-full h-full object-cover rounded-full" alt="Profile">
+                    </div>
+                    <span id="userOnlineStatusDot" class="absolute bottom-0 right-0 w-2.5 h-2.5 bg-red-500 border-2 border-brand-darkBg rounded-full"></span>
+                </div>
             </div>
         </header>
 
@@ -325,6 +333,16 @@
                     </div>
                 </div>
 
+                <!-- NEW: Action Bar for Match Center (Fantasy & Highlights) -->
+                <div class="grid grid-cols-2 gap-3 mt-2">
+                    <button onclick="openFantasyBuilder()" class="bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-black text-[10px] py-2.5 rounded-xl uppercase tracking-widest shadow-lg flex items-center justify-center gap-2 border border-purple-400/30 transition-all active:scale-95">
+                        <span>🏏</span> Create Fantasy Team
+                    </button>
+                    <button onclick="alert('Generating AI Highlights Reel...')" class="bg-brand-surface border border-white/10 text-brand-neon font-black text-[10px] py-2.5 rounded-xl uppercase tracking-widest shadow-lg flex items-center justify-center gap-2 transition-all active:scale-95">
+                        <span>⚡</span> AI Highlights
+                    </button>
+                </div>
+
                 <div class="bg-brand-surface p-4 rounded-xl border border-white/5 space-y-3">
                     <div class="flex justify-between items-center">
                         <h4 class="text-xs font-black text-brand-gold uppercase tracking-wider">⚡ AI Analyst Prediction (Gemini Core Engine)</h4>
@@ -374,6 +392,130 @@
 
             <div class="text-center text-[9px] text-gray-500 leading-normal">
                 By connection, you agree to Sportsnap <span class="text-brand-neon underline cursor-pointer">Terms of Premium Service</span>.
+            </div>
+        </div>
+
+        <!-- ================= FANTASY TEAM BUILDER MODAL (DREAM11 CLONE) ================= -->
+        <div id="fantasyBuilderModal" class="absolute inset-0 z-50 bg-brand-darkBg flex flex-col transform translate-y-full transition-transform duration-300">
+            <!-- Header -->
+            <div class="bg-brand-surface/90 backdrop-blur-md px-4 py-3 border-b border-white/10 flex items-center justify-between sticky top-0">
+                <div class="flex items-center gap-3">
+                    <button onclick="closeFantasyBuilder()" class="text-white font-bold text-lg hover:text-brand-neon transition-colors">←</button>
+                    <div>
+                        <h2 class="text-xs font-black text-white uppercase tracking-wider">Create Team 1</h2>
+                        <p class="text-[9px] text-gray-400">GT vs RCB • 1h 45m left</p>
+                    </div>
+                </div>
+                <div class="text-right">
+                    <div class="text-[9px] text-gray-400 uppercase font-bold">Max Credits</div>
+                    <div class="text-sm font-black text-brand-neon" id="fantasyCreditsLeft">100.0</div>
+                </div>
+            </div>
+            
+            <!-- Pitch Info -->
+            <div class="flex justify-between items-center px-4 py-2 bg-brand-surface text-[10px] text-gray-300 border-b border-white/5">
+                <span class="flex items-center gap-1">🏏 <span class="font-bold text-white">Pitch:</span> Batting</span>
+                <span class="flex items-center gap-1">☀️ <span class="font-bold text-white">Weather:</span> Clear</span>
+                <span class="flex items-center gap-1">📈 <span class="font-bold text-white">Avg:</span> 185</span>
+            </div>
+
+            <!-- Progress Bar -->
+            <div class="px-4 py-3 bg-brand-darkBg space-y-2">
+                <div class="flex justify-between text-[10px] font-bold">
+                    <span class="text-gray-400">Players <span id="fantasyPlayerCount" class="text-white text-xs font-black">0</span>/11</span>
+                    <span class="text-brand-gold font-black tracking-wider">MEGA CONTEST PRO</span>
+                </div>
+                <div class="w-full bg-white/10 h-2 rounded-full flex gap-0.5 overflow-hidden" id="fantasyProgressBar">
+                    <!-- Dynamic segments will be added via JS -->
+                </div>
+            </div>
+
+            <!-- Player Selection List -->
+            <div class="flex-1 overflow-y-auto hide-scrollbar bg-brand-darkBg pb-20">
+                <!-- Tabs -->
+                <div class="flex border-b border-white/5 text-[11px] font-bold sticky top-0 bg-brand-darkBg z-10">
+                    <button class="flex-1 py-3 text-brand-neon border-b-2 border-brand-neon">WK & BAT</button>
+                    <button class="flex-1 py-3 text-gray-500 hover:text-gray-300">ALL ROUNDERS</button>
+                    <button class="flex-1 py-3 text-gray-500 hover:text-gray-300">BOWLERS</button>
+                </div>
+                
+                <!-- Player Rows -->
+                <div class="space-y-0.5" id="fantasyPlayerList">
+                    <!-- Player Item 1 -->
+                    <div class="flex items-center justify-between p-3 bg-brand-surface border-b border-white/5 cursor-pointer hover:bg-brand-surfaceSecondary transition-colors" onclick="toggleFantasyPlayer(this, 10.5)">
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 rounded-full bg-red-900 border border-red-500 flex items-center justify-center text-xs font-black text-white relative">
+                                VK
+                                <span class="absolute -bottom-1 -right-1 bg-brand-surface text-[7px] px-1 rounded border border-white/20">RCB</span>
+                            </div>
+                            <div>
+                                <h4 class="text-xs font-bold text-white">Virat Kohli</h4>
+                                <p class="text-[9px] text-gray-400">Sel by 94.5% • 845 Pts</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-4">
+                            <span class="text-xs font-bold text-brand-neon">10.5</span>
+                            <div class="w-6 h-6 rounded-full border border-white/20 flex items-center justify-center text-xl text-gray-500 add-btn transition-colors">+</div>
+                        </div>
+                    </div>
+                    <!-- Player Item 2 -->
+                    <div class="flex items-center justify-between p-3 bg-brand-surface border-b border-white/5 cursor-pointer hover:bg-brand-surfaceSecondary transition-colors" onclick="toggleFantasyPlayer(this, 9.5)">
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 rounded-full bg-blue-900 border border-blue-500 flex items-center justify-center text-xs font-black text-white relative">
+                                SG
+                                <span class="absolute -bottom-1 -right-1 bg-brand-surface text-[7px] px-1 rounded border border-white/20">GT</span>
+                            </div>
+                            <div>
+                                <h4 class="text-xs font-bold text-white">Shubman Gill</h4>
+                                <p class="text-[9px] text-gray-400">Sel by 88.2% • 720 Pts</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-4">
+                            <span class="text-xs font-bold text-brand-neon">9.5</span>
+                            <div class="w-6 h-6 rounded-full border border-white/20 flex items-center justify-center text-xl text-gray-500 add-btn transition-colors">+</div>
+                        </div>
+                    </div>
+                    <!-- Player Item 3 -->
+                    <div class="flex items-center justify-between p-3 bg-brand-surface border-b border-white/5 cursor-pointer hover:bg-brand-surfaceSecondary transition-colors" onclick="toggleFantasyPlayer(this, 9.0)">
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 rounded-full bg-red-900 border border-red-500 flex items-center justify-center text-xs font-black text-white relative">
+                                FM
+                                <span class="absolute -bottom-1 -right-1 bg-brand-surface text-[7px] px-1 rounded border border-white/20">RCB</span>
+                            </div>
+                            <div>
+                                <h4 class="text-xs font-bold text-white">Faf du Plessis</h4>
+                                <p class="text-[9px] text-gray-400">Sel by 75.1% • 610 Pts</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-4">
+                            <span class="text-xs font-bold text-white">9.0</span>
+                            <div class="w-6 h-6 rounded-full border border-white/20 flex items-center justify-center text-xl text-gray-500 add-btn transition-colors">+</div>
+                        </div>
+                    </div>
+                    <!-- Player Item 4 -->
+                    <div class="flex items-center justify-between p-3 bg-brand-surface border-b border-white/5 cursor-pointer hover:bg-brand-surfaceSecondary transition-colors" onclick="toggleFantasyPlayer(this, 9.0)">
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 rounded-full bg-blue-900 border border-blue-500 flex items-center justify-center text-xs font-black text-white relative">
+                                RS
+                                <span class="absolute -bottom-1 -right-1 bg-brand-surface text-[7px] px-1 rounded border border-white/20">GT</span>
+                            </div>
+                            <div>
+                                <h4 class="text-xs font-bold text-white">Rashid Khan</h4>
+                                <p class="text-[9px] text-gray-400">Sel by 89.9% • 680 Pts</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-4">
+                            <span class="text-xs font-bold text-white">9.0</span>
+                            <div class="w-6 h-6 rounded-full border border-white/20 flex items-center justify-center text-xl text-gray-500 add-btn transition-colors">+</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bottom Action Bar -->
+            <div class="absolute bottom-0 inset-x-0 bg-brand-surface/90 backdrop-blur-md border-t border-white/10 p-4 flex justify-between items-center z-40">
+                <button class="text-[10px] font-bold text-white px-4 py-2 border border-white/20 rounded-lg uppercase hover:bg-white/5 transition-colors">Team Preview</button>
+                <button onclick="saveFantasyTeam()" id="fantasySaveBtn" class="bg-gray-600 text-gray-400 font-black text-xs px-8 py-2.5 rounded-lg uppercase tracking-wider transition-all pointer-events-none">Save Team</button>
             </div>
         </div>
 
@@ -845,6 +987,91 @@
         function triggerTicketBookingProcess() {
             alert("PRO Pass Processing Core: Your digital access pass voucher hash has been securely pinned inside user memory profile. Transaction Fee: ₹0 (Zero Host Matrix Plan Verified).");
         }
+
+        // ================= FANTASY SPORTS ENGINE LOGIC =================
+        let FANTASY_STATE = {
+            playersSelected: 0,
+            creditsLeft: 100.0
+        };
+
+        function openFantasyBuilder() {
+            document.getElementById('fantasyBuilderModal').classList.remove('translate-y-full');
+            updateFantasyProgressBar();
+        }
+
+        function closeFantasyBuilder() {
+            document.getElementById('fantasyBuilderModal').classList.add('translate-y-full');
+        }
+
+        function toggleFantasyPlayer(element, creditCost) {
+            const isSelected = element.classList.contains('bg-brand-neon/10');
+            const addBtn = element.querySelector('.add-btn');
+            
+            if (isSelected) {
+                // Deselect logic
+                element.classList.remove('bg-brand-neon/10', 'border-brand-neon/50');
+                addBtn.textContent = '+';
+                addBtn.classList.remove('bg-brand-neon', 'text-black', 'border-brand-neon');
+                addBtn.classList.add('border-white/20', 'text-gray-500');
+                
+                FANTASY_STATE.playersSelected--;
+                FANTASY_STATE.creditsLeft += creditCost;
+            } else {
+                // Validation before select
+                if (FANTASY_STATE.playersSelected >= 11) {
+                    return alert("Maximum 11 players can be selected for your Fantasy Team!");
+                }
+                if (FANTASY_STATE.creditsLeft - creditCost < 0) {
+                    return alert("Not enough Fantasy Credits remaining!");
+                }
+
+                // Select logic
+                element.classList.add('bg-brand-neon/10', 'border-brand-neon/50');
+                addBtn.textContent = '✓';
+                addBtn.classList.remove('border-white/20', 'text-gray-500');
+                addBtn.classList.add('bg-brand-neon', 'text-black', 'border-brand-neon');
+                
+                FANTASY_STATE.playersSelected++;
+                FANTASY_STATE.creditsLeft -= creditCost;
+            }
+
+            // Update UI trackers
+            document.getElementById('fantasyPlayerCount').textContent = FANTASY_STATE.playersSelected;
+            document.getElementById('fantasyCreditsLeft').textContent = FANTASY_STATE.creditsLeft.toFixed(1);
+            
+            // Dynamic State for Save Button
+            const saveBtn = document.getElementById('fantasySaveBtn');
+            if (FANTASY_STATE.playersSelected >= 1) { // Allowing save early for testing simulation
+                saveBtn.classList.remove('bg-gray-600', 'text-gray-400', 'pointer-events-none');
+                saveBtn.classList.add('bg-brand-neon', 'text-black', 'shadow-neon-glow', 'pointer-events-auto');
+            } else {
+                saveBtn.classList.add('bg-gray-600', 'text-gray-400', 'pointer-events-none');
+                saveBtn.classList.remove('bg-brand-neon', 'text-black', 'shadow-neon-glow', 'pointer-events-auto');
+            }
+
+            updateFantasyProgressBar();
+        }
+
+        function updateFantasyProgressBar() {
+            const bar = document.getElementById('fantasyProgressBar');
+            bar.innerHTML = '';
+            for(let i=0; i<11; i++) {
+                const segment = document.createElement('div');
+                segment.className = `flex-1 h-full rounded-full transition-all duration-300 ${i < FANTASY_STATE.playersSelected ? 'bg-brand-neon' : 'bg-white/10'}`;
+                bar.appendChild(segment);
+            }
+        }
+
+        function saveFantasyTeam() {
+            alert(`🎉 Fantasy Team Saved Successfully!\n\nYou have registered ${FANTASY_STATE.playersSelected} players for the Mega Contest. Track your rank on the live leaderboard!`);
+            closeFantasyBuilder();
+            
+            // Trigger Gamification Reward
+            const coinsNode = document.getElementById('fanCoinBalance');
+            let currentCoins = parseInt(coinsNode.textContent.replace(/,/g, ''));
+            coinsNode.textContent = (currentCoins + 100).toLocaleString();
+            alert("🪙 +100 Fan Coins awarded for joining the Match Contest!");
+        }
     </script>
 </body>
-                        </html>
+                            </html>
