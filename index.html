@@ -14,32 +14,42 @@
       min-height: 100vh;
     }
 
+    /* HEADER */
     .header {
       display: flex;
       justify-content: space-between;
       align-items: center;
       padding: 16px 20px;
-      background: linear-gradient(135deg, #0A0E1A, #111827);
+      background: linear-gradient(135deg, #0A0E1A 0%, #111827 100%);
       border-bottom: 1px solid #1E2D45;
       position: sticky;
       top: 0;
       z-index: 100;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
     }
 
-    .logo {
+    .logo-section {
       display: flex;
       align-items: center;
-      gap: 10px;
-      font-size: 24px;
-      font-weight: 900;
-      background: linear-gradient(135deg, #00D4FF, #7C3AED);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
+      gap: 12px;
     }
 
-    .auth-section {
+    .logo-icon {
+      font-size: 32px;
+    }
+
+    .logo-text {
+      font-size: 24px;
+      font-weight: 900;
+      background: linear-gradient(135deg, #00D4FF 0%, #7C3AED 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .header-right {
       display: flex;
-      gap: 10px;
+      gap: 12px;
       align-items: center;
     }
 
@@ -57,6 +67,7 @@
 
     .btn-auth:hover {
       background: #2A3D55;
+      transform: translateY(-2px);
     }
 
     .btn-signup {
@@ -64,26 +75,53 @@
       color: white !important;
     }
 
-    .user-profile {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      cursor: pointer;
-    }
-
-    .avatar {
-      width: 32px;
-      height: 32px;
-      background: #1E2D45;
+    .user-avatar {
+      width: 36px;
+      height: 36px;
+      background: linear-gradient(135deg, #00D4FF, #7C3AED);
       border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
       font-weight: 700;
-      font-size: 12px;
+      font-size: 14px;
+      cursor: pointer;
     }
 
-    .sport-tabs {
+    /* STORIES */
+    .stories-container {
+      display: flex;
+      gap: 12px;
+      padding: 16px 20px;
+      overflow-x: auto;
+      scrollbar-width: none;
+      border-bottom: 1px solid #1E2D45;
+    }
+
+    .stories-container::-webkit-scrollbar { display: none; }
+
+    .story {
+      min-width: 70px;
+      width: 70px;
+      height: 100px;
+      background: linear-gradient(135deg, #00D4FF, #7C3AED);
+      border-radius: 16px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 28px;
+      transition: all 0.3s;
+      flex-shrink: 0;
+    }
+
+    .story:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 20px rgba(0, 212, 255, 0.3);
+    }
+
+    /* TABS */
+    .tabs {
       display: flex;
       gap: 10px;
       padding: 12px 20px;
@@ -92,7 +130,7 @@
       scrollbar-width: none;
     }
 
-    .sport-tabs::-webkit-scrollbar { display: none; }
+    .tabs::-webkit-scrollbar { display: none; }
 
     .tab {
       padding: 8px 16px;
@@ -104,6 +142,12 @@
       font-weight: 600;
       transition: all 0.3s;
       white-space: nowrap;
+      font-size: 13px;
+    }
+
+    .tab:hover {
+      border-color: #00D4FF;
+      color: #00D4FF;
     }
 
     .tab.active {
@@ -112,6 +156,7 @@
       background: rgba(0, 212, 255, 0.1);
     }
 
+    /* CONTAINER */
     .container {
       max-width: 1200px;
       margin: 0 auto;
@@ -119,14 +164,31 @@
     }
 
     .section-title {
-      padding: 16px 0 8px;
+      padding: 20px 0 12px;
       font-size: 12px;
       color: #8A9BB5;
       text-transform: uppercase;
       font-weight: 700;
       letter-spacing: 1px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
     }
 
+    .live-dot {
+      width: 8px;
+      height: 8px;
+      background: #FF3D57;
+      border-radius: 50%;
+      animation: pulse 1.5s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+
+    /* MATCHES GRID */
     .matches-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
@@ -135,18 +197,37 @@
     }
 
     .match-card {
-      background: #111827;
+      background: linear-gradient(135deg, #111827 0%, #151D2E 100%);
       border: 1px solid #1E2D45;
       border-radius: 16px;
       padding: 16px;
       transition: all 0.3s;
       cursor: pointer;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .match-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, #00D4FF, #7C3AED);
+      opacity: 0;
+      transition: opacity 0.3s;
     }
 
     .match-card:hover {
-      background: #151D2E;
+      background: linear-gradient(135deg, #151D2E 0%, #1A2438 100%);
       border-color: #00D4FF;
-      box-shadow: 0 0 20px rgba(0, 212, 255, 0.1);
+      box-shadow: 0 0 30px rgba(0, 212, 255, 0.2);
+      transform: translateY(-4px);
+    }
+
+    .match-card:hover::before {
+      opacity: 1;
     }
 
     .match-header {
@@ -168,34 +249,25 @@
       gap: 4px;
     }
 
-    .live-dot {
-      width: 6px;
-      height: 6px;
-      background: #FF3D57;
-      border-radius: 50%;
-      animation: blink 1s infinite;
-    }
-
-    @keyframes blink {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.5; }
-    }
-
     .fav-btn {
       background: none;
       border: none;
       cursor: pointer;
       font-size: 20px;
       transition: all 0.3s;
+      padding: 4px 8px;
+    }
+
+    .fav-btn:hover {
+      transform: scale(1.2);
     }
 
     .fav-btn.active {
       color: #FF3D57;
-      transform: scale(1.2);
     }
 
     .match-title {
-      font-size: 14px;
+      font-size: 15px;
       color: #F0F4FF;
       margin-bottom: 12px;
       font-weight: 600;
@@ -206,9 +278,10 @@
       justify-content: space-between;
       align-items: center;
       margin-bottom: 12px;
-      padding: 12px;
+      padding: 14px;
       background: rgba(0, 212, 255, 0.05);
-      border-radius: 10px;
+      border-radius: 12px;
+      border: 1px solid rgba(0, 212, 255, 0.1);
     }
 
     .team {
@@ -224,14 +297,15 @@
     }
 
     .team-score {
-      font-size: 26px;
+      font-size: 28px;
       font-weight: 900;
       color: #00D4FF;
+      line-height: 1;
     }
 
     .vs {
-      padding: 0 12px;
-      font-size: 12px;
+      padding: 0 10px;
+      font-size: 11px;
       color: #4A5568;
       font-weight: 700;
     }
@@ -241,22 +315,25 @@
       justify-content: space-between;
       font-size: 11px;
       color: #4A5568;
+      padding-top: 8px;
+      border-top: 1px solid rgba(255, 255, 255, 0.05);
     }
 
+    /* LOADING & ERROR */
     .loading {
       text-align: center;
-      padding: 40px 20px;
+      padding: 60px 20px;
       color: #8A9BB5;
     }
 
     .spinner {
-      width: 40px;
-      height: 40px;
-      border: 3px solid #1E2D45;
+      width: 48px;
+      height: 48px;
+      border: 4px solid #1E2D45;
       border-top-color: #00D4FF;
       border-radius: 50%;
       animation: spin 1s linear infinite;
-      margin: 0 auto 12px;
+      margin: 0 auto 16px;
     }
 
     @keyframes spin {
@@ -275,17 +352,19 @@
       margin-bottom: 20px;
     }
 
+    /* BOTTOM NAV */
     .bottom-nav {
       position: fixed;
       bottom: 0;
       left: 0;
       right: 0;
-      background: #111827;
+      background: linear-gradient(180deg, rgba(17, 24, 39, 0.95) 0%, #0A0E1A 100%);
       border-top: 1px solid #1E2D45;
       display: flex;
       justify-content: space-around;
       padding: 8px 0;
       z-index: 99;
+      backdrop-filter: blur(10px);
     }
 
     .nav-item {
@@ -296,9 +375,14 @@
       color: #4A5568;
       font-size: 10px;
       cursor: pointer;
-      padding: 8px 16px;
+      padding: 8px 12px;
       transition: all 0.3s;
       flex: 1;
+      font-weight: 500;
+    }
+
+    .nav-item:hover {
+      color: #00D4FF;
     }
 
     .nav-item.active {
@@ -306,9 +390,24 @@
     }
 
     .nav-icon {
-      font-size: 20px;
+      font-size: 22px;
+      transition: all 0.3s;
     }
 
+    .nav-item.active .nav-icon {
+      transform: scale(1.1);
+    }
+
+    /* PAGES */
+    .page-content {
+      display: none;
+    }
+
+    .page-content.active {
+      display: block;
+    }
+
+    /* MODAL */
     .modal {
       display: none;
       position: fixed;
@@ -327,18 +426,22 @@
     }
 
     .modal-content {
-      background: #111827;
+      background: linear-gradient(135deg, #111827 0%, #151D2E 100%);
       border-radius: 16px;
       padding: 24px;
       width: 90%;
       max-width: 400px;
       border: 1px solid #1E2D45;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
     }
 
     .modal-title {
-      font-size: 20px;
+      font-size: 22px;
       font-weight: 700;
-      margin-bottom: 16px;
+      margin-bottom: 20px;
+      background: linear-gradient(135deg, #00D4FF, #7C3AED);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
     }
 
     .input-field {
@@ -350,6 +453,13 @@
       border-radius: 8px;
       margin-bottom: 12px;
       font-size: 14px;
+      transition: all 0.3s;
+    }
+
+    .input-field:focus {
+      outline: none;
+      border-color: #00D4FF;
+      box-shadow: 0 0 10px rgba(0, 212, 255, 0.2);
     }
 
     .btn-primary {
@@ -362,10 +472,12 @@
       cursor: pointer;
       font-weight: 700;
       margin-bottom: 8px;
+      transition: all 0.3s;
     }
 
     .btn-primary:hover {
-      opacity: 0.9;
+      transform: translateY(-2px);
+      box-shadow: 0 10px 25px rgba(0, 212, 255, 0.3);
     }
 
     .btn-secondary {
@@ -377,46 +489,34 @@
       border-radius: 8px;
       cursor: pointer;
       font-weight: 600;
+      transition: all 0.3s;
     }
 
-    .story-carousel {
-      display: flex;
-      gap: 12px;
-      padding: 16px 20px;
-      overflow-x: auto;
-      scrollbar-width: none;
-      border-bottom: 1px solid #1E2D45;
+    .btn-secondary:hover {
+      background: #2A3D55;
     }
 
-    .story-carousel::-webkit-scrollbar { display: none; }
-
-    .story {
-      min-width: 60px;
-      width: 60px;
-      height: 80px;
-      background: linear-gradient(135deg, #00D4FF, #7C3AED);
-      border-radius: 12px;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 24px;
-    }
-
+    /* NEWS CARD */
     .news-card {
-      background: #111827;
+      background: linear-gradient(135deg, #111827 0%, #151D2E 100%);
       border: 1px solid #1E2D45;
       border-radius: 12px;
       padding: 12px;
       margin-bottom: 12px;
       display: flex;
       gap: 12px;
+      transition: all 0.3s;
+    }
+
+    .news-card:hover {
+      border-color: #00D4FF;
+      box-shadow: 0 0 15px rgba(0, 212, 255, 0.1);
     }
 
     .news-image {
       width: 80px;
       height: 80px;
-      background: #1E2D45;
+      background: linear-gradient(135deg, #00D4FF, #7C3AED);
       border-radius: 8px;
       flex-shrink: 0;
     }
@@ -438,31 +538,40 @@
       line-height: 1.4;
     }
 
-    .page-content {
-      display: none;
-    }
-
-    .page-content.active {
-      display: block;
+    /* RESPONSIVE */
+    @media (max-width: 768px) {
+      .matches-grid {
+        grid-template-columns: 1fr;
+      }
     }
   </style>
 </head>
 <body>
-  <!-- Header -->
+  <!-- HEADER -->
   <div class="header">
-    <div class="logo">🏏 SportSnap PRO ⚡</div>
-    <div class="auth-section">
+    <div class="logo-section">
+      <div class="logo-icon">🏏</div>
+      <div class="logo-text">SportSnap PRO ⚡</div>
+    </div>
+    <div class="header-right">
       <button class="btn-auth" id="loginBtn" onclick="openLogin()" style="display: none;">Login</button>
       <button class="btn-auth btn-signup" id="signupBtn" onclick="openSignup()" style="display: none;">Sign Up</button>
-      <div class="user-profile" id="userProfile" style="display: none;">
-        <div class="avatar" id="userAvatar">U</div>
-        <span id="userName">User</span>
-      </div>
+      <div class="user-avatar" id="userProfile" style="display: none;" title="User Profile">U</div>
     </div>
   </div>
 
-  <!-- Sport Tabs -->
-  <div class="sport-tabs">
+  <!-- STORIES -->
+  <div class="stories-container">
+    <div class="story">📰</div>
+    <div class="story">🎥</div>
+    <div class="story">⚽</div>
+    <div class="story">🏀</div>
+    <div class="story">🎾</div>
+    <div class="story">📸</div>
+  </div>
+
+  <!-- TABS -->
+  <div class="tabs">
     <button class="tab active" data-sport="cricket">🏏 Cricket</button>
     <button class="tab" data-sport="football">⚽ Football</button>
     <button class="tab" data-sport="basketball">🏀 Basketball</button>
@@ -471,50 +580,44 @@
     <button class="tab" data-sport="hockey">🏑 Hockey</button>
   </div>
 
-  <!-- Main Container -->
+  <!-- MAIN CONTENT -->
   <div class="container">
-    <!-- Stories -->
-    <div class="story-carousel" id="storiesContainer"></div>
-
-    <!-- Home Page -->
+    <!-- HOME PAGE -->
     <div class="page-content active" id="homePage">
-      <div class="section-title">🔴 LIVE MATCHES</div>
+      <div class="section-title">
+        <span class="live-dot"></span>
+        LIVE MATCHES
+      </div>
       <div id="errorContainer"></div>
       <div id="matchesContainer" class="matches-grid"></div>
     </div>
 
-    <!-- Clubs Page -->
+    <!-- CLUBS PAGE -->
     <div class="page-content" id="clubsPage">
-      <div class="section-title">🏆 CLUBS</div>
+      <div class="section-title">🏆 CLUBS & TEAMS</div>
       <div id="clubsContainer"></div>
     </div>
 
-    <!-- Reels Page -->
+    <!-- REELS PAGE -->
     <div class="page-content" id="reelsPage">
       <div class="section-title">🎬 REELS</div>
       <div id="reelsContainer"></div>
     </div>
 
-    <!-- Favorites Page -->
-    <div class="page-content" id="favoritesPage">
-      <div class="section-title">❤️ FAVORITES</div>
-      <div id="favoritesContainer"></div>
+    <!-- TICKETS PAGE -->
+    <div class="page-content" id="ticketsPage">
+      <div class="section-title">🎟️ TICKETS</div>
+      <div id="ticketsContainer"></div>
     </div>
 
-    <!-- News Page -->
+    <!-- NEWS PAGE -->
     <div class="page-content" id="newsPage">
       <div class="section-title">📰 NEWS</div>
       <div id="newsContainer"></div>
     </div>
-
-    <!-- Profile Page -->
-    <div class="page-content" id="profilePage">
-      <div class="section-title">👤 PROFILE</div>
-      <div id="profileContainer"></div>
-    </div>
   </div>
 
-  <!-- Bottom Navigation -->
+  <!-- BOTTOM NAV -->
   <div class="bottom-nav">
     <div class="nav-item active" data-page="home">
       <div class="nav-icon">🏠</div>
@@ -528,21 +631,17 @@
       <div class="nav-icon">🎬</div>
       <div>Reels</div>
     </div>
-    <div class="nav-item" data-page="favorites">
-      <div class="nav-icon">❤️</div>
-      <div>Favorites</div>
+    <div class="nav-item" data-page="tickets">
+      <div class="nav-icon">🎟️</div>
+      <div>Tickets</div>
     </div>
     <div class="nav-item" data-page="news">
       <div class="nav-icon">📰</div>
       <div>News</div>
     </div>
-    <div class="nav-item" data-page="profile">
-      <div class="nav-icon">👤</div>
-      <div>Profile</div>
-    </div>
   </div>
 
-  <!-- Login Modal -->
+  <!-- LOGIN MODAL -->
   <div class="modal" id="loginModal">
     <div class="modal-content">
       <div class="modal-title">Login</div>
@@ -553,7 +652,7 @@
     </div>
   </div>
 
-  <!-- Signup Modal -->
+  <!-- SIGNUP MODAL -->
   <div class="modal" id="signupModal">
     <div class="modal-content">
       <div class="modal-title">Sign Up</div>
@@ -565,45 +664,9 @@
     </div>
   </div>
 
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-app.js";
-    import { getFirestore, collection, getDocs, addDoc, deleteDoc, doc, query, where } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-firestore.js";
-    import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-auth.js";
-
-    const firebaseConfig = {
-      apiKey: "AIzaSyDummy_key_replace_with_yours",
-      authDomain: "sportsnap-pro.firebaseapp.com",
-      projectId: "sportsnap-pro",
-      storageBucket: "sportsnap-pro.appspot.com",
-      messagingSenderId: "123456789",
-      appId: "1:123456789:web:abcdef123456"
-    };
-
-    const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
-    const auth = getAuth(app);
-
-    let currentUser = null;
+  <script>
     let selectedSport = 'cricket';
-    let favorites = [];
-
-    // Auth State
-    onAuthStateChanged(auth, (user) => {
-      if (user) {
-        currentUser = user;
-        document.getElementById('loginBtn').style.display = 'none';
-        document.getElementById('signupBtn').style.display = 'none';
-        document.getElementById('userProfile').style.display = 'flex';
-        document.getElementById('userAvatar').textContent = user.email.charAt(0).toUpperCase();
-        document.getElementById('userName').textContent = user.email.split('@')[0];
-        loadFavorites();
-      } else {
-        currentUser = null;
-        document.getElementById('loginBtn').style.display = 'block';
-        document.getElementById('signupBtn').style.display = 'block';
-        document.getElementById('userProfile').style.display = 'none';
-      }
-    });
+    let currentUser = null;
 
     // Modal Functions
     window.openLogin = () => document.getElementById('loginModal').classList.add('active');
@@ -614,29 +677,26 @@
     window.handleLogin = async () => {
       const email = document.getElementById('loginEmail').value;
       const password = document.getElementById('loginPassword').value;
-      try {
-        await signInWithEmailAndPassword(auth, email, password);
+      if (email && password) {
+        currentUser = { email: email };
+        document.getElementById('loginBtn').style.display = 'none';
+        document.getElementById('signupBtn').style.display = 'none';
+        document.getElementById('userProfile').style.display = 'flex';
+        document.getElementById('userProfile').textContent = email.charAt(0).toUpperCase();
         closeLogin();
-      } catch (error) {
-        alert('Login failed: ' + error.message);
       }
     };
 
     window.handleSignup = async () => {
       const email = document.getElementById('signupEmail').value;
-      const password = document.getElementById('signupPassword').value;
       const name = document.getElementById('signupName').value;
-      try {
-        const result = await createUserWithEmailAndPassword(auth, email, password);
-        await addDoc(collection(db, 'users'), {
-          uid: result.user.uid,
-          name: name,
-          email: email,
-          createdAt: new Date()
-        });
+      if (email && name) {
+        currentUser = { email: email, name: name };
+        document.getElementById('loginBtn').style.display = 'none';
+        document.getElementById('signupBtn').style.display = 'none';
+        document.getElementById('userProfile').style.display = 'flex';
+        document.getElementById('userProfile').textContent = email.charAt(0).toUpperCase();
         closeSignup();
-      } catch (error) {
-        alert('Signup failed: ' + error.message);
       }
     };
 
@@ -653,7 +713,7 @@
         const data = await response.json();
 
         if (!data || data.length === 0) {
-          container.innerHTML = '<div class="loading">No matches right now 📭</div>';
+          container.innerHTML = '<div class="loading">📭 No matches right now. Check back soon!</div>';
           return;
         }
 
@@ -661,11 +721,10 @@
           <div class="match-card">
             <div class="match-header">
               <div class="live-badge">
-                <div class="live-dot"></div>
+                <div style="width: 6px; height: 6px; background: #FF3D57; border-radius: 50%; animation: pulse 1s infinite;"></div>
                 LIVE
               </div>
-              <button class="fav-btn ${favorites.includes(match.team1 + ' vs ' + match.team2) ? 'active' : ''}" 
-                      onclick="toggleFavorite('${match.team1} vs ${match.team2}')">❤️</button>
+              <button class="fav-btn" onclick="toggleFav(this)">🤍</button>
             </div>
             <div class="match-title">${match.team1} vs ${match.team2}</div>
             <div class="score-section">
@@ -690,63 +749,29 @@
       }
     }
 
-    // Toggle Favorite
-    window.toggleFavorite = async (matchName) => {
-      if (!currentUser) {
-        alert('Please login to add favorites');
-        return;
-      }
-
-      try {
-        if (favorites.includes(matchName)) {
-          favorites = favorites.filter(f => f !== matchName);
-        } else {
-          favorites.push(matchName);
-        }
-        
-        await addDoc(collection(db, 'favorites'), {
-          uid: currentUser.uid,
-          match: matchName,
-          sport: selectedSport,
-          addedAt: new Date()
-        });
-
-        fetchMatches();
-      } catch (error) {
-        console.error('Error:', error);
-      }
+    window.toggleFav = (btn) => {
+      btn.textContent = btn.textContent === '🤍' ? '❤️' : '🤍';
+      btn.classList.toggle('active');
     };
 
-    async function loadFavorites() {
-      if (!currentUser) return;
-      try {
-        const q = query(collection(db, 'favorites'), where('uid', '==', currentUser.uid));
-        const snapshot = await getDocs(q);
-        favorites = snapshot.docs.map(doc => doc.data().match);
-      } catch (error) {
-        console.error('Error loading favorites:', error);
-      }
-    }
-
     // Sport Tabs
-    document.querySelectorAll('.tab').forEach(btn => {
-      btn.addEventListener('click', () => {
-        document.querySelectorAll('.tab').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        selectedSport = btn.dataset.sport;
+    document.querySelectorAll('.tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+        selectedSport = tab.dataset.sport;
         fetchMatches();
       });
     });
 
-    // Bottom Navigation
+    // Bottom Nav
     document.querySelectorAll('.nav-item').forEach(item => {
       item.addEventListener('click', () => {
         document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
         item.classList.add('active');
         
         document.querySelectorAll('.page-content').forEach(p => p.classList.remove('active'));
-        const page = item.dataset.page;
-        document.getElementById(page + 'Page').classList.add('active');
+        document.getElementById(item.dataset.page + 'Page').classList.add('active');
       });
     });
 
