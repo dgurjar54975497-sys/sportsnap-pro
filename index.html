@@ -1,4 +1,4 @@
-                    <!DOCTYPE html>
+       <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -11,7 +11,6 @@
             --brand-darkBg: #0f172a;
             --brand-surface: #1e293b;
             --brand-gold: #FFD700;
-            --brand-pink: #f43f5e;
         }
         body {
             background-color: var(--brand-darkBg);
@@ -30,19 +29,12 @@
         .toast {
             transition: all 0.3s ease-in-out;
         }
-        @keyframes pulse-slow {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.4; }
-        }
-        .animate-pulse-slow { animation: pulse-slow 2s infinite; }
     </style>
 </head>
 <body class="flex flex-col h-screen">
 
-    <!-- TOAST NOTIFICATION SYSTEM -->
     <div id="toastContainer" class="fixed top-5 left-1/2 transform -translate-x-1/2 z-[100] flex flex-col gap-2 pointer-events-none"></div>
 
-    <!-- HEADER (Fan Coins & Rewards) -->
     <header class="p-4 flex justify-between items-center border-b border-white/10 bg-brand-darkBg z-40 sticky top-0">
         <h1 class="text-xl font-black text-white tracking-wider">SPORTSNAP <span class="text-brand-neon">PRO</span></h1>
         <div onclick="toggleModal('storeModal')" class="bg-brand-surface px-4 py-1.5 rounded-full text-sm font-bold border border-brand-gold cursor-pointer shadow-[0_0_10px_rgba(255,215,0,0.2)]">
@@ -50,356 +42,208 @@
         </div>
     </header>
 
-    <!-- MAIN NAVIGATION TABS -->
     <div class="flex border-b border-white/10 bg-brand-surface overflow-x-auto hide-scrollbar sticky top-[65px] z-30">
-        <button id="btn-homeTab" onclick="switchTab('homeTab')" class="px-6 py-3 text-sm font-bold border-b-2 border-brand-neon text-brand-neon focus:outline-none transition-all">Home</button>
-        <button id="btn-fantasyTab" onclick="switchTab('fantasyTab')" class="px-6 py-3 text-sm font-bold border-b-2 border-transparent text-gray-400 focus:outline-none transition-all">Fantasy Builder</button>
-        <button id="btn-leaderboardTab" onclick="switchTab('leaderboardTab')" class="px-6 py-3 text-sm font-bold border-b-2 border-transparent text-gray-400 focus:outline-none transition-all">Leaderboard</button>
-        <button id="btn-studioTab" onclick="switchTab('studioTab')" class="px-6 py-3 text-sm font-bold border-b-2 border-transparent text-gray-400 focus:outline-none transition-all">Creator Studio</button>
+        <button onclick="switchTab('homeTab')" class="px-6 py-3 text-sm font-bold border-b-2 border-brand-neon text-brand-neon focus:outline-none">Home</button>
+        <button onclick="switchTab('studioTab')" class="px-6 py-3 text-sm font-bold border-b-2 border-transparent text-gray-400 focus:outline-none">Creator Studio</button>
+        <button onclick="switchTab('fantasyTab')" class="px-6 py-3 text-sm font-bold border-b-2 border-transparent text-gray-400 focus:outline-none">Fantasy Builder</button>
     </div>
 
-    <!-- CONTENT WRAPPER -->
     <main class="flex-1 overflow-y-auto p-4 pb-20 hide-scrollbar">
 
-        <!-- ================= HOME TAB (Match Center) ================= -->
         <div id="homeTab" class="tab-content space-y-6">
-            <div class="flex justify-between items-center">
-                <h2 class="text-sm font-black text-gray-400 uppercase tracking-widest">Live Action</h2>
-                <span class="text-[11px] text-brand-neon flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-brand-neon animate-pulse"></span> Engine Active</span>
-            </div>
+            <h2 class="text-sm font-bold text-gray-400 uppercase tracking-widest">Live Action</h2>
             
-            <!-- Live Match Card -->
-            <div onclick="toggleModal('matchCenterModal')" class="bg-gradient-to-br from-blue-950 via-slate-900 to-black p-5 rounded-2xl border border-white/10 relative overflow-hidden shadow-2xl cursor-pointer hover:border-white/20 transition-all">
-                <div class="absolute top-0 right-0 w-32 h-32 bg-brand-neon/5 rounded-full blur-3xl"></div>
+            <div class="bg-gradient-to-br from-blue-900 to-black p-5 rounded-2xl border border-white/10 relative overflow-hidden shadow-lg">
+                <div class="absolute top-0 right-0 w-24 h-24 bg-brand-neon/10 rounded-full blur-2xl"></div>
                 <div class="flex justify-between items-center mb-4">
-                    <span class="bg-red-500 text-[10px] px-2.5 py-1 rounded-full font-black tracking-wider animate-pulse">🔴 LIVE MATCH</span>
-                    <span class="text-xs text-gray-400 font-semibold tracking-wide">IPL 2026 • FINAL</span>
+                    <span class="bg-red-500 text-[10px] px-2.5 py-1 rounded-full font-bold animate-pulse">🔴 LIVE</span>
+                    <span class="text-xs text-gray-300 font-semibold">IPL 2026 - FINAL</span>
                 </div>
-                <div class="flex justify-between items-end">
+                <div class="flex justify-between items-center">
                     <div>
-                        <h2 class="text-2xl font-black tracking-wide">GT <span class="text-gray-500 text-lg font-normal">vs</span> RCB</h2>
-                        <p class="text-2xl font-black text-brand-neon mt-2 tracking-tight"><span id="liveScoreLabel">155-8</span> <span class="text-xs text-gray-400 font-medium" id="liveOversLabel">(18.2)</span></p>
-                        <p class="text-[11px] text-gray-400 mt-2 italic" id="liveTickerLabel">Rashid Khan to Virat Kohli, 1 run.</p>
+                        <h2 class="text-2xl font-black">GT <span class="text-gray-500 text-lg">vs</span> RCB</h2>
+                        <p class="text-brand-neon font-bold mt-1">155-8 <span class="text-xs text-gray-400">(18.2)</span></p>
                     </div>
-                    <div class="bg-brand-neon text-black font-black text-[10px] px-3 py-2 rounded-lg uppercase tracking-wider shadow-[0_0_15px_rgba(57,255,20,0.3)]">
-                        Match Center
-                    </div>
+                    <button onclick="toggleModal('matchCenterModal')" class="bg-white/10 hover:bg-white/20 px-4 py-2 rounded-lg text-xs font-bold backdrop-blur-sm transition-all border border-white/20">
+                        Match Center ▶
+                    </button>
                 </div>
             </div>
             
-            <!-- AI Club Chant Generator -->
-            <div class="bg-brand-surface p-5 rounded-2xl border border-white/5 space-y-3 shadow-lg">
-                <h3 class="text-xs font-black text-brand-gold uppercase tracking-wider">📣 AI Club Chant Generator</h3>
-                <p class="text-[11px] text-gray-400">Generate energetic stadium anthems instantly using Gemini AI models.</p>
-                <div class="flex gap-2">
-                    <input id="chantTeam" type="text" placeholder="Enter Team Name (e.g., RCB)" class="flex-1 bg-brand-darkBg border border-white/10 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-brand-neon">
-                    <button onclick="generateChant()" class="sparkle-btn px-4 py-2 rounded-lg text-xs transition-transform active:scale-95">Generate ✨</button>
+            <div class="bg-brand-surface p-4 rounded-2xl border border-white/5 space-y-3">
+                <h3 class="text-xs font-black text-brand-gold uppercase">📣 AI Club Chant Generator</h3>
+                <input id="chantTeam" type="text" placeholder="Enter Team (e.g., RCB)" class="w-full bg-brand-darkBg border border-white/10 rounded-lg px-3 py-2 text-xs text-white">
+                <button onclick="generateChant()" class="w-full sparkle-btn py-2 rounded-lg text-xs">Generate Chant ✨</button>
+                <p id="chantOutput" class="text-xs text-gray-300 italic hidden"></p>
+            </div>
+        </div>
+
+        <div id="studioTab" class="tab-content hidden space-y-6">
+            <div class="bg-brand-surface p-5 rounded-2xl border border-white/10">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="font-black text-lg">Monetization Dashboard</h2>
+                    <span class="text-xs bg-green-500/20 text-green-400 px-2 py-1 rounded font-bold">ACTIVE</span>
                 </div>
-                <div id="chantOutputBox" class="bg-black/40 p-3 rounded-xl border border-white/5 hidden animate-fade-in">
-                    <p id="chantOutput" class="text-xs text-gray-300 italic leading-relaxed"></p>
+                
+                <div class="grid grid-cols-2 gap-4 mb-4">
+                    <div class="bg-brand-darkBg p-3 rounded-lg border border-white/5">
+                        <p class="text-[10px] text-gray-400 uppercase">Total Views</p>
+                        <p class="text-xl font-black">1.2M</p>
+                    </div>
+                    <div class="bg-brand-darkBg p-3 rounded-lg border border-white/5">
+                        <p class="text-[10px] text-gray-400 uppercase">Est. Earnings</p>
+                        <p class="text-xl font-black text-brand-neon">₹ 14,500</p>
+                    </div>
+                </div>
+
+                <div class="space-y-2">
+                    <div class="flex justify-between text-xs text-gray-400">
+                        <span>Watch Hours Progress</span>
+                        <span>3,200 / 4,000</span>
+                    </div>
+                    <div class="w-full bg-brand-darkBg rounded-full h-2">
+                        <div class="bg-brand-neon h-2 rounded-full" style="width: 80%"></div>
+                    </div>
                 </div>
             </div>
         </div>
 
-        <!-- ================= FANTASY BUILDER TAB ================= -->
         <div id="fantasyTab" class="tab-content hidden space-y-4">
-            <div class="flex justify-between items-center bg-brand-surface p-4 rounded-xl border border-white/10 shadow-md">
+            <div class="flex justify-between items-center bg-brand-surface p-4 rounded-xl border border-white/10">
                 <div>
-                    <h3 class="font-black text-sm tracking-wide">Squad Constructor</h3>
-                    <p class="text-xs text-gray-400">Gujarat Titans vs Royal Challengers</p>
+                    <h3 class="font-black text-sm">Create Team</h3>
+                    <p class="text-xs text-gray-400">GT vs RCB</p>
                 </div>
                 <div class="text-right">
-                    <p class="text-[10px] text-gray-400 uppercase font-bold">Credits Left</p>
+                    <p class="text-[10px] text-gray-400">Credits Left</p>
                     <p class="text-lg font-black text-brand-neon">100.0</p>
                 </div>
             </div>
 
-            <button onclick="aiCaptainPicker()" class="w-full bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-bold py-3 rounded-xl text-xs flex justify-center items-center gap-2 border border-indigo-400/30 shadow-lg transition-all active:scale-[0.99]">
-                🤖 Run Gemini AI Captain Picker Advisor
+            <button onclick="aiCaptainPicker()" class="w-full bg-[#6366f1] text-white font-bold py-3 rounded-xl text-xs flex justify-center items-center gap-2 border border-[#818cf8]/50">
+                🤖 AI Fantasy Captain Picker
             </button>
 
-            <!-- Player List -->
             <div class="space-y-2">
-                <div class="flex justify-between items-center bg-brand-surface p-3 rounded-xl border border-white/5">
+                <div class="flex justify-between items-center bg-brand-surface p-3 rounded-lg border border-white/5">
                     <div class="flex items-center gap-3">
-                        <div class="w-9 h-9 bg-gradient-to-tr from-red-600 to-black rounded-full flex items-center justify-center font-black text-xs text-white">VK</div>
+                        <div class="w-8 h-8 bg-gray-700 rounded-full"></div>
                         <div>
-                            <p class="text-xs font-bold">Virat Kohli (BAT)</p>
-                            <p class="text-[10px] text-gray-400 uppercase tracking-wider font-semibold">RCB</p>
+                            <p class="text-xs font-bold">V. Kohli (BAT)</p>
+                            <p class="text-[10px] text-gray-400">RCB</p>
                         </div>
                     </div>
                     <div class="flex items-center gap-3">
-                        <p class="text-xs font-black text-gray-300">9.5 Cr</p>
-                        <button onclick="showToast('+ Added Virat Kohli to Fantasy Squad', 'success')" class="bg-brand-neon text-black w-7 h-7 rounded-full font-black text-sm flex items-center justify-center transition-transform active:scale-90">+</button>
+                        <p class="text-xs font-bold text-gray-300">9.5 Cr</p>
+                        <button onclick="showToast('+ Added to team', 'success')" class="bg-brand-neon text-black w-6 h-6 rounded-full font-black text-xs">+</button>
                     </div>
                 </div>
-                <div class="flex justify-between items-center bg-brand-surface p-3 rounded-xl border border-white/5">
+                <div class="flex justify-between items-center bg-brand-surface p-3 rounded-lg border border-white/5">
                     <div class="flex items-center gap-3">
-                        <div class="w-9 h-9 bg-gradient-to-tr from-blue-600 to-black rounded-full flex items-center justify-center font-black text-xs text-white">RK</div>
+                        <div class="w-8 h-8 bg-gray-700 rounded-full"></div>
                         <div>
-                            <p class="text-xs font-bold">Rashid Khan (ALL)</p>
-                            <p class="text-[10px] text-gray-400 uppercase tracking-wider font-semibold">GT</p>
+                            <p class="text-xs font-bold">Rashid K. (BOWL)</p>
+                            <p class="text-[10px] text-gray-400">GT</p>
                         </div>
                     </div>
                     <div class="flex items-center gap-3">
-                        <p class="text-xs font-black text-gray-300">9.0 Cr</p>
-                        <button onclick="showToast('+ Added Rashid Khan to Fantasy Squad', 'success')" class="bg-brand-neon text-black w-7 h-7 rounded-full font-black text-sm flex items-center justify-center transition-transform active:scale-90">+</button>
+                        <p class="text-xs font-bold text-gray-300">9.0 Cr</p>
+                        <button onclick="showToast('+ Added to team', 'success')" class="bg-brand-neon text-black w-6 h-6 rounded-full font-black text-xs">+</button>
                     </div>
                 </div>
             </div>
-            <button onclick="saveFantasyTeam()" class="w-full bg-brand-neon text-black font-black py-3 rounded-xl text-sm mt-4 shadow-[0_4px_15px_rgba(57,255,20,0.2)]">SAVE TEAM (+100 🪙)</button>
-        </div>
-
-        <!-- ================= LEADERBOARD TAB ================= -->
-        <div id="leaderboardTab" class="tab-content hidden space-y-4">
-            <div class="bg-brand-surface p-4 rounded-xl border border-white/10 shadow-lg">
-                <h3 class="font-black text-sm tracking-wide text-brand-gold uppercase mb-1">Global Fan Leaderboard</h3>
-                <p class="text-xs text-gray-400">Ranks update live based on token accumulations across streams and fantasy setups.</p>
-            </div>
-            
-            <div class="bg-brand-surface rounded-xl border border-white/5 divide-y divide-white/5 overflow-hidden">
-                <div class="p-3 flex justify-between items-center bg-brand-gold/10">
-                    <div class="flex items-center gap-3 text-xs">
-                        <span class="font-black text-brand-gold w-4">🥇</span>
-                        <span class="font-bold text-white">@alpha_striker</span>
-                    </div>
-                    <span class="text-xs font-mono text-brand-gold font-bold">🪙 14,820</span>
-                </div>
-                <div class="p-3 flex justify-between items-center bg-white/5">
-                    <div class="flex items-center gap-3 text-xs">
-                        <span class="font-black text-gray-400 w-4">🥈</span>
-                        <span class="font-bold text-gray-200">@king_prediction</span>
-                    </div>
-                    <span class="text-xs font-mono text-gray-300 font-bold">🪙 12,400</span>
-                </div>
-                <div class="p-3 flex justify-between items-center">
-                    <div class="flex items-center gap-3 text-xs">
-                        <span class="font-black text-amber-700 w-4">🥉</span>
-                        <span class="font-bold text-gray-300">@cric_genius_1</span>
-                    </div>
-                    <span class="text-xs font-mono text-gray-400 font-bold">🪙 9,150</span>
-                </div>
-                <div class="p-3 flex justify-between items-center border-t border-brand-neon/20 bg-brand-neon/5">
-                    <div class="flex items-center gap-3 text-xs">
-                        <span class="font-black text-brand-neon w-4">24</span>
-                        <span class="font-bold text-brand-neon">@You (Sportsnap Fan)</span>
-                    </div>
-                    <span class="text-xs font-mono text-brand-neon font-bold">🪙 <span id="leaderboardUserCoins">2450</span></span>
-                </div>
-            </div>
-        </div>
-
-        <!-- ================= CREATOR STUDIO TAB ================= -->
-        <div id="studioTab" class="tab-content hidden space-y-6">
-            <div class="bg-brand-surface p-5 rounded-2xl border border-white/10 shadow-xl">
-                <div class="flex justify-between items-center mb-4">
-                    <h2 class="font-black text-lg tracking-wide">Creator Monetization Studio</h2>
-                    <span class="text-xs bg-green-500/20 text-green-400 px-2.5 py-1 rounded-md font-bold tracking-wider">LIVE PARTNER</span>
-                </div>
-                
-                <div class="grid grid-cols-2 gap-4 mb-4">
-                    <div class="bg-brand-darkBg p-3 rounded-xl border border-white/5">
-                        <p class="text-[10px] text-gray-400 uppercase font-bold tracking-wider">Total Reels Views</p>
-                        <p class="text-xl font-black mt-1">1,245,800</p>
-                    </div>
-                    <div class="bg-brand-darkBg p-3 rounded-xl border border-white/5">
-                        <p class="text-[10px] text-gray-400 uppercase font-bold tracking-wider">Est. Earnings</p>
-                        <p class="text-xl font-black text-brand-neon mt-1">Rupees 14,500</p>
-                    </div>
-                </div>
-
-                <div class="space-y-2 bg-black/20 p-4 rounded-xl border border-white/5">
-                    <div class="flex justify-between text-xs text-gray-400 font-medium">
-                        <span>Watch Hours Threshold Requirement</span>
-                        <span class="text-white font-bold">3,200 / 4,000 hrs</span>
-                    </div>
-                    <div class="w-full bg-brand-darkBg rounded-full h-2.5 overflow-hidden border border-white/5">
-                        <div class="bg-gradient-to-r from-brand-neon to-green-400 h-full rounded-full" style="width: 80%"></div>
-                    </div>
-                </div>
-            </div>
+            <button onclick="saveFantasyTeam()" class="w-full bg-brand-neon text-black font-black py-3 rounded-xl text-sm mt-4">SAVE TEAM (+100 🪙)</button>
         </div>
 
     </main>
 
-    <!-- ================= MODALS & OVERLAYS ================= -->
-
-    <!-- 1. Match Center Modal (Live Stream + Chat) -->
     <div id="matchCenterModal" class="fixed inset-0 bg-brand-darkBg z-50 transform translate-y-full transition-transform duration-300 flex flex-col">
-        <div class="p-4 bg-slate-950 flex justify-between items-center border-b border-white/10">
-            <button onclick="toggleModal('matchCenterModal')" class="text-gray-400 hover:text-white font-black text-xs uppercase tracking-wider">✕ CLOSE DASHBOARD</button>
-            <span class="text-xs font-black text-brand-neon uppercase tracking-widest flex items-center gap-1">
-                <span class="w-2 h-2 rounded-full bg-brand-neon animate-ping"></span> Live Broadcast Hub
-            </span>
+        <div class="p-3 bg-black flex justify-between items-center border-b border-white/10">
+            <button onclick="toggleModal('matchCenterModal')" class="text-white font-bold text-xs">✕ CLOSE</button>
+            <span class="text-xs font-bold text-brand-neon">LIVE STREAM</span>
         </div>
         
-        <!-- Stream Media Panel Container -->
-        <div class="w-full aspect-video bg-black flex flex-col items-center justify-center relative border-b border-white/10 shadow-inner">
-            <p class="text-white font-black tracking-wider text-sm mb-1" id="currentServerLabel">▶ STREAM SERVER 1 ACTIVE</p>
-            <p class="text-gray-400 text-xs font-mono" id="streamModalScore">GT 155-8 (18.2)</p>
-            <span class="bg-red-600 text-white text-[9px] font-black px-2 py-0.5 rounded absolute top-3 left-3 tracking-widest animate-pulse">CRICFY CLONE MODULE</span>
-            
-            <!-- Server Switch Controls overlay -->
-            <div class="absolute bottom-3 right-3 flex gap-1 bg-black/60 p-1 rounded-lg backdrop-blur-md">
-                <button onclick="switchServer(1)" class="bg-brand-neon text-black text-[9px] font-black px-2 py-1 rounded">S1</button>
-                <button onclick="switchServer(2)" class="bg-white/10 text-white text-[9px] font-black px-2 py-1 rounded hover:bg-white/20">S2</button>
-                <button onclick="switchServer(3)" class="bg-white/10 text-white text-[9px] font-black px-2 py-1 rounded hover:bg-white/20">S3</button>
-            </div>
+        <div class="w-full aspect-video bg-gray-900 flex flex-col items-center justify-center relative">
+            <p class="text-gray-500 font-bold mb-2">▶ JioHotstar Server 1 Module</p>
+            <span class="bg-red-500/80 text-white text-[10px] px-2 py-1 rounded absolute top-2 left-2">🔴 LIVE MATCH</span>
         </div>
 
-        <div class="flex-1 overflow-y-auto p-4 flex flex-col gap-4 hide-scrollbar">
-            <!-- AI Live Analytics Execution Component -->
-            <div class="bg-brand-surface p-4 rounded-2xl border border-brand-gold/20 shadow-md space-y-2">
-                <div class="flex justify-between items-center">
-                    <span class="text-xs font-black text-brand-gold uppercase tracking-wider">⚡ Live Gemini AI Analytics Dashboard</span>
-                    <button onclick="generateAIHighlights()" class="sparkle-btn px-3 py-1.5 rounded-lg text-[10px] tracking-wider uppercase transition-transform active:scale-95">Run Analysis</button>
-                </div>
-                <p id="aiAnalysisOutput" class="text-xs text-gray-400 leading-relaxed italic">Click the trigger button to invoke Google Gemini flash computational metrics on current performance parameters.</p>
+        <div class="flex-1 overflow-y-auto p-4 flex flex-col gap-4">
+            <div class="bg-brand-surface p-3 rounded-xl border border-brand-gold/30 flex justify-between items-center">
+                <span class="text-xs font-black text-brand-gold">⚡ Live AI Highlights</span>
+                <button onclick="generateAIHighlights()" class="sparkle-btn px-3 py-1 rounded text-[10px]">Analyze</button>
             </div>
 
-            <!-- Live Mega Chat Infrastructure Component -->
-            <div class="flex-1 bg-brand-surface rounded-2xl border border-white/10 flex flex-col h-60 shadow-lg overflow-hidden">
-                <div class="bg-slate-950 p-2.5 border-b border-white/5 text-[10px] font-black text-white uppercase flex justify-between items-center tracking-wider">
-                    <span class="text-brand-pink">🔴 Fan Wars Live Chat Room</span>
-                    <span class="text-green-400 animate-pulse-slow font-mono">● 14,592 CONCURRENT FANS</span>
+            <div class="flex-1 bg-brand-surface rounded-xl border border-white/10 flex flex-col h-48">
+                <div class="bg-black/30 p-2 rounded-t-xl border-b border-white/5 text-[10px] font-black text-white uppercase flex justify-between">
+                    <span>🔴 Fan Wars Chat</span>
+                    <span class="text-green-400 animate-pulse">● 14k Online</span>
                 </div>
-                <div id="liveChatMessages" class="flex-1 p-3 overflow-y-auto space-y-2 text-[11px] hide-scrollbar font-medium">
-                    <div><span class="text-blue-400 font-bold">@rcb_blood:</span> Kohli will finish this matching in the 19th over! 🔥</div>
-                    <div><span class="text-yellow-400 font-bold">@cricket_nerd:</span> Pitch conditions favor spinners completely right now.</div>
-                    <div><span class="text-purple-400 font-bold">@titan_force:</span> Rashid khan outstanding execution loading! 🌪️</div>
+                <div id="liveChatMessages" class="flex-1 p-3 overflow-y-auto space-y-2 text-[11px] hide-scrollbar">
+                    <div><span class="text-blue-400 font-bold">@rcb_blood:</span> Kohli will score a century today! 🔥</div>
+                    <div><span class="text-yellow-400 font-bold">@cricket_nerd:</span> Pitch is looking dry... spin will work.</div>
                 </div>
-                <div class="p-2 bg-slate-950 border-t border-white/5 flex gap-2">
-                    <input id="chatInput" type="text" placeholder="Type message to stadium rooms..." class="flex-1 bg-brand-darkBg border border-white/10 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-brand-neon">
-                    <button onclick="sendChat()" class="bg-brand-neon text-black font-black text-[10px] px-4 rounded-lg tracking-wider uppercase transition-all active:scale-95">SEND</button>
+                <div class="p-2 border-t border-white/5 flex gap-2">
+                    <input id="chatInput" type="text" placeholder="Type..." class="flex-1 bg-brand-darkBg border border-white/10 rounded px-2 py-1 text-xs focus:outline-none focus:border-brand-neon">
+                    <button onclick="sendChat()" class="bg-brand-neon text-black font-bold text-[10px] px-3 rounded">SEND</button>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- 2. Fan Rewards Store Modal -->
     <div id="storeModal" class="fixed inset-0 bg-brand-darkBg/95 z-50 transform translate-y-full transition-transform duration-300 p-4 flex flex-col">
         <div class="flex justify-between items-center mb-6 mt-4">
-            <h2 class="text-2xl font-black text-brand-gold tracking-wide">Pro Rewards Hub 🛍️</h2>
-            <button onclick="toggleModal('storeModal')" class="text-white bg-white/10 w-9 h-9 rounded-full font-black text-sm flex items-center justify-center">✕</button>
+            <h2 class="text-2xl font-black text-brand-gold">Pro Rewards Hub 🛍️</h2>
+            <button onclick="toggleModal('storeModal')" class="text-white bg-white/10 w-8 h-8 rounded-full font-bold">✕</button>
         </div>
-        <p class="text-xs text-gray-400 mb-4">Redeem your accumulated Fan tokens for authentic sports gear and elite hospitality accesses.</p>
         <div class="grid grid-cols-2 gap-4">
-            <div class="bg-brand-surface p-4 rounded-2xl border border-white/10 text-center shadow-md">
+            <div class="bg-brand-surface p-4 rounded-xl border border-white/10 text-center">
                 <div class="text-4xl mb-2">👕</div>
-                <p class="text-xs font-bold mb-1">Official Team Jersey</p>
-                <p class="text-[10px] text-gray-400 mb-3">Authentic Merchandise</p>
-                <button onclick="buyItem(1500)" class="w-full bg-brand-neon text-black font-black text-[11px] py-2 rounded-xl transition-transform active:scale-95">🪙 1,500</button>
+                <p class="text-xs font-bold mb-1">Official Jersey</p>
+                <button onclick="buyItem(1500)" class="w-full bg-brand-neon text-black font-bold text-[10px] py-1.5 rounded">🪙 1,500</button>
             </div>
-            <div class="bg-brand-surface p-4 rounded-2xl border border-white/10 text-center shadow-md">
+            <div class="bg-brand-surface p-4 rounded-xl border border-white/10 text-center">
                 <div class="text-4xl mb-2">🎫</div>
-                <p class="text-xs font-bold mb-1">VIP Luxury Pavilion Pass</p>
-                <p class="text-[10px] text-gray-400 mb-3">Grandstand Lounge</p>
-                <button onclick="buyItem(5000)" class="w-full bg-slate-700 text-gray-400 font-black text-[11px] py-2 rounded-xl cursor-not-allowed">🪙 5,000</button>
+                <p class="text-xs font-bold mb-1">VIP Stadium Pass</p>
+                <button onclick="buyItem(5000)" class="w-full bg-gray-500 text-white font-bold text-[10px] py-1.5 rounded">🪙 5,000</button>
             </div>
         </div>
     </div>
 
-    <!-- 3. Floating AI Chatbot Widget (Groundor) -->
-    <button onclick="toggleModal('chatbotModal')" class="fixed bottom-6 right-6 w-14 h-14 rounded-full bg-indigo-600 shadow-[0_4px_20px_rgba(99,102,241,0.4)] border-2 border-indigo-400 flex items-center justify-center text-2xl z-40 hover:scale-110 transition-transform active:scale-95">
+    <button onclick="toggleModal('chatbotModal')" class="fixed bottom-6 right-6 w-12 h-12 rounded-full bg-[#6366f1] shadow-lg border-2 border-[#818cf8] flex items-center justify-center text-2xl z-40 hover:scale-110 transition-transform">
         🤖
     </button>
-    <div id="chatbotModal" class="fixed inset-x-4 bottom-24 bg-brand-surface border border-indigo-500 rounded-2xl z-50 transform scale-0 origin-bottom-right transition-transform duration-300 shadow-2xl h-80 flex flex-col">
-        <div class="bg-indigo-600 p-3.5 rounded-t-2xl flex justify-between items-center border-b border-indigo-400/20">
-            <span class="text-xs font-black text-white tracking-wider uppercase">AI Groundor Sports Buddy</span>
+    <div id="chatbotModal" class="fixed inset-x-4 bottom-24 bg-brand-surface border border-[#6366f1] rounded-2xl z-50 transform scale-0 origin-bottom-right transition-transform duration-300 shadow-2xl h-80 flex flex-col">
+        <div class="bg-[#6366f1] p-3 rounded-t-2xl flex justify-between items-center">
+            <span class="text-xs font-black text-white">AI Sports Buddy</span>
             <button onclick="toggleModal('chatbotModal')" class="text-white font-bold text-xs">✕</button>
         </div>
-        <div class="flex-1 p-3 text-xs text-gray-300 overflow-y-auto space-y-2 hide-scrollbar">
-            <p class="bg-white/5 p-2.5 rounded-xl border border-white/5 inline-block max-w-[85%]">Namaste! This module utilizes Google Search Grounding pipelines to serve optimized sports analysis. Ask away live questions!</p>
+        <div class="flex-1 p-3 text-xs text-gray-300 overflow-y-auto">
+            <p class="bg-white/5 p-2 rounded-lg inline-block">Hi! I have real-time Google Search grounding. Ask me any live stats or news!</p>
         </div>
-        <div class="p-2 bg-slate-900 border-t border-white/10 rounded-b-2xl flex gap-2">
-            <input type="text" placeholder="Inquire about live analytics, stats, rosters..." class="flex-1 bg-brand-darkBg rounded-lg px-3 py-2 text-xs border border-white/10 text-white focus:outline-none focus:border-indigo-400">
-            <button onclick="showToast('AI Query pipeline grounding simulations active', 'info')" class="bg-indigo-600 text-white px-4 rounded-lg text-[10px] font-black tracking-wider uppercase">ASK</button>
+        <div class="p-2 border-t border-white/10 flex gap-2">
+            <input type="text" placeholder="Ask AI..." class="flex-1 bg-brand-darkBg rounded px-2 py-1 text-xs border border-white/10">
+            <button class="bg-[#6366f1] text-white px-3 rounded text-[10px] font-bold">ASK</button>
         </div>
     </div>
 
-    <!-- ================= SCRIPTS & SYSTEM LOGIC ================= -->
     <script>
-        // Global App State
-        let coins = 2450;
-        let matchRuns = 155;
-        let matchWickets = 8;
-        let matchOvers = 18.2;
-
-        // Dynamic Score Ticker Simulation Core
-        function runLiveScoreEngine() {
-            setInterval(() => {
-                // Update parameters metrics realistically
-                let ballChance = Math.random();
-                let runsScored = 0;
-                let textUpdate = "";
-
-                if (ballChance < 0.4) {
-                    runsScored = 1;
-                    textUpdate = "Virat Kohli drives to long-on for a single.";
-                } else if (ballChance < 0.6) {
-                    runsScored = 2;
-                    textUpdate = "Excellent running! Controlled pull shot yields a couple.";
-                } else if (ballChance < 0.75) {
-                    runsScored = 4;
-                    textUpdate = "CRACKING SHOT! Boundary through extra-cover ropes!";
-                } else if (ballChance < 0.85) {
-                    runsScored = 6;
-                    textUpdate = "MAXIMUM! Massive strike sailed deep into the pavilions!";
-                } else if (ballChance < 0.95) {
-                    runsScored = 0;
-                    textUpdate = "Dot ball. Solid defensive structural block displayed.";
-                } else {
-                    if (matchWickets < 10) {
-                        matchWickets += 1;
-                        textUpdate = "OUT! Clean bowled! Off stump shattered out of the ground!";
-                    } else {
-                        textUpdate = "Innings conclusion reached. Spectacular contest!";
-                    }
-                }
-
-                matchRuns += runsScored;
-                
-                // Advance overs metric logically
-                let currentBall = Math.round((matchOvers % 1) * 10);
-                if (currentBall >= 5) {
-                    matchOvers = Math.floor(matchOvers) + 1;
-                } else {
-                    matchOvers = (Math.floor(matchOvers) + ((currentBall + 1) / 10));
-                }
-
-                // Format string output rendering safely
-                let finalScoreStr = `${matchRuns}-${matchWickets}`;
-                let finalOversStr = `(${matchOvers.toFixed(1)})`;
-
-                // Render components UI data bindings
-                document.getElementById('liveScoreLabel').innerText = finalScoreStr;
-                document.getElementById('liveOversLabel').innerText = finalOversStr;
-                document.getElementById('streamModalScore').innerText = `GT ${finalScoreStr} ${finalOversStr}`;
-                document.getElementById('liveTickerLabel').innerText = textUpdate;
-            }, 4500);
-        }
-
-        // Invoke Engine at Boot Runtime Setup
-        window.onload = function() {
-            runLiveScoreEngine();
-        };
-
-        // Tab Navigation Architecture Module
+        // Tab Navigation Logic
         function switchTab(tabId) {
             document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
             document.getElementById(tabId).classList.remove('hidden');
             
+            // Update button styles
             const buttons = document.querySelectorAll('.overflow-x-auto button');
             buttons.forEach(btn => {
                 btn.classList.remove('border-brand-neon', 'text-brand-neon');
                 btn.classList.add('border-transparent', 'text-gray-400');
             });
-            
-            document.getElementById('btn-' + tabId).classList.remove('border-transparent', 'text-gray-400');
-            document.getElementById('btn-' + tabId).classList.add('border-brand-neon', 'text-brand-neon');
+            event.target.classList.remove('border-transparent', 'text-gray-400');
+            event.target.classList.add('border-brand-neon', 'text-brand-neon');
         }
 
-        // Overlays Configuration Panel Logic
+        // Modal Toggles
         function toggleModal(modalId) {
             const modal = document.getElementById(modalId);
             if (modalId === 'chatbotModal') {
@@ -409,107 +253,88 @@
             }
         }
 
-        // Live Media Switching Controller
-        function switchServer(serverNum) {
-            document.getElementById('currentServerLabel').innerText = `▶ STREAM SERVER ${serverNum} ACTIVE`;
-            showToast(`Rerouting stream packets to Node Server ${serverNum}`, 'info');
-        }
-
-        // Standalone Toast Display Framework Engine
+        // Safe Toast System
         function showToast(message, type = 'info') {
             const container = document.getElementById('toastContainer');
             const toast = document.createElement('div');
             const color = type === 'success' ? 'bg-brand-neon text-black' : type === 'error' ? 'bg-red-500 text-white' : 'bg-brand-surface border border-white/20 text-white';
             
-            toast.className = `toast ${color} px-4 py-2 rounded-full text-xs font-black shadow-2xl transform translate-y-[-20px] opacity-0 tracking-wide uppercase`;
+            toast.className = `toast ${color} px-4 py-2 rounded-full text-xs font-bold shadow-lg transform translate-y-[-20px] opacity-0`;
             toast.innerText = message;
             
             container.appendChild(toast);
             
+            // Animate in
             setTimeout(() => {
                 toast.classList.remove('translate-y-[-20px]', 'opacity-0');
             }, 10);
 
+            // Remove after 3 seconds
             setTimeout(() => {
                 toast.classList.add('opacity-0', 'translate-y-[-20px]');
                 setTimeout(() => toast.remove(), 300);
             }, 3000);
         }
 
-        // Communication Chat Execution
+        // Feature: Live Chat
         function sendChat() {
             const input = document.getElementById('chatInput');
             const container = document.getElementById('liveChatMessages');
             if (input.value.trim() !== '') {
-                container.innerHTML += `<div class="animate-fade-in"><span class="text-brand-pink font-bold">@You:</span> <span class="text-white">${input.value}</span></div>`;
-                const userMsg = input.value;
+                container.innerHTML += `<div class="animate-fade-in"><span class="text-brand-neon font-bold">@You:</span> <span class="text-white">${input.value}</span></div>`;
                 input.value = '';
                 container.scrollTop = container.scrollHeight;
                 
+                // Bot auto-reply simulation
                 setTimeout(() => {
-                    const sampleReplies = ["Absolutely wild match!", "RCB throwing this game away?", "What an over!", "Unbelievable hitting!"];
-                    const randomText = sampleReplies[Math.floor(Math.random() * sampleReplies.length)];
-                    container.innerHTML += `<div><span class="text-brand-neon font-bold">@fan_${Math.floor(Math.random()*999)}:</span> <span class="text-gray-300">${randomText}</span></div>`;
+                    container.innerHTML += `<div><span class="text-purple-400 font-bold">@fan_${Math.floor(Math.random()*99)}:</span> Yes bro! 🙌</div>`;
                     container.scrollTop = container.scrollHeight;
-                }, 1200);
+                }, 1500);
             }
         }
 
-        // Financial Gamification Transactions Handler
+        // Feature: E-commerce Store
+        let coins = 2450;
         function buyItem(price) {
             if (coins >= price) {
                 coins -= price;
-                updateCoinBalances();
-                showToast('Merchandise acquisition successful! Redemptions verified.', 'success');
+                document.getElementById('coinBalance').innerText = coins;
+                showToast('Item purchased successfully! 🛍️', 'success');
             } else {
-                showToast('Insufficient Fan Coins tokens balance inside storage wallet.', 'error');
+                showToast('Not enough Fan Coins! Play more to earn.', 'error');
             }
         }
 
-        function updateCoinBalances() {
-            document.getElementById('coinBalance').innerText = coins;
-            document.getElementById('leaderboardUserCoins').innerText = coins;
-        }
-
-        // AI LLM Flash Query Handlers
+        // Feature: AI Functionalities (Mocks)
         function generateAIHighlights() {
-            document.getElementById('aiAnalysisOutput').innerText = "Accessing runtime metrics context... Invoking deep inference layers...";
-            setTimeout(() => {
-                document.getElementById('aiAnalysisOutput').innerHTML = `<span class="text-brand-neon font-bold">Gemini Analytics Engine:</span> Critical parameter found. Run-rate vectors indicate RCB requires <span class="text-white font-bold">11.4 RPO</span>. Bowling strategies must leverage short-length outer variations immediately.`;
-                showToast('Gemini Analytics compile complete', 'success');
-            }, 1800);
+            showToast('Generating AI Insights via Gemini...', 'info');
+            setTimeout(() => showToast('AI: Virat Kohli is striking at 165.4 against Spinners right now! 🔥', 'success'), 2000);
         }
 
         function aiCaptainPicker() {
-            showToast('Parsing statistical performance database trends...', 'info');
-            setTimeout(() => {
-                showToast('Gemini AI Recommendation: Set Virat Kohli as C (In-form metrics) & Rashid Khan as VC.', 'success');
-            }, 1500);
+            showToast('Scanning player stats via AI...', 'info');
+            setTimeout(() => showToast('AI Recommends: Captain (V. Kohli) & VC (Rashid K.)', 'success'), 2000);
         }
 
         function generateChant() {
-            const team = document.getElementById('chantTeam').value.trim();
-            const box = document.getElementById('chantOutputBox');
-            const txt = document.getElementById('chantOutput');
-            
+            const team = document.getElementById('chantTeam').value;
+            const output = document.getElementById('chantOutput');
             if(team) {
-                box.classList.remove('hidden');
-                txt.innerText = `Connecting via Gemini pipeline to compute stadium acoustics configurations for team [${team}]...`;
-                
+                output.classList.remove('hidden');
+                output.innerText = `Generating AI chant for ${team}...`;
                 setTimeout(() => {
-                    txt.innerHTML = `🔥 <span class="text-brand-neon font-bold uppercase">${team} RUMBLE!</span> <br>"We march to the field, the crowd starts to roar, ${team} warriors charging the score! Stand up and cheer, let the stadium shake, history is ours to break!" 🥁🙌`;
-                    showToast('Stadium acoustics chant generated successfully', 'success');
-                }, 2000);
+                    output.innerHTML = `<span class="text-brand-neon">"${team} on the pitch, hear the roar! We don't stop till we want more!" 🥁🙌</span>`;
+                }, 1500);
             } else {
-                showToast('Error: Form text field input parameter empty.', 'error');
+                showToast('Please enter a team name first!', 'error');
             }
         }
 
         function saveFantasyTeam() {
             coins += 100;
-            updateCoinBalances();
-            showToast('Fantasy Squad state committed to memory. Reward tokens dispatched (+100 🪙)', 'success');
+            document.getElementById('coinBalance').innerText = coins;
+            showToast('Team Saved! +100 Fan Coins earned! 🪙', 'success');
         }
     </script>
 </body>
-    </html>
+          </html>
