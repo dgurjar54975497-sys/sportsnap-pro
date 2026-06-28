@@ -1,0 +1,613 @@
+cat > index.html << 'HTMLEOF'
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SportSnap PRO</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { 
+      background: #0A0E1A; color: #F0F4FF; 
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      min-height: 100vh;
+    }
+    
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px 20px;
+      background: linear-gradient(135deg, #0A0E1A, #111827);
+      border-bottom: 1px solid #1E2D45;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 24px;
+      font-weight: 900;
+      background: linear-gradient(135deg, #00D4FF, #7C3AED);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .auth-buttons {
+      display: flex;
+      gap: 10px;
+    }
+
+    .btn-small {
+      padding: 8px 16px;
+      background: #1E2D45;
+      border: none;
+      color: #00D4FF;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .btn-small:hover {
+      background: #2A3D55;
+    }
+
+    .tabs {
+      display: flex;
+      gap: 10px;
+      padding: 12px 20px;
+      border-bottom: 1px solid #1E2D45;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+
+    .tabs::-webkit-scrollbar { display: none; }
+
+    .tab {
+      padding: 8px 16px;
+      background: transparent;
+      border: 2px solid #1E2D45;
+      color: #8A9BB5;
+      border-radius: 20px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.3s;
+      white-space: nowrap;
+    }
+
+    .tab.active {
+      border-color: #00D4FF;
+      color: #00D4FF;
+      background: rgba(0, 212, 255, 0.1);
+    }
+
+    .section-title {
+      padding: 16px 20px 8px;
+      font-size: 12px;
+      color: #8A9BB5;
+      text-transform: uppercase;
+      font-weight: 700;
+      letter-spacing: 1px;
+    }
+
+    .matches-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 12px;
+      padding: 0 16px 100px;
+    }
+
+    .match-card {
+      background: #111827;
+      border: 1px solid #1E2D45;
+      border-radius: 16px;
+      padding: 16px;
+      transition: all 0.3s;
+      cursor: pointer;
+    }
+
+    .match-card:hover {
+      background: #151D2E;
+      border-color: #00D4FF;
+      box-shadow: 0 0 20px rgba(0, 212, 255, 0.1);
+    }
+
+    .match-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    .live-badge {
+      background: rgba(255, 61, 87, 0.2);
+      color: #FF3D57;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .live-dot {
+      width: 6px;
+      height: 6px;
+      background: #FF3D57;
+      border-radius: 50%;
+      animation: blink 1s infinite;
+    }
+
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+
+    .match-title {
+      font-size: 14px;
+      color: #4A5568;
+    }
+
+    .score-section {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+      padding: 12px;
+      background: rgba(0, 212, 255, 0.05);
+      border-radius: 10px;
+    }
+
+    .team {
+      text-align: center;
+      flex: 1;
+    }
+
+    .team-name {
+      font-size: 12px;
+      color: #8A9BB5;
+      margin-bottom: 4px;
+      font-weight: 600;
+    }
+
+    .team-score {
+      font-size: 26px;
+      font-weight: 900;
+      color: #00D4FF;
+    }
+
+    .vs {
+      padding: 0 12px;
+      font-size: 12px;
+      color: #4A5568;
+      font-weight: 700;
+    }
+
+    .match-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 11px;
+      color: #4A5568;
+    }
+
+    .fav-btn {
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-size: 18px;
+      transition: all 0.3s;
+    }
+
+    .fav-btn.active {
+      color: #FF3D57;
+      transform: scale(1.2);
+    }
+
+    .loading {
+      text-align: center;
+      padding: 40px 20px;
+      color: #8A9BB5;
+    }
+
+    .spinner {
+      width: 40px;
+      height: 40px;
+      border: 3px solid #1E2D45;
+      border-top-color: #00D4FF;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin: 0 auto 12px;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    .error {
+      background: rgba(255, 61, 87, 0.1);
+      border: 1px solid #FF3D57;
+      color: #FF3D57;
+      padding: 16px;
+      border-radius: 10px;
+      margin: 16px;
+      text-align: center;
+      font-size: 13px;
+    }
+
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: #111827;
+      border-top: 1px solid #1E2D45;
+      display: flex;
+      justify-content: space-around;
+      padding: 8px 0;
+      z-index: 99;
+    }
+
+    .nav-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      color: #4A5568;
+      font-size: 10px;
+      cursor: pointer;
+      padding: 8px 16px;
+      transition: all 0.3s;
+    }
+
+    .nav-item.active {
+      color: #00D4FF;
+    }
+
+    .nav-icon {
+      font-size: 20px;
+    }
+
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.8);
+      z-index: 200;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .modal.active {
+      display: flex;
+    }
+
+    .modal-content {
+      background: #111827;
+      border-radius: 16px;
+      padding: 24px;
+      width: 90%;
+      max-width: 400px;
+      border: 1px solid #1E2D45;
+    }
+
+    .modal-title {
+      font-size: 20px;
+      font-weight: 700;
+      margin-bottom: 16px;
+    }
+
+    .input-field {
+      width: 100%;
+      padding: 12px;
+      background: #0A0E1A;
+      border: 1px solid #1E2D45;
+      color: #F0F4FF;
+      border-radius: 8px;
+      margin-bottom: 12px;
+      font-size: 14px;
+    }
+
+    .btn-primary {
+      width: 100%;
+      padding: 12px;
+      background: linear-gradient(135deg, #00D4FF, #7C3AED);
+      border: none;
+      color: white;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .btn-primary:hover {
+      opacity: 0.9;
+    }
+
+    .btn-secondary {
+      width: 100%;
+      padding: 12px;
+      background: #1E2D45;
+      border: none;
+      color: #00D4FF;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+    }
+
+    .user-profile {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+    }
+
+    .avatar {
+      width: 32px;
+      height: 32px;
+      background: #1E2D45;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <div class="logo">🏏 SportSnap PRO ⚡</div>
+    <div class="auth-buttons">
+      <button class="btn-small" id="loginBtn" onclick="openLogin()">Login</button>
+      <button class="btn-small" id="signupBtn" onclick="openSignup()" style="background: linear-gradient(135deg, #00D4FF, #7C3AED); color: white;">Sign Up</button>
+      <div class="user-profile" id="userProfile" style="display: none;">
+        <div class="avatar" id="userAvatar">U</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="tabs">
+    <button class="tab active" data-sport="cricket">🏏 Cricket</button>
+    <button class="tab" data-sport="football">⚽ Football</button>
+    <button class="tab" data-sport="basketball">🏀 Basketball</button>
+    <button class="tab" data-sport="tennis">🎾 Tennis</button>
+  </div>
+
+  <div class="section-title">🔴 LIVE MATCHES</div>
+  <div id="errorContainer"></div>
+  <div id="matchesContainer" class="matches-grid"></div>
+
+  <div class="bottom-nav">
+    <div class="nav-item active" data-page="home">
+      <div class="nav-icon">🏠</div>
+      <div>Home</div>
+    </div>
+    <div class="nav-item" data-page="clubs">
+      <div class="nav-icon">🏆</div>
+      <div>Clubs</div>
+    </div>
+    <div class="nav-item" data-page="reels">
+      <div class="nav-icon">🎬</div>
+      <div>Reels</div>
+    </div>
+    <div class="nav-item" data-page="favorites">
+      <div class="nav-icon">❤️</div>
+      <div>Favorites</div>
+    </div>
+    <div class="nav-item" data-page="profile">
+      <div class="nav-icon">👤</div>
+      <div>Profile</div>
+    </div>
+  </div>
+
+  <!-- Login Modal -->
+  <div class="modal" id="loginModal">
+    <div class="modal-content">
+      <div class="modal-title">Login</div>
+      <input class="input-field" id="loginEmail" type="email" placeholder="Email">
+      <input class="input-field" id="loginPassword" type="password" placeholder="Password">
+      <button class="btn-primary" onclick="handleLogin()">Login</button>
+      <button class="btn-secondary" onclick="closeLogin()">Cancel</button>
+    </div>
+  </div>
+
+  <!-- Signup Modal -->
+  <div class="modal" id="signupModal">
+    <div class="modal-content">
+      <div class="modal-title">Sign Up</div>
+      <input class="input-field" id="signupName" type="text" placeholder="Username">
+      <input class="input-field" id="signupEmail" type="email" placeholder="Email">
+      <input class="input-field" id="signupPassword" type="password" placeholder="Password">
+      <button class="btn-primary" onclick="handleSignup()">Create Account</button>
+      <button class="btn-secondary" onclick="closeSignup()">Cancel</button>
+    </div>
+  </div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-app.js";
+    import { getFirestore, collection, getDocs, addDoc, query, where, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-firestore.js";
+    import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-auth.js";
+
+    const firebaseConfig = {
+      apiKey: "YOUR_FIREBASE_API_KEY",
+      authDomain: "sportsnap-pro.firebaseapp.com",
+      projectId: "sportsnap-pro",
+      storageBucket: "sportsnap-pro.appspot.com",
+      messagingSenderId: "YOUR_MESSAGING_ID",
+      appId: "YOUR_APP_ID"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+    const auth = getAuth(app);
+
+    let currentUser = null;
+    let selectedSport = 'cricket';
+    let favorites = [];
+
+    // Auth State
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        currentUser = user;
+        document.getElementById('loginBtn').style.display = 'none';
+        document.getElementById('signupBtn').style.display = 'none';
+        document.getElementById('userProfile').style.display = 'flex';
+        document.getElementById('userAvatar').textContent = user.email.charAt(0).toUpperCase();
+        loadFavorites();
+      } else {
+        currentUser = null;
+        document.getElementById('loginBtn').style.display = 'block';
+        document.getElementById('signupBtn').style.display = 'block';
+        document.getElementById('userProfile').style.display = 'none';
+      }
+    });
+
+    // UI Functions
+    window.openLogin = () => document.getElementById('loginModal').classList.add('active');
+    window.closeLogin = () => document.getElementById('loginModal').classList.remove('active');
+    window.openSignup = () => document.getElementById('signupModal').classList.add('active');
+    window.closeSignup = () => document.getElementById('signupModal').classList.remove('active');
+
+    window.handleLogin = async () => {
+      const email = document.getElementById('loginEmail').value;
+      const password = document.getElementById('loginPassword').value;
+      try {
+        await signInWithEmailAndPassword(auth, email, password);
+        closeLogin();
+      } catch (error) {
+        alert('Login failed: ' + error.message);
+      }
+    };
+
+    window.handleSignup = async () => {
+      const email = document.getElementById('signupEmail').value;
+      const password = document.getElementById('signupPassword').value;
+      const name = document.getElementById('signupName').value;
+      try {
+        const result = await createUserWithEmailAndPassword(auth, email, password);
+        await addDoc(collection(db, 'users'), {
+          uid: result.user.uid,
+          name: name,
+          email: email,
+          createdAt: new Date()
+        });
+        closeSignup();
+      } catch (error) {
+        alert('Signup failed: ' + error.message);
+      }
+    };
+
+    // Load Matches
+    async function fetchMatches() {
+      const container = document.getElementById('matchesContainer');
+      const errorContainer = document.getElementById('errorContainer');
+      
+      container.innerHTML = '<div class="loading"><div class="spinner"></div>Loading matches...</div>';
+      errorContainer.innerHTML = '';
+
+      try {
+        const response = await fetch('/api/scores?sport=' + selectedSport);
+        const data = await response.json();
+
+        if (!data || data.length === 0) {
+          container.innerHTML = '<div class="loading">No matches right now 📭</div>';
+          return;
+        }
+
+        container.innerHTML = data.map(match => `
+          <div class="match-card">
+            <div class="match-header">
+              <div class="live-badge">
+                <div class="live-dot"></div>
+                LIVE
+              </div>
+              <button class="fav-btn ${favorites.includes(match.team1 + ' vs ' + match.team2) ? 'active' : ''}" 
+                      onclick="toggleFavorite('${match.team1} vs ${match.team2}')">❤️</button>
+            </div>
+            <div class="match-title">${match.team1} vs ${match.team2}</div>
+            <div class="score-section">
+              <div class="team">
+                <div class="team-name">${match.team1}</div>
+                <div class="team-score">${match.score1}</div>
+              </div>
+              <div class="vs">VS</div>
+              <div class="team">
+                <div class="team-name">${match.team2}</div>
+                <div class="team-score">${match.score2}</div>
+              </div>
+            </div>
+            <div class="match-footer">
+              <span>⏱️ ${match.status}</span>
+              <span>${match.venue || match.league || ''}</span>
+            </div>
+          </div>
+        `).join('');
+      } catch (error) {
+        errorContainer.innerHTML = '<div class="error">⚠️ Error loading matches: ' + error.message + '</div>';
+      }
+    }
+
+    // Favorites
+    window.toggleFavorite = async (matchName) => {
+      if (!currentUser) {
+        alert('Please login to add favorites');
+        return;
+      }
+
+      try {
+        if (favorites.includes(matchName)) {
+          favorites = favorites.filter(f => f !== matchName);
+        } else {
+          favorites.push(matchName);
+        }
+        
+        await addDoc(collection(db, 'users', currentUser.uid, 'favorites'), {
+          match: matchName,
+          sport: selectedSport,
+          addedAt: new Date()
+        });
+
+        fetchMatches();
+      } catch (error) {
+        console.error('Error:', error);
+      }
+    };
+
+    async function loadFavorites() {
+      if (!currentUser) return;
+      try {
+        const snapshot = await getDocs(collection(db, 'users', currentUser.uid, 'favorites'));
+        favorites = snapshot.docs.map(doc => doc.data().match);
+      } catch (error) {
+        console.error('Error loading favorites:', error);
+      }
+    }
+
+    // Event Listeners
+    document.querySelectorAll('.tab').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.tab').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        selectedSport = btn.dataset.sport;
+        fetchMatches();
+      });
+    });
+
+    // Initial Load
+    fetchMatches();
+    setInterval(fetchMatches, 30000);
+  </script>
+</body>
+</html>
+HTMLEOF
+
+echo '''✅ index.html updated with Firebase!'''
